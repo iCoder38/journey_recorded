@@ -51,8 +51,63 @@ class _InventoryScreenState extends State<InventoryScreen> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
+            Container(
+              // margin: const EdgeInsets.all(10.0),
+              color: Colors.amber[600],
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      width: 48.0,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+
+                  Expanded(
+                    child: Container(
+                      // margin: const EdgeInsets.all(10.0),
+                      width: 48.0,
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.brown,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.brown,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+
+                  Expanded(
+                    child: Container(
+                      // margin: const EdgeInsets.all(10.0),
+                      color: Colors.pink,
+                      width: 48.0,
+                      height: 60,
+                      // child: widget
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            )
+
             //
-            category_finance_UI(context),
+            /*category_finance_UI(context),
             //
             const SizedBox(
               height: 40.0,
@@ -129,7 +184,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                   ]
                 ],
               ),
-            ],
+            ],*/
           ],
         ),
       ),
