@@ -45,6 +45,7 @@ dependencies:
   image_picker: ^0.8.6
   url_launcher:
   google_fonts: ^4.0.3
+  easy_image_viewer:
   # cached_network_image: ^3.2.3
 
 dev_dependencies:

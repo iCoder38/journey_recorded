@@ -10,7 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/shop_click_details/shop_click_details.dart';
+import 'package:journey_recorded/shops/in_game_details/in_game_action_details.dart';
 import 'package:journey_recorded/shops/shop_item_details/shop_item_details.dart';
+import 'package:journey_recorded/shops/show_all_in_game/show_all_in_game_images.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -607,18 +609,34 @@ class _GameScreenState extends State<GameScreen> {
                       'Actions',
                     ),
                     //
-                    Container(
-                      width: 100,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(
-                          15.0,
+                    GestureDetector(
+                      onTap: () {
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const InGameActionDetailsScreen(
+                                    // getAllGameData: arr_action_list,
+                                    ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(
+                            15.0,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: text_with_regular_style(
-                          'View',
+                        child: Center(
+                          child: text_regular_style_custom(
+                            'View',
+                            Colors.black,
+                            14.0,
+                          ),
                         ),
                       ),
                     ),
@@ -673,18 +691,35 @@ class _GameScreenState extends State<GameScreen> {
                       'Skills',
                     ),
                     //
-                    Container(
-                      width: 100,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(
-                          15.0,
+                    GestureDetector(
+                      onTap: () {
+                        //
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const ShowAllInGameImagesScreen(
+                              getNumberToParse: '1',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(
+                            15.0,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: text_with_regular_style(
-                          'View',
+                        child: Center(
+                          child: text_regular_style_custom(
+                            'View all',
+                            Colors.black,
+                            14.0,
+                          ),
                         ),
                       ),
                     ),
@@ -738,18 +773,34 @@ class _GameScreenState extends State<GameScreen> {
                       'Products',
                     ),
                     //
-                    Container(
-                      width: 100,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        color: Colors.orange,
-                        borderRadius: BorderRadius.circular(
-                          15.0,
+                    GestureDetector(
+                      onTap: () {
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const ShowAllInGameImagesScreen(
+                              getNumberToParse: '2',
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          color: Colors.orange,
+                          borderRadius: BorderRadius.circular(
+                            15.0,
+                          ),
                         ),
-                      ),
-                      child: Center(
-                        child: text_with_regular_style(
-                          'View',
+                        child: Center(
+                          child: text_regular_style_custom(
+                            'View all',
+                            Colors.black,
+                            14.0,
+                          ),
                         ),
                       ),
                     ),
@@ -775,120 +826,7 @@ class _GameScreenState extends State<GameScreen> {
               //
             ],
             //
-            /*Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 200,
-                      // width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 0.4),
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(
-                          15.0,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  8.0,
-                                ),
-                                child: Image.network(
-                                  //
-                                  arr_product_list[1]['image_1'].toString(),
-                                  fit: BoxFit.cover,
-                                  //
-                                ),
-                              ),
-                            ),
-                          ),
-                          //
-                          Align(
-                            alignment: Alignment.center,
-                            child: text_regular_style_custom(
-                              //
-                              arr_product_list[1]['name'].toString(),
-                              //
-                              Colors.black,
-                              16.0,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: text_bold_style_custom(
-                              '\$12.45',
-                              Colors.black,
-                              14.0,
-                            ),
-                          ),
-                          //
-                        ],
-                      ),
-                    ),
-                  ),
-                  //
-                  const SizedBox(
-                    width: 12.0,
-                  ),
-                  //
-                  Expanded(
-                    child: Container(
-                      height: 200,
-                      // width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        border: Border.all(width: 0.4),
-                        borderRadius: BorderRadius.circular(
-                          15.0,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  8.0,
-                                ),
-                                child: Image.asset(
-                                  'assets/images/3.png',
-                                ),
-                              ),
-                            ),
-                          ),
-                          //
-                          Align(
-                            alignment: Alignment.center,
-                            child: text_regular_style_custom(
-                              'Dishant Rajput',
-                              Colors.black,
-                              16.0,
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: text_bold_style_custom(
-                              '\$12.45',
-                              Colors.black,
-                              14.0,
-                            ),
-                          ),
-                          //
-                        ],
-                      ),
-                    ),
-                  ),
-                  //
-                ],
-              ),
-            ),*/
+
             const SizedBox(
               height: 20.0,
             ),
@@ -1022,57 +960,71 @@ class _GameScreenState extends State<GameScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_product_list[0],
+                      strProfileNumber: '2',
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_product_list[0]['image_1'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_product_list[0]['image_1'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_product_list[0]['name'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_product_list[0]['name'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_product_list[0]['salePrice']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_product_list[0]['salePrice']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1082,57 +1034,71 @@ class _GameScreenState extends State<GameScreen> {
           ),
           //
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(width: 0.4),
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_product_list[1],
+                      strProfileNumber: '2',
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(width: 0.4),
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_product_list[1]['image_1'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_product_list[1]['image_1'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_product_list[1]['name'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_product_list[1]['name'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_product_list[1]['salePrice']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_product_list[1]['salePrice']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1148,57 +1114,70 @@ class _GameScreenState extends State<GameScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_product_list[0],
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_product_list[0]['image_1'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_product_list[0]['image_1'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_product_list[0]['name'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_product_list[0]['name'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_product_list[0]['salePrice']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_product_list[0]['salePrice']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1219,57 +1198,70 @@ class _GameScreenState extends State<GameScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_skill_list[0],
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_skill_list[0]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_skill_list[0]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_skill_list[0]['SkillName'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_skill_list[0]['SkillName'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_skill_list[0]['price'].toString()}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_skill_list[0]['price'].toString()}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1280,57 +1272,70 @@ class _GameScreenState extends State<GameScreen> {
 
           //
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_skill_list[1],
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_skill_list[1]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_skill_list[1]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_skill_list[1]['SkillName'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_skill_list[1]['SkillName'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_skill_list[1]['price'].toString()}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_skill_list[1]['price'].toString()}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1345,57 +1350,70 @@ class _GameScreenState extends State<GameScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ShopitemDetailsScreen(
+                      getFullDataOfproduct: arr_skill_list,
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_skill_list[i]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_skill_list[i]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_skill_list[i]['name'].toString(),
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_skill_list[i]['SkillName'].toString(),
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_skill_list[i]['price']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_skill_list[i]['price']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
