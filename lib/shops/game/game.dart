@@ -24,6 +24,9 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   //
   var str_main_loader = '0';
+  //
+  var arr_action_list = [];
+  var arr_skill_list = [];
   var arr_product_list = [];
   //
   @override
@@ -34,15 +37,13 @@ class _GameScreenState extends State<GameScreen> {
 
   // product list
   product_list_WB() async {
-    print('=====> POST : SERVICE LIST');
+    if (kDebugMode) {
+      print('=====> POST : PRODUCT LIST');
+    }
 
     setState(() {
       str_main_loader = '0';
     });
-
-    //
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    //
 
     final resposne = await http.post(
       Uri.parse(
@@ -54,10 +55,7 @@ class _GameScreenState extends State<GameScreen> {
       body: jsonEncode(
         <String, String>{
           'action': 'productlist',
-          // 'userId': prefs.getInt('userId').toString(),
-          'categoryId': '',
-          'forSell': '1',
-          'pageNo': '1',
+          // 'pageNo': '1',
         },
       ),
     );
@@ -78,15 +76,115 @@ class _GameScreenState extends State<GameScreen> {
           arr_product_list.add(i);
           //
         }
-        if (arr_product_list.isEmpty) {
-          setState(() {
-            str_main_loader = '1';
-          });
-        } else {
-          setState(() {
-            str_main_loader = '2';
-          });
+        //
+        actionList();
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  // action list
+  actionList() async {
+    if (kDebugMode) {
+      print('=====> POST : ACTION LIST');
+    }
+
+    setState(() {
+      str_main_loader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'goallist',
+          'subGoal': '2',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      // print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arr_action_list.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arr_action_list.add(i);
+          //
         }
+        //
+        skillList();
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  // product list
+  skillList() async {
+    if (kDebugMode) {
+      print('=====> POST : SKILL LIST');
+    }
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'skilllist',
+          'pageNo': '1',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      // print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arr_skill_list.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arr_skill_list.add(i);
+          //
+        }
+        //
+        setState(() {
+          str_main_loader = '2';
+        });
+        //
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -99,12 +197,10 @@ class _GameScreenState extends State<GameScreen> {
 
   // business list
   business_list_WB() async {
-    print('=====> POST : BUSINESS LIST');
+    if (kDebugMode) {
+      print('=====> POST : BUSINESS LIST');
+    }
 
-    setState(() {
-      str_main_loader = '0';
-    });
-    //
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -126,28 +222,24 @@ class _GameScreenState extends State<GameScreen> {
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
     if (kDebugMode) {
-      print(get_data);
+      // print(get_data);
     }
 
     if (resposne.statusCode == 200) {
       //
-      arr_product_list.clear();
+      // arr_product_list.clear();
       //
       if (get_data['status'].toString().toLowerCase() == 'success') {
         for (Map i in get_data['data']) {
           //
-          arr_product_list.add(i);
+          // arr_product_list.add(i);
           //
         }
-        if (arr_product_list.isEmpty) {
-          setState(() {
-            str_main_loader = '1';
-          });
-        } else {
-          setState(() {
-            str_main_loader = '2';
-          });
-        }
+        //
+        setState(() {
+          str_main_loader = '2';
+        });
+        //
       } else {
         if (kDebugMode) {
           print(
@@ -251,14 +343,19 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ],
           ),
-          body: TabBarView(
-            children: <Widget>[
-              //
-              tabbar_in_games_UI(context),
-              //
-              tabbar_OUT_GAMES_ui(context),
-              //
-              /*ListView.builder(
+          body: (str_main_loader == '0')
+              ? const Align(
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(),
+                )
+              : TabBarView(
+                  children: <Widget>[
+                    //
+                    tabbar_in_games_UI(context),
+                    //
+                    tabbar_OUT_GAMES_ui(context),
+                    //
+                    /*ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 //scrollDirection: Axis.vertical,
@@ -297,8 +394,8 @@ class _GameScreenState extends State<GameScreen> {
                   );
                 },
               ),*/
-            ],
-          ),
+                  ],
+                ),
         ),
       ),
     );
@@ -427,10 +524,10 @@ class _GameScreenState extends State<GameScreen> {
                                 child: RichText(
                                   text: TextSpan(
                                     children: [
-                                      TextSpan(
+                                      const TextSpan(
                                         text: " ",
                                       ),
-                                      WidgetSpan(
+                                      const WidgetSpan(
                                         child: Icon(
                                           Icons.list,
                                           size: 18,
@@ -456,10 +553,10 @@ class _GameScreenState extends State<GameScreen> {
                                 child: RichText(
                                   text: TextSpan(
                                     children: [
-                                      TextSpan(
+                                      const TextSpan(
                                         text: " ",
                                       ),
-                                      WidgetSpan(
+                                      const WidgetSpan(
                                         child: Icon(
                                           Icons.list,
                                           size: 14,
@@ -495,8 +592,310 @@ class _GameScreenState extends State<GameScreen> {
 
   SingleChildScrollView tabbar_in_games_UI(BuildContext context) {
     return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            //
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    text_with_bold_style_black(
+                      'Actions',
+                    ),
+                    //
+                    Container(
+                      width: 100,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: text_with_regular_style(
+                          'View',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            //
+            // text_with_regular_style(arr_action_list.length),
+            //
+            if (arr_action_list.isEmpty) ...[
+              //
+              text_with_regular_style('NO DATA FOUND'),
+              //
+            ] else if (arr_action_list.length == 1) ...[
+              //
+              for (int i = 0; i < arr_action_list.length; i++) ...[
+                actionHaveOneDataUI(i)
+              ]
+              //
+            ] else ...[
+              //
+              actionHaveTwoDataUI()
+              //
+            ],
+            //
+
+            ///
+            ///
+            const SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+
+            ///
+            //
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    text_with_bold_style_black(
+                      'Skills',
+                    ),
+                    //
+                    Container(
+                      width: 100,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: text_with_regular_style(
+                          'View',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            //
+            // text_with_regular_style(arr_skill_list.length),
+            //
+            if (arr_skill_list.isEmpty) ...[
+              //
+              text_with_regular_style('NO DATA FOUND'),
+              //
+            ] else if (arr_skill_list.length == 1) ...[
+              //
+              for (int i = 0; i < arr_skill_list.length; i++) ...[
+                skillHaveOneDataUI(i),
+              ]
+              //
+            ] else ...[
+              //
+              skillHaveMultipleDataUI(),
+              //
+            ],
+
+            ///
+            ///
+            const SizedBox(
+              height: 20.0,
+            ),
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.black,
+            ),
+            const SizedBox(
+              height: 10.0,
+            ),
+
+            ///
+            //
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    text_with_bold_style_black(
+                      'Products',
+                    ),
+                    //
+                    Container(
+                      width: 100,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: text_with_regular_style(
+                          'View',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            //
+            // text_with_regular_style(arr_product_list.length),
+            //
+            //
+            if (arr_product_list.isEmpty) ...[
+              //
+              text_with_regular_style('NO DATA FOUND'),
+              //
+            ] else if (arr_product_list.length == 1) ...[
+              //
+              productSingleDataUI(),
+              //
+            ] else ...[
+              //
+              productMultipleDataUI(),
+              //
+            ],
+            //
+            /*Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 200,
+                      // width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        border: Border.all(width: 0.4),
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  8.0,
+                                ),
+                                child: Image.network(
+                                  //
+                                  arr_product_list[1]['image_1'].toString(),
+                                  fit: BoxFit.cover,
+                                  //
+                                ),
+                              ),
+                            ),
+                          ),
+                          //
+                          Align(
+                            alignment: Alignment.center,
+                            child: text_regular_style_custom(
+                              //
+                              arr_product_list[1]['name'].toString(),
+                              //
+                              Colors.black,
+                              16.0,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: text_bold_style_custom(
+                              '\$12.45',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                          //
+                        ],
+                      ),
+                    ),
+                  ),
+                  //
+                  const SizedBox(
+                    width: 12.0,
+                  ),
+                  //
+                  Expanded(
+                    child: Container(
+                      height: 200,
+                      // width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border.all(width: 0.4),
+                        borderRadius: BorderRadius.circular(
+                          15.0,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  8.0,
+                                ),
+                                child: Image.asset(
+                                  'assets/images/3.png',
+                                ),
+                              ),
+                            ),
+                          ),
+                          //
+                          Align(
+                            alignment: Alignment.center,
+                            child: text_regular_style_custom(
+                              'Dishant Rajput',
+                              Colors.black,
+                              16.0,
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: text_bold_style_custom(
+                              '\$12.45',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                          //
+                        ],
+                      ),
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),*/
+            const SizedBox(
+              height: 20.0,
+            ),
+          ],
+        )
+
+        /*Column(
         children: <Widget>[
           Container(
             height: 80,
@@ -612,6 +1011,592 @@ class _GameScreenState extends State<GameScreen> {
                     );
                   },
                 )
+        ],
+      ),*/
+        );
+  }
+
+  Padding productMultipleDataUI() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_product_list[0]['image_1'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_product_list[0]['name'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_product_list[0]['salePrice']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+          const SizedBox(
+            width: 12.0,
+          ),
+          //
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(width: 0.4),
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_product_list[1]['image_1'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_product_list[1]['name'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_product_list[1]['salePrice']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+        ],
+      ),
+    );
+  }
+
+  Padding productSingleDataUI() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_product_list[0]['image_1'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_product_list[0]['name'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_product_list[0]['salePrice']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+          const SizedBox(
+            width: 12.0,
+          ),
+
+          //
+        ],
+      ),
+    );
+  }
+
+  Padding skillHaveMultipleDataUI() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_skill_list[0]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_skill_list[0]['SkillName'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_skill_list[0]['price'].toString()}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+          const SizedBox(
+            width: 12.0,
+          ),
+
+          //
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_skill_list[1]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_skill_list[1]['SkillName'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_skill_list[1]['price'].toString()}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding skillHaveOneDataUI(int i) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_skill_list[i]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_skill_list[i]['name'].toString(),
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_skill_list[i]['price']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+          const SizedBox(
+            width: 12.0,
+          ),
+
+          //
+        ],
+      ),
+    );
+  }
+
+  Padding actionHaveTwoDataUI() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_action_list[0]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_action_list[0]['name'],
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_action_list[0]['price']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+          const SizedBox(
+            width: 12.0,
+          ),
+          //
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(width: 0.4),
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_action_list[1]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      //
+                      arr_action_list[1]['name'],
+                      //
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      '\$${arr_action_list[1]['price']}',
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+        ],
+      ),
+    );
+  }
+
+  Padding actionHaveOneDataUI(i) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 200,
+              // width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                border: Border.all(width: 0.4),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(
+                  15.0,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          8.0,
+                        ),
+                        child: Image.network(
+                          //
+                          arr_action_list[i]['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
+                    ),
+                  ),
+                  //
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_regular_style_custom(
+                      'Dishant Rajput',
+                      Colors.black,
+                      16.0,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: text_bold_style_custom(
+                      //
+                      arr_action_list[i]['price'].toString(),
+                      //
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                  //
+                ],
+              ),
+            ),
+          ),
+          //
+
+          //
         ],
       ),
     );

@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 
-class AppBarScreen extends StatelessWidget with PreferredSizeWidget {
+class AppBarScreen extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
   final String str_app_bar_title;

@@ -69,6 +69,27 @@ Text text_with_regular_style(str) {
   );
 }
 
+Text text_regular_style_custom(str, color, size) {
+  return Text(
+    str.toString(),
+    style: GoogleFonts.montserrat(
+      color: color,
+      fontSize: size,
+    ),
+  );
+}
+
+Text text_bold_style_custom(str, color, size) {
+  return Text(
+    str.toString(),
+    style: GoogleFonts.montserrat(
+      color: color,
+      fontSize: size,
+      fontWeight: FontWeight.w700,
+    ),
+  );
+}
+
 // text with bold
 Text text_with_bold_style(str) {
   return Text(

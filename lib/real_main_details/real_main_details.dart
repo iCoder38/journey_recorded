@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
 
 // all scroll blue 'Container type_UI(BuildContext context)'
 import 'dart:convert';
@@ -4481,7 +4481,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       ),
     );
 
-    print('result =====> ' + result);
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
 
     if (!mounted) return;
 
