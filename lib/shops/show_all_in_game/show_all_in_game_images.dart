@@ -164,6 +164,10 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
 
   funcManageAllDataForOne(data) {
     if (kDebugMode) {
+      print('====================================');
+      print('====================================');
+      print('MANAGE DATA FROM HERE');
+
       print(data);
     }
     if (widget.getNumberToParse == '1') {
@@ -174,6 +178,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'name': i['SkillName'].toString(),
           'price': i['price'].toString(),
           'description': i['description'].toString(),
+          'Quantity': i['Quantity'].toString(),
+          'productId': i['productId'].toString(),
         };
 
         //
@@ -188,6 +194,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'name': i['name'].toString(),
           'price': i['salePrice'].toString(),
           'description': i['description'].toString(),
+          'Quantity': i['Quantity'].toString(),
+          'productId': i['productId'].toString(),
         };
 
         //
@@ -202,6 +210,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'name': i['name'].toString(),
           'price': i['price'].toString(),
           'description': i['description'].toString(),
+          'Quantity': i['Quantity'].toString(),
+          'productId': i['productId'].toString(),
         };
 
         //
@@ -216,6 +226,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'name': i['name'].toString(),
           'price': i['price'].toString(),
           'description': i['description'].toString(),
+          'Quantity': i['Quantity'].toString(),
+          'productId': i['productId'].toString(),
         };
 
         //
@@ -230,6 +242,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'name': i['name'].toString(),
           'price': i['price'].toString(),
           'description': i['description'].toString(),
+          'Quantity': i['Quantity'].toString(),
+          'productId': i['productId'].toString(),
         };
 
         //
@@ -285,14 +299,31 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                     GestureDetector(
                       onTap: () {
                         //
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShopitemDetailsScreen(
-                              getFullDataOfproduct: arrAllInOneArray[i],
+                        if (widget.getNumberToParse == '2') {
+                          //
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopitemDetailsScreen(
+                                getFullDataOfproduct: arrAllInOneArray[i],
+                                strProfileNumber: '2',
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        } else if (widget.getNumberToParse == '1') {
+                          //
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopitemDetailsScreen(
+                                getFullDataOfproduct: arrAllInOneArray[i],
+                                strProfileNumber: '1',
+                              ),
+                            ),
+                          );
+                        }
                       },
                       child: Container(
                         height: 200,

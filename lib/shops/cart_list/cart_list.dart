@@ -16,6 +16,7 @@ class ShopCartListScreen extends StatefulWidget {
 
 class _ShopCartListScreenState extends State<ShopCartListScreen> {
   //
+  var strSummSalePrice = 0.0;
   var arrCartItemCount = [];
   var strTotalPrice = '';
   //
@@ -84,16 +85,22 @@ class _ShopCartListScreenState extends State<ShopCartListScreen> {
   funcGetTotalPrice() {
     //
     if (kDebugMode) {
-      print(arrCartItemCount);
+      // print(arrCartItemCount);
     }
     //
-    var strSummSalePrice = 0.0;
-    var finalResult = 0.0;
+
     for (int i = 0; i < arrCartItemCount.length; i++) {
       //
-      // strSummSalePrice = double.parse(arrCartItemCount[]) + strSummSalePrice;
+      strSummSalePrice =
+          (double.parse(arrCartItemCount[i]['salePrice'].toString()) *
+                  double.parse(arrCartItemCount[i]['quantity'].toString())) +
+              strSummSalePrice;
     }
-    // setState(() {});
+    //
+    if (kDebugMode) {
+      print(strSummSalePrice);
+    }
+    setState(() {});
   }
 
   //
@@ -161,22 +168,31 @@ class _ShopCartListScreenState extends State<ShopCartListScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 0; i < arrCartItemCount.length; i++) ...[
-                    text_regular_style_custom(
-                      'Total Price : ',
-                      Colors.black,
-                      14.0,
-                    ),
-                  ],
-                  // text_regular_style_custom(
-                  //   'Total Price : ',
-                  //   Colors.black,
-                  //   14.0,
-                  // ),
+                  (strSummSalePrice == 0.0)
+                      ? text_regular_style_custom(
+                          'calculating...',
+                          Colors.black,
+                          14.0,
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            text_bold_style_custom(
+                              'Checkout ',
+                              Colors.black,
+                              20.0,
+                            ),
+                            text_regular_style_custom(
+                              '\$$strSummSalePrice',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ],
+                        ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

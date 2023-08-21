@@ -954,6 +954,33 @@ class _GameScreenState extends State<GameScreen> {
         );
   }
 
+  funcProductManageToDetails(productClickedData) {
+    if (kDebugMode) {
+      print(productClickedData);
+    }
+
+    var custom = {
+      'image': productClickedData['image_1'].toString(),
+      'name': productClickedData['name'].toString(),
+      'price': productClickedData['salePrice'].toString(),
+      'description': productClickedData['description'].toString(),
+      'Quantity': productClickedData['Quantity'].toString(),
+      'productId': productClickedData['productId'].toString(),
+    };
+
+    //
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShopitemDetailsScreen(
+          getFullDataOfproduct: custom,
+          strProfileNumber: '2',
+        ),
+      ),
+    );
+  }
+
   Padding productMultipleDataUI() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -963,15 +990,17 @@ class _GameScreenState extends State<GameScreen> {
             child: GestureDetector(
               onTap: () {
                 //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShopitemDetailsScreen(
-                      getFullDataOfproduct: arr_product_list[0],
-                      strProfileNumber: '2',
-                    ),
-                  ),
-                );
+                funcProductManageToDetails(arr_product_list[0]);
+
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ShopitemDetailsScreen(
+                //       getFullDataOfproduct: arr_product_list[0],
+                //       strProfileNumber: '2',
+                //     ),
+                //   ),
+                // );
               },
               child: Container(
                 height: 200,
@@ -1037,15 +1066,16 @@ class _GameScreenState extends State<GameScreen> {
             child: GestureDetector(
               onTap: () {
                 //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShopitemDetailsScreen(
-                      getFullDataOfproduct: arr_product_list[1],
-                      strProfileNumber: '2',
-                    ),
-                  ),
-                );
+                funcProductManageToDetails(arr_product_list[1]);
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ShopitemDetailsScreen(
+                //       getFullDataOfproduct: arr_product_list[1],
+                //       strProfileNumber: '2',
+                //     ),
+                //   ),
+                // );
               },
               child: Container(
                 height: 200,
@@ -1192,6 +1222,33 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  funcSkillManageToDetails(skillClickedData) {
+    if (kDebugMode) {
+      print(skillClickedData);
+    }
+
+    var custom = {
+      'image': skillClickedData['image'].toString(),
+      'name': skillClickedData['SkillName'].toString(),
+      'price': skillClickedData['price'].toString(),
+      'description': skillClickedData['description'].toString(),
+      'Quantity': skillClickedData['Quantity'].toString(),
+      'productId': skillClickedData['skillId'].toString(),
+    };
+
+    // //
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShopitemDetailsScreen(
+          getFullDataOfproduct: custom,
+          strProfileNumber: '1',
+        ),
+      ),
+    );
+  }
+
   Padding skillHaveMultipleDataUI() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -1201,14 +1258,7 @@ class _GameScreenState extends State<GameScreen> {
             child: GestureDetector(
               onTap: () {
                 //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShopitemDetailsScreen(
-                      getFullDataOfproduct: arr_skill_list[0],
-                    ),
-                  ),
-                );
+                funcSkillManageToDetails(arr_skill_list[0]);
               },
               child: Container(
                 height: 200,
@@ -1275,14 +1325,8 @@ class _GameScreenState extends State<GameScreen> {
             child: GestureDetector(
               onTap: () {
                 //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShopitemDetailsScreen(
-                      getFullDataOfproduct: arr_skill_list[1],
-                    ),
-                  ),
-                );
+                //
+                funcSkillManageToDetails(arr_skill_list[1]);
               },
               child: Container(
                 height: 200,
@@ -1353,14 +1397,8 @@ class _GameScreenState extends State<GameScreen> {
             child: GestureDetector(
               onTap: () {
                 //
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ShopitemDetailsScreen(
-                      getFullDataOfproduct: arr_skill_list,
-                    ),
-                  ),
-                );
+                //
+                funcSkillManageToDetails(arr_skill_list);
               },
               child: Container(
                 height: 200,
