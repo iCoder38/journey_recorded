@@ -167,92 +167,325 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const navigationDrawer(),
-      appBar: dashboard_app_bar_UI(),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.white,
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 500 - 160,
-                    decoration: const BoxDecoration(
-                      color: Colors.orange,
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromRGBO(
-                            54,
-                            30,
-                            107,
-                            1,
-                          ),
-                          Color.fromRGBO(
-                            92,
-                            21,
-                            93,
-                            1,
-                          ),
-                          Color.fromRGBO(
-                            138,
-                            0,
-                            70,
-                            1,
-                          ),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Scaffold(
+        drawer: const navigationDrawer(),
+        appBar: dashboard_app_bar_UI(),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Column(
+            children: [
+              Container(
+                color: Colors.white,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 500 - 160,
+                      decoration: const BoxDecoration(
+                        color: Colors.orange,
+                        gradient: LinearGradient(
+                          colors: [
+                            Color.fromRGBO(
+                              54,
+                              30,
+                              107,
+                              1,
+                            ),
+                            Color.fromRGBO(
+                              92,
+                              21,
+                              93,
+                              1,
+                            ),
+                            Color.fromRGBO(
+                              138,
+                              0,
+                              70,
+                              1,
+                            ),
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
                       ),
-                    ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: <Widget>[
-                            if (str_dashboard_category_loader == '1') ...[
-                              for (int i = 0; i < arr_category.length; i++) ...[
-                                InkWell(
-                                  onTap: () {
-                                    //
-                                    if (kDebugMode) {
-                                      print(
-                                        arr_category[i]['id'].toString(),
-                                      );
-                                    }
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: <Widget>[
+                              if (str_dashboard_category_loader == '1') ...[
+                                for (int i = 0;
+                                    i < arr_category.length;
+                                    i++) ...[
+                                  InkWell(
+                                    onTap: () {
+                                      //
+                                      if (kDebugMode) {
+                                        print(
+                                          arr_category[i]['id'].toString(),
+                                        );
+                                      }
 
-                                    //
-                                    //
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            AllQuotesListScreen(
-                                          str_cateogry_id:
-                                              arr_category[i]['id'].toString(),
-                                          str_cateogry_name: arr_category[i]
-                                                  ['name']
-                                              .toString(),
+                                      //
+                                      //
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              AllQuotesListScreen(
+                                            str_cateogry_id: arr_category[i]
+                                                    ['id']
+                                                .toString(),
+                                            str_cateogry_name: arr_category[i]
+                                                    ['name']
+                                                .toString(),
+                                          ),
+                                        ),
+                                      );
+                                      //
+                                      //
+                                    },
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                        top: 20.0,
+                                        left: 20.0,
+                                        right: 10.0,
+                                      ),
+                                      height: 60,
+                                      width: 200,
+                                      decoration: const BoxDecoration(
+                                        // color: Colors.orange,
+                                        image: DecorationImage(
+                                          image: AssetImage(
+                                            // image name
+                                            'assets/images/dashboard_upper_button.png',
+                                          ),
+                                          fit: BoxFit.fill,
+                                          // opacity: .4,
                                         ),
                                       ),
-                                    );
-                                    //
-                                    //
-                                  },
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                      top: 20.0,
-                                      left: 20.0,
-                                      right: 10.0,
+                                      child: Stack(
+                                        children: <Widget>[
+                                          Center(
+                                            child: Text(
+                                              //
+                                              arr_category[i]['category'] +
+                                                  ' : LV ' +
+                                                  arr_category[i]['skill_Lavel']
+                                                      .toString(),
+                                              //
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+                                  ),
+                                ],
+                              ] else ...[
+                                const Center(
+                                  child: Text(
+                                    'please wait...',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 90.0,
+                        left: 10.0,
+                        right: 10.0,
+                      ),
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          image: AssetImage(
+                            // image name
+                            'assets/images/dashboard_pink_box.png',
+                          ),
+                          fit: BoxFit.fill,
+                          // opacity: .4,
+                        ),
+                      ),
+                      child: Stack(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                    top: 50.0,
+                                    left: 40.0,
+                                    bottom: 40.0,
+                                  ),
+                                  height: 90,
+                                  width: 90,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 2,
+                                    ),
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(
+                                        12.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Container(
+                                  margin: const EdgeInsets.only(
+                                    top: 50.0,
+                                    left: 10.0,
+                                    bottom: 40.0,
+                                    right: 30.0,
+                                  ),
+                                  height: 90,
+                                  // width: MediaQuery.of(context).size.width - 150,
+                                  color: Colors.transparent,
+                                  child: Column(
+                                    children: <Widget>[
+                                      // Icon(Icons.abc),
+                                      Row(
+                                        children: [
+                                          //
+                                          const Icon(
+                                            Icons.currency_rupee,
+                                            color: Colors.white,
+                                          ),
+                                          //
+                                          Expanded(
+                                            child: Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              color: Colors.transparent,
+                                              child: Text(
+                                                //
+                                                strTotalCoins.toString(),
+                                                //
+                                                style: TextStyle(
+                                                  fontFamily: font_style_name,
+                                                  fontSize: 24.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      //
+                                      Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          Text(
+                                            '13/3600',
+                                            style: TextStyle(
+                                              fontFamily: font_style_name,
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      //
+                                      Expanded(
+                                        child: Container(
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          color: Colors.transparent,
+                                          child: Slider(
+                                            value: _currentSliderValue,
+                                            max: 100,
+                                            divisions: 5,
+                                            label: _currentSliderValue
+                                                .round()
+                                                .toString(),
+                                            onChanged: (double value) {
+                                              setState(
+                                                () {
+                                                  _currentSliderValue = value;
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        width: 0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              top: 142.0,
+                              left: 40.0,
+                              bottom: 40.0,
+                            ),
+                            // height: 140,
+                            width: 90,
+                            color: Colors.transparent,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Text(
+                                //
+                                login_user_name.toString(),
+                                //
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  fontSize: 14.0,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              top: 142.0,
+                              left: 140.0,
+                              bottom: 40.0,
+                              right: 40.0,
+                            ),
+                            // height: 140,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.transparent,
+                            child: Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
                                     height: 60,
-                                    width: 200,
+                                    width: 160,
                                     decoration: const BoxDecoration(
-                                      // color: Colors.orange,
                                       image: DecorationImage(
                                         image: AssetImage(
                                           // image name
@@ -262,330 +495,106 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         // opacity: .4,
                                       ),
                                     ),
-                                    child: Stack(
-                                      children: <Widget>[
-                                        Center(
-                                          child: Text(
-                                            //
-                                            arr_category[i]['category'] +
-                                                ' : LV ' +
-                                                arr_category[i]['skill_Lavel']
-                                                    .toString(),
-                                            //
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ] else ...[
-                              const Center(
-                                child: Text(
-                                  'please wait...',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 90.0,
-                      left: 10.0,
-                      right: 10.0,
-                    ),
-                    height: 220,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      image: DecorationImage(
-                        image: AssetImage(
-                          // image name
-                          'assets/images/dashboard_pink_box.png',
-                        ),
-                        fit: BoxFit.fill,
-                        // opacity: .4,
-                      ),
-                    ),
-                    child: Stack(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 1,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 50.0,
-                                  left: 40.0,
-                                  bottom: 40.0,
-                                ),
-                                height: 90,
-                                width: 90,
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  border: Border.all(
-                                    color: Colors.white,
-                                    width: 2,
-                                  ),
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(
-                                      12.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  top: 50.0,
-                                  left: 10.0,
-                                  bottom: 40.0,
-                                  right: 30.0,
-                                ),
-                                height: 90,
-                                // width: MediaQuery.of(context).size.width - 150,
-                                color: Colors.transparent,
-                                child: Column(
-                                  children: <Widget>[
-                                    // Icon(Icons.abc),
-                                    Row(
-                                      children: [
+                                    child: Center(
+                                      child: Text(
                                         //
-                                        const Icon(
-                                          Icons.currency_rupee,
+                                        'Level : ' +
+                                            strLoginUserLevel.toString(),
+                                        //
+                                        style: TextStyle(
+                                          fontFamily: font_style_name,
+                                          fontSize: 14.0,
                                           color: Colors.white,
                                         ),
-                                        //
-                                        Expanded(
-                                          child: Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            color: Colors.transparent,
-                                            child: Text(
-                                              //
-                                              strTotalCoins.toString(),
-                                              //
-                                              style: TextStyle(
-                                                fontFamily: font_style_name,
-                                                fontSize: 24.0,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    //
-                                    Row(
-                                      children: [
-                                        const SizedBox(
-                                          width: 20,
-                                        ),
-                                        Text(
-                                          '13/3600',
-                                          style: TextStyle(
-                                            fontFamily: font_style_name,
-                                            fontSize: 20.0,
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    //
-                                    Expanded(
-                                      child: Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        color: Colors.transparent,
-                                        child: Slider(
-                                          value: _currentSliderValue,
-                                          max: 100,
-                                          divisions: 5,
-                                          label: _currentSliderValue
-                                              .round()
-                                              .toString(),
-                                          onChanged: (double value) {
-                                            setState(
-                                              () {
-                                                _currentSliderValue = value;
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 0,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                            top: 142.0,
-                            left: 40.0,
-                            bottom: 40.0,
-                          ),
-                          // height: 140,
-                          width: 90,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              //
-                              login_user_name.toString(),
-                              //
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 14.0,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                            top: 142.0,
-                            left: 140.0,
-                            bottom: 40.0,
-                            right: 40.0,
-                          ),
-                          // height: 140,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.center,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  height: 60,
-                                  width: 160,
-                                  decoration: const BoxDecoration(
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        // image name
-                                        'assets/images/dashboard_upper_button.png',
-                                      ),
-                                      fit: BoxFit.fill,
-                                      // opacity: .4,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      //
-                                      'Level : ' + strLoginUserLevel.toString(),
-                                      //
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 14.0,
-                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                ),
-                                // Text(
-                                //   'Donnie McClurrink',
-                                //   textAlign: TextAlign.center,
-                                //   style: TextStyle(
-                                //     fontFamily: font_style_name,
-                                //     fontSize: 14.0,
-                                //     color: Colors.white,
-                                //   ),
-                                // )
-                              ],
+                                  // Text(
+                                  //   'Donnie McClurrink',
+                                  //   textAlign: TextAlign.center,
+                                  //   style: TextStyle(
+                                  //     fontFamily: font_style_name,
+                                  //     fontSize: 14.0,
+                                  //     color: Colors.white,
+                                  //   ),
+                                  // )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 360,
-                      left: 20,
-                      right: 20,
-                    ),
-                    height: 220,
-                    width: MediaQuery.of(context).size.width,
-                    decoration: const BoxDecoration(
-                      color: Colors.transparent,
-                      image: DecorationImage(
-                        image: AssetImage(
-                          // image name
-                          'assets/images/box1.png',
-                        ),
-                        fit: BoxFit.fill,
-                        // opacity: .4,
+                        ],
                       ),
                     ),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 100,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.transparent,
-                          margin: const EdgeInsets.only(
-                            top: 42.0,
-                            left: 60.0,
-                            right: 58.0,
-                            // bottom: 80.0,
+                    Container(
+                      margin: const EdgeInsets.only(
+                        top: 360,
+                        left: 20,
+                        right: 20,
+                      ),
+                      height: 220,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        image: DecorationImage(
+                          image: AssetImage(
+                            // image name
+                            'assets/images/box1.png',
                           ),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.vertical,
-                            child: Text(
-                              "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                color: Colors.white,
-                                fontSize: 16.0,
+                          fit: BoxFit.fill,
+                          // opacity: .4,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 100,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.transparent,
+                            margin: const EdgeInsets.only(
+                              top: 42.0,
+                              left: 60.0,
+                              right: 58.0,
+                              // bottom: 80.0,
+                            ),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.vertical,
+                              child: Text(
+                                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  color: Colors.white,
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Container(
-                          height: 30,
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.transparent,
-                          margin: const EdgeInsets.only(
-                            top: 10.0,
-                            left: 60.0,
-                            right: 58.0,
-                            // bottom: 50.0,
+                          Container(
+                            height: 30,
+                            width: MediaQuery.of(context).size.width,
+                            color: Colors.transparent,
+                            margin: const EdgeInsets.only(
+                              top: 10.0,
+                              left: 60.0,
+                              right: 58.0,
+                              // bottom: 50.0,
+                            ),
+                            // child: const TabPageSelector(),
                           ),
-                          // child: const TabPageSelector(),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            //
-            const SizedBox(
-              height: 10,
-            ),
-            //
-            dashboard_grid_UI(context),
-            //
-          ],
+              //
+              const SizedBox(
+                height: 10,
+              ),
+              //
+              dashboard_grid_UI(context),
+              //
+            ],
+          ),
         ),
       ),
     );
@@ -822,12 +831,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   AppBar dashboard_app_bar_UI() {
     return AppBar(
       backgroundColor: navigation_color,
-      title: Text(
-        'Dashboard',
-        style: TextStyle(
-          fontFamily: font_style_name,
-          fontSize: 18.0,
-        ),
+      title: text_regular_style_custom(
+        'Home',
+        Colors.white,
+        16.0,
       ),
       actions: const [
         Padding(
@@ -851,7 +858,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   func_add() {
-    print('check');
+    if (kDebugMode) {
+      print('check');
+    }
 
     int summ = 0;
 

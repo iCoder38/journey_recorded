@@ -1,11 +1,18 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:badges/badges.dart' as badges;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/shops/cart_list/cart_list.dart';
+import 'package:journey_recorded/shops/payment_list/buy_now_payment_screen.dart';
 
 import 'package:readmore/readmore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopitemDetailsScreen extends StatefulWidget {
   const ShopitemDetailsScreen(
@@ -22,6 +29,9 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
   //
   var strQuantityCounter = 1;
   var strTotalPriceIs = '';
+  var strCartCount = '0';
+  var strCartLoader = '0';
+  var strAddToCartLoader = '1';
   //
   @override
   void initState() {
@@ -34,6 +44,8 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
     //
     strTotalPriceIs = '${widget.getFullDataOfproduct['salePrice']}';
 
+    //
+    funcGetCartListWB();
     super.initState();
   }
 
@@ -72,6 +84,122 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
     });
   }
 
+  funcGetCartListWB() async {
+    if (kDebugMode) {
+      print('=====> POST : GET CART');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'getcarts',
+          'userId': prefs.getInt('userId').toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var getData = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(getData);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (getData['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        var strCartItemCount = [];
+        for (var i = 0; i < getData['data'].length; i++) {
+          strCartItemCount.add(getData['data']);
+        }
+        //
+        strCartCount = strCartItemCount.length.toString();
+        setState(() {
+          strCartLoader = '1';
+          strAddToCartLoader = '1';
+        });
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
+  //
+  funcAddToCartListWB() async {
+    if (kDebugMode) {
+      print('=====> POST : ADD TO CART');
+    }
+    setState(() {
+      strAddToCartLoader = '0';
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'addcart',
+          'userId': prefs.getInt('userId').toString(),
+          'productId': widget.getFullDataOfproduct['productId'].toString(),
+          'quantity': strQuantityCounter.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var getData = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(getData);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (getData['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        strCartCount = getData['totalCartItem'].toString();
+        //
+        funcGetCartListWB();
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+  //
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -91,12 +219,60 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: navigation_color,
+        actions: [
+          (strCartLoader == '0')
+              ? const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(),
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: badges.Badge(
+                    badgeStyle: badges.BadgeStyle(
+                      shape: badges.BadgeShape.circle,
+                      badgeColor: Colors.blue,
+                      padding: const EdgeInsets.all(8),
+                      borderRadius: BorderRadius.circular(1),
+                      borderSide: const BorderSide(
+                        color: Colors.pinkAccent,
+                        width: 2,
+                      ),
+                      elevation: 0,
+                    ),
+                    badgeContent: text_regular_style_custom(
+                      //,
+                      strCartCount.toString(),
+                      Colors.white,
+                      10.0,
+                    ),
+                    onTap: () {
+                      //
+                      //
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ShopCartListScreen(),
+                        ),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.shopping_cart,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
             //
+
             if (widget.strProfileNumber == '2') ...[
               // product
               Container(
@@ -183,36 +359,57 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                       width: 10,
                     ),
                     Expanded(
-                      child: Container(
-                        height: 60,
-                        // width: 100,
+                      child: GestureDetector(
+                        onTap: () {
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BuyNowPaymentScreen(
+                                strProductId: widget
+                                    .getFullDataOfproduct['productId']
+                                    .toString(),
+                                strTotalPrice: strTotalPriceIs,
+                                strProductName: widget
+                                    .getFullDataOfproduct['name']
+                                    .toString(),
+                                strProductQuantity:
+                                    strQuantityCounter.toString(),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: 60,
+                          // width: 100,
 
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(170, 200, 240, 1),
-                          border: Border.all(width: 0.2),
-                          borderRadius: BorderRadius.circular(
-                            12.0,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.credit_card),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              text_bold_style_custom(
-                                'Buy Now \$$strTotalPriceIs',
-                                Colors.black,
-                                14.0,
-                              ),
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(170, 200, 240, 1),
+                            border: Border.all(width: 0.2),
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 6.0,
+                              )
                             ],
+                          ),
+                          child: Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.credit_card),
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                text_bold_style_custom(
+                                  'Buy Now \$$strTotalPriceIs',
+                                  Colors.black,
+                                  14.0,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -237,20 +434,33 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                           ],
                         ),
                         child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.add_shopping_cart),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              text_bold_style_custom(
-                                'Add To Cart',
-                                Colors.black,
-                                14.0,
-                              ),
-                            ],
-                          ),
+                          child: (strAddToCartLoader == '0')
+                              ? SizedBox(
+                                  height: 30,
+                                  width: 30,
+                                  child: CircularProgressIndicator(
+                                      color: navigation_color),
+                                )
+                              : GestureDetector(
+                                  onTap: () {
+                                    //
+                                    funcAddToCartListWB();
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(Icons.add_shopping_cart),
+                                      const SizedBox(
+                                        width: 10,
+                                      ),
+                                      text_bold_style_custom(
+                                        'Add To Cart',
+                                        Colors.black,
+                                        14.0,
+                                      ),
+                                    ],
+                                  ),
+                                ),
                         ),
                       ),
                     ),

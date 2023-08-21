@@ -12,12 +12,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
+import 'package:flutter_stripe/flutter_stripe.dart';
+
 RemoteMessage? initialMessage;
 FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
 void main() async {
   //
   WidgetsFlutterBinding.ensureInitialized();
+
+  Stripe.publishableKey = '';
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

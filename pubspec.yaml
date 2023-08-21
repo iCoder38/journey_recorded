@@ -47,7 +47,8 @@ dependencies:
   google_fonts: ^4.0.3
   easy_image_viewer:
   readmore: ^2.1.0
-  # cached_network_image: ^3.2.3
+  flutter_stripe:
+  badges:
 
 dev_dependencies:
   flutter_test:
