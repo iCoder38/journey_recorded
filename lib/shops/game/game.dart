@@ -296,16 +296,6 @@ class _GameScreenState extends State<GameScreen> {
                     ),
                   ),
                 ),
-                /*Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Actions',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),*/
               ],
               onTap: (value) {
                 if (kDebugMode) {
@@ -1466,63 +1456,97 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  funcActionsManageToDetails(actionClickedData) {
+    if (kDebugMode) {
+      print(actionClickedData);
+    }
+
+    var custom = {
+      'image': actionClickedData['image'].toString(),
+      'name': actionClickedData['name'].toString(),
+      'price': actionClickedData['price'].toString(),
+      'description': actionClickedData['aboutGoal'].toString(),
+      'Quantity': '1',
+      'productId': actionClickedData['goalId'].toString(),
+      'category': actionClickedData['categoryName'].toString(),
+    };
+
+    // //
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShopitemDetailsScreen(
+          getFullDataOfproduct: custom,
+          strProfileNumber: 'actions',
+        ),
+      ),
+    );
+  }
+
   Padding actionHaveTwoDataUI() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                funcActionsManageToDetails(arr_action_list[0]);
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_action_list[0]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_action_list[0]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_action_list[0]['name'],
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_action_list[0]['name'],
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_action_list[0]['price']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_action_list[0]['price']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1532,57 +1556,63 @@ class _GameScreenState extends State<GameScreen> {
           ),
           //
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(width: 0.4),
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                funcActionsManageToDetails(arr_action_list[1]);
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  border: Border.all(width: 0.4),
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_action_list[1]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_action_list[1]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      //
-                      arr_action_list[1]['name'],
-                      //
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        //
+                        arr_action_list[1]['name'],
+                        //
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      '\$${arr_action_list[1]['price']}',
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        '\$${arr_action_list[1]['price']}',
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),
@@ -1598,55 +1628,61 @@ class _GameScreenState extends State<GameScreen> {
       child: Row(
         children: [
           Expanded(
-            child: Container(
-              height: 200,
-              // width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                border: Border.all(width: 0.4),
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(
-                  15.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                funcActionsManageToDetails(arr_action_list[i]);
+              },
+              child: Container(
+                height: 200,
+                // width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 0.4),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    15.0,
+                  ),
                 ),
-              ),
-              child: Column(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          8.0,
-                        ),
-                        child: Image.network(
-                          //
-                          arr_action_list[i]['image'].toString(),
-                          fit: BoxFit.cover,
-                          //
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                          child: Image.network(
+                            //
+                            arr_action_list[i]['image'].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  //
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_regular_style_custom(
-                      'Dishant Rajput',
-                      Colors.black,
-                      16.0,
+                    //
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_regular_style_custom(
+                        'Dishant Rajput',
+                        Colors.black,
+                        16.0,
+                      ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: text_bold_style_custom(
-                      //
-                      arr_action_list[i]['price'].toString(),
-                      //
-                      Colors.black,
-                      14.0,
+                    Align(
+                      alignment: Alignment.center,
+                      child: text_bold_style_custom(
+                        //
+                        arr_action_list[i]['price'].toString(),
+                        //
+                        Colors.black,
+                        14.0,
+                      ),
                     ),
-                  ),
-                  //
-                ],
+                    //
+                  ],
+                ),
               ),
             ),
           ),

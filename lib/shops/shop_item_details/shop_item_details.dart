@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/shops/cart_list/cart_list.dart';
+import 'package:journey_recorded/shops/payment_list/buy_now_goals_payment_Screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_payment_screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_skill_payment_screen.dart';
 
@@ -268,8 +269,538 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
         child: Column(
           children: [
             //
+            if (widget.strProfileNumber == 'actions') ...[
+              Container(
+                height: 240,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    0,
+                  ),
+                  child: Image.network(
+                    //
+                    widget.getFullDataOfproduct['image'].toString(),
+                    fit: BoxFit.cover,
+                    //
+                  ),
+                ),
+              ),
+              //
+              text_bold_style_custom(
+                //
+                widget.getFullDataOfproduct['name'].toString(),
+                Colors.black,
+                20.0,
+              ),
+              //
+              const SizedBox(
+                height: 20,
+              ),
+              text_regular_style_custom(
+                //
+                'Price : \$${widget.getFullDataOfproduct['price']}',
+                Colors.black,
+                16.0,
+              ),
+              //
 
-            if (widget.strProfileNumber == '1') ...[
+              GestureDetector(
+                onTap: () {
+                  //
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BuyNowGoalsPaymentScreen(
+                        strProductId:
+                            widget.getFullDataOfproduct['productId'].toString(),
+                        strTotalPrice: strTotalPriceIs,
+                        strProductName:
+                            widget.getFullDataOfproduct['name'].toString(),
+                        strProductQuantity: strQuantityCounter.toString(),
+                      ),
+                    ),
+                  );*/
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          height: 60,
+                          // width: 100,
+
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(170, 200, 240, 1),
+                            border: Border.all(width: 0.2),
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: text_bold_style_custom(
+                              'View Details',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BuyNowGoalsPaymentScreen(
+                                  strProductId: widget
+                                      .getFullDataOfproduct['productId']
+                                      .toString(),
+                                  strTotalPrice: strTotalPriceIs,
+                                  strProductName: widget
+                                      .getFullDataOfproduct['name']
+                                      .toString(),
+                                  strProductQuantity:
+                                      strQuantityCounter.toString(),
+                                  strType: 'Goal',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 60,
+                            // width: 100,
+
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(170, 200, 240, 1),
+                              border: Border.all(width: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                12.0,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 6.0,
+                                )
+                              ],
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.credit_card),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  text_bold_style_custom(
+                                    'Buy Now \$$strTotalPriceIs',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: ReadMoreText(
+                  '${widget.getFullDataOfproduct['description']}',
+                  trimLines: 6,
+                  colorClickableText: Colors.pink,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                  ),
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: 'Show more',
+                  trimExpandedText: '...Show less',
+                  lessStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                  moreStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              //
+              const SizedBox(
+                width: 40,
+              ),
+            ] else if (widget.strProfileNumber == 'missions') ...[
+              Container(
+                height: 240,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    0,
+                  ),
+                  child: Image.network(
+                    //
+                    widget.getFullDataOfproduct['image'].toString(),
+                    fit: BoxFit.cover,
+                    //
+                  ),
+                ),
+              ),
+              //
+              text_bold_style_custom(
+                //
+                widget.getFullDataOfproduct['name'].toString(),
+                Colors.black,
+                20.0,
+              ),
+              //
+              const SizedBox(
+                height: 20,
+              ),
+              text_regular_style_custom(
+                //
+                'Price : \$${widget.getFullDataOfproduct['price']}',
+                Colors.black,
+                16.0,
+              ),
+              //
+
+              GestureDetector(
+                onTap: () {
+                  //
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BuyNowGoalsPaymentScreen(
+                        strProductId:
+                            widget.getFullDataOfproduct['productId'].toString(),
+                        strTotalPrice: strTotalPriceIs,
+                        strProductName:
+                            widget.getFullDataOfproduct['name'].toString(),
+                        strProductQuantity: strQuantityCounter.toString(),
+                      ),
+                    ),
+                  );*/
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          height: 60,
+                          // width: 100,
+
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(170, 200, 240, 1),
+                            border: Border.all(width: 0.2),
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: text_bold_style_custom(
+                              'View Details',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BuyNowGoalsPaymentScreen(
+                                  strProductId: widget
+                                      .getFullDataOfproduct['productId']
+                                      .toString(),
+                                  strTotalPrice: strTotalPriceIs,
+                                  strProductName: widget
+                                      .getFullDataOfproduct['name']
+                                      .toString(),
+                                  strProductQuantity:
+                                      strQuantityCounter.toString(),
+                                  strType: 'Mission',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 60,
+                            // width: 100,
+
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(170, 200, 240, 1),
+                              border: Border.all(width: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                12.0,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 6.0,
+                                )
+                              ],
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.credit_card),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  text_bold_style_custom(
+                                    'Buy Now \$$strTotalPriceIs',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: ReadMoreText(
+                  '${widget.getFullDataOfproduct['description']}',
+                  trimLines: 6,
+                  colorClickableText: Colors.pink,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                  ),
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: 'Show more',
+                  trimExpandedText: '...Show less',
+                  lessStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                  moreStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              //
+              const SizedBox(
+                width: 40,
+              ),
+            ] else if (widget.strProfileNumber == 'quests') ...[
+              Container(
+                height: 240,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    0,
+                  ),
+                  child: Image.network(
+                    //
+                    widget.getFullDataOfproduct['image'].toString(),
+                    fit: BoxFit.cover,
+                    //
+                  ),
+                ),
+              ),
+              //
+              text_bold_style_custom(
+                //
+                widget.getFullDataOfproduct['name'].toString(),
+                Colors.black,
+                20.0,
+              ),
+              //
+              const SizedBox(
+                height: 20,
+              ),
+              text_regular_style_custom(
+                //
+                'Price : \$${widget.getFullDataOfproduct['price']}',
+                Colors.black,
+                16.0,
+              ),
+              //
+
+              GestureDetector(
+                onTap: () {
+                  //
+                  /*Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => BuyNowGoalsPaymentScreen(
+                        strProductId:
+                            widget.getFullDataOfproduct['productId'].toString(),
+                        strTotalPrice: strTotalPriceIs,
+                        strProductName:
+                            widget.getFullDataOfproduct['name'].toString(),
+                        strProductQuantity: strQuantityCounter.toString(),
+                      ),
+                    ),
+                  );*/
+                },
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Container(
+                          height: 60,
+                          // width: 100,
+
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(170, 200, 240, 1),
+                            border: Border.all(width: 0.2),
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            boxShadow: const [
+                              BoxShadow(
+                                blurRadius: 6.0,
+                              )
+                            ],
+                          ),
+                          child: Center(
+                            child: text_bold_style_custom(
+                              'View Details',
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    //
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BuyNowGoalsPaymentScreen(
+                                  strProductId: widget
+                                      .getFullDataOfproduct['productId']
+                                      .toString(),
+                                  strTotalPrice: strTotalPriceIs,
+                                  strProductName: widget
+                                      .getFullDataOfproduct['name']
+                                      .toString(),
+                                  strProductQuantity:
+                                      strQuantityCounter.toString(),
+                                  strType: 'Quest',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            height: 60,
+                            // width: 100,
+
+                            decoration: BoxDecoration(
+                              color: const Color.fromRGBO(170, 200, 240, 1),
+                              border: Border.all(width: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                12.0,
+                              ),
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 6.0,
+                                )
+                              ],
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.credit_card),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  text_bold_style_custom(
+                                    'Buy Now \$$strTotalPriceIs',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: ReadMoreText(
+                  '${widget.getFullDataOfproduct['description']}',
+                  trimLines: 6,
+                  colorClickableText: Colors.pink,
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    color: Colors.black,
+                  ),
+                  trimMode: TrimMode.Line,
+                  trimCollapsedText: 'Show more',
+                  trimExpandedText: '...Show less',
+                  lessStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                  moreStyle: GoogleFonts.montserrat(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+              //
+              const SizedBox(
+                width: 40,
+              ),
+            ] else if (widget.strProfileNumber == '1') ...[
               Container(
                 height: 240,
                 width: MediaQuery.of(context).size.width,
@@ -388,8 +919,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               const SizedBox(
                 width: 40,
               ),
-            ],
-            if (widget.strProfileNumber == '2') ...[
+            ] else if (widget.strProfileNumber == '2') ...[
               // product
               Container(
                 height: 240,

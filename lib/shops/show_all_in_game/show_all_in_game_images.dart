@@ -211,7 +211,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'price': i['price'].toString(),
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
-          'productId': i['productId'].toString(),
+          'productId': i['goalId'].toString(),
         };
 
         //
@@ -227,7 +227,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'price': i['price'].toString(),
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
-          'productId': i['productId'].toString(),
+          'productId': i['missionId'].toString(),
         };
 
         //
@@ -243,7 +243,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'price': i['price'].toString(),
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
-          'productId': i['productId'].toString(),
+          'productId': i['questId'].toString(),
         };
 
         //
@@ -299,7 +299,43 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                     GestureDetector(
                       onTap: () {
                         //
-                        if (widget.getNumberToParse == '2') {
+                        if (widget.getNumberToParse == '3') {
+                          //
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopitemDetailsScreen(
+                                getFullDataOfproduct: arrAllInOneArray[i],
+                                strProfileNumber: 'actions',
+                              ),
+                            ),
+                          );
+                        } else if (widget.getNumberToParse == '4') {
+                          //
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopitemDetailsScreen(
+                                getFullDataOfproduct: arrAllInOneArray[i],
+                                strProfileNumber: 'missions',
+                              ),
+                            ),
+                          );
+                        } else if (widget.getNumberToParse == '5') {
+                          //
+                          //
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopitemDetailsScreen(
+                                getFullDataOfproduct: arrAllInOneArray[i],
+                                strProfileNumber: 'quests',
+                              ),
+                            ),
+                          );
+                        } else if (widget.getNumberToParse == '2') {
                           //
                           //
                           Navigator.push(
