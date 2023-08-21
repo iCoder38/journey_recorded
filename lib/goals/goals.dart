@@ -807,6 +807,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
         style: TextStyle(
           fontFamily: font_style_name,
           fontSize: 18.0,
+          color: Colors.white,
         ),
       ),
       // leading: Icon(

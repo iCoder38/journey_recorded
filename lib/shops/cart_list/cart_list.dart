@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/shops/payment_list/buy_cart_products.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopCartListScreen extends StatefulWidget {
@@ -161,35 +162,59 @@ class _ShopCartListScreenState extends State<ShopCartListScreen> {
           //
           Align(
             alignment: Alignment.bottomCenter,
-            child: Container(
-              height: 100,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.amber,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  (strSummSalePrice == 0.0)
-                      ? text_regular_style_custom(
-                          'calculating...',
-                          Colors.black,
-                          14.0,
-                        )
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            text_bold_style_custom(
-                              'Checkout ',
-                              Colors.black,
-                              20.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+              },
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.amber,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    (strSummSalePrice == 0.0)
+                        ? text_regular_style_custom(
+                            'calculating...',
+                            Colors.black,
+                            14.0,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => BuyCartProductsScreen(
+                                    strTotalPrice: strSummSalePrice.toString(),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 100,
+                              color: Colors.transparent,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: text_bold_style_custom(
+                                      'Checkout ',
+                                      Colors.black,
+                                      20.0,
+                                    ),
+                                  ),
+                                  text_regular_style_custom(
+                                    '\$$strSummSalePrice',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
+                              ),
                             ),
-                            text_regular_style_custom(
-                              '\$$strSummSalePrice',
-                              Colors.black,
-                              14.0,
-                            ),
-                          ],
-                        ),
-                ],
+                          ),
+                  ],
+                ),
               ),
             ),
           ),

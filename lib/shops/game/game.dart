@@ -1479,6 +1479,7 @@ class _GameScreenState extends State<GameScreen> {
         builder: (context) => ShopitemDetailsScreen(
           getFullDataOfproduct: custom,
           strProfileNumber: 'actions',
+          getAnotherFullDataToPush: actionClickedData,
         ),
       ),
     );

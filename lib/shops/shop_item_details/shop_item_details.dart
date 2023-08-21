@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/shops/cart_list/cart_list.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_goals_payment_Screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_payment_screen.dart';
@@ -18,10 +19,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopitemDetailsScreen extends StatefulWidget {
   const ShopitemDetailsScreen(
-      {super.key, this.getFullDataOfproduct, this.strProfileNumber});
+      {super.key,
+      this.getFullDataOfproduct,
+      this.strProfileNumber,
+      this.getAnotherFullDataToPush});
 
   final strProfileNumber;
   final getFullDataOfproduct;
+  final getAnotherFullDataToPush;
 
   @override
   State<ShopitemDetailsScreen> createState() => _ShopitemDetailsScreenState();
@@ -41,6 +46,11 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
       print('=====> PRODUCT DETAILS <=====');
       print(widget.strProfileNumber);
       print(widget.getFullDataOfproduct);
+      print('==================================');
+      print('==================================');
+      print(widget.getAnotherFullDataToPush);
+      print('==================================');
+      print('==================================');
       // print(widget.getFullDataOfproduct['image'].toString());
     }
     //
@@ -270,6 +280,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
           children: [
             //
             if (widget.strProfileNumber == 'actions') ...[
+              // goals
               Container(
                 height: 240,
                 width: MediaQuery.of(context).size.width,
@@ -308,19 +319,51 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               GestureDetector(
                 onTap: () {
                   //
-                  /*Navigator.push(
+                  /*
+                  arr_goal_list[index]['categoryName'].toString(),
+                        arr_goal_list[index]['name'].toString(),
+                        arr_goal_list[index]['deadline'].toString(),
+                        arr_goal_list[index]['aboutGoal'].toString(),
+                        arr_goal_list[index]['goalId'].toString(),
+                        arr_goal_list[index]['categoryId'].toString(),
+                        arr_goal_list[index]['parentName'].toString(),
+                        arr_goal_list[index]['image'].toString(),
+                         */
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BuyNowGoalsPaymentScreen(
-                        strProductId:
-                            widget.getFullDataOfproduct['productId'].toString(),
-                        strTotalPrice: strTotalPriceIs,
-                        strProductName:
-                            widget.getFullDataOfproduct['name'].toString(),
-                        strProductQuantity: strQuantityCounter.toString(),
+                      builder: (context) => RealMainDetailsScreen(
+                        str_navigation_title: 'Goal',
+                        str_category_name: widget
+                            .getAnotherFullDataToPush['categoryName']
+                            .toString(),
+                        str_name:
+                            widget.getAnotherFullDataToPush['name'].toString(),
+                        str_due_date: widget
+                            .getAnotherFullDataToPush['deadline']
+                            .toString(),
+                        str_get_about_goal: widget
+                            .getAnotherFullDataToPush['aboutGoal']
+                            .toString(),
+                        str_get_goal_id: widget
+                            .getAnotherFullDataToPush['groupId_Sub']
+                            .toString(),
+                        str_category_id: widget
+                            .getAnotherFullDataToPush['categoryId']
+                            .toString(),
+                        str_professional_type: 'Goal',
+                        str_tray_value: 'goal',
+                        str_parent_name: widget
+                            .getAnotherFullDataToPush['parentName']
+                            .toString(),
+                        str_goal_cat_id: widget
+                            .getAnotherFullDataToPush['groupId_Sub']
+                            .toString(),
+                        str_image:
+                            widget.getAnotherFullDataToPush['image'].toString(),
                       ),
                     ),
-                  );*/
+                  );
                 },
                 child: Row(
                   children: [
