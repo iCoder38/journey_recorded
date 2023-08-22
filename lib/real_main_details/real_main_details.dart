@@ -41,7 +41,8 @@ class RealMainDetailsScreen extends StatefulWidget {
       required this.str_tray_value,
       required this.str_parent_name,
       required this.str_goal_cat_id,
-      required this.str_image});
+      required this.str_image,
+      required this.strFromViewDetails});
 
   final String str_image;
   final String str_tray_value;
@@ -55,6 +56,7 @@ class RealMainDetailsScreen extends StatefulWidget {
   final String str_get_goal_id;
   final String str_professional_type;
   final String str_goal_cat_id;
+  final String strFromViewDetails;
 
   @override
   State<RealMainDetailsScreen> createState() => _RealMainDetailsScreenState();
@@ -137,6 +139,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   void initState() {
     super.initState();
 
+    if (kDebugMode) {
+      print('========================');
+      print('====== GOAL ID ========');
+      print(widget.str_get_goal_id);
+      print('========================');
+      print('======= VIEW PROFILE =======');
+      print(widget.strFromViewDetails);
+    }
     cont_reward_name = TextEditingController();
     cont_reward_price = TextEditingController();
 
@@ -144,12 +154,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     _tabController = TabController(vsync: this, length: 6);
 
     func_get_goal_details_WB();
-
-    /*(widget.str_tray_value == 'goal')
-        ? get_sub_goals_list_WB()
-        : func_get_task_list_WB();*/
-    // mission_info_list_WB();
-    //
   }
 
   @override
@@ -280,7 +284,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
                   str_main_loader = 'quotes_loader_start';
                   setState(() {});
-                  func_quotes_WB();
+                  (widget.strFromViewDetails == 'yes')
+                      ? func_quotes_WB_without_userId()
+                      : func_quotes_WB();
                 } else if (value == 3) {
                   // quotes
                   str_show_ui = 'n.a.';
@@ -297,7 +303,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   setState(() {});
                   func_reward_WB();
 
-                  print('clicked on reward');
+                  if (kDebugMode) {
+                    print('clicked on reward');
+                  }
                 } else if (value == 5) {
                   // link
                   str_show_ui = 'n.a.';
@@ -320,7 +328,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   ),
                   child: IconButton(
                     onPressed: () {
-                      print('action sheet');
+                      if (kDebugMode) {
+                        print('action sheet');
+                      }
                       //ActionSheetExample();
                       _showActionSheet(context);
                     },
@@ -423,8 +433,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         ),
                       );
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.add,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -443,7 +454,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   child: IconButton(
                     onPressed: () {
                       // delete
-                      print(widget.str_tray_value.toString());
+                      if (kDebugMode) {
+                        print(widget.str_tray_value.toString());
+                      }
 
                       gear_popup_22(
                         'Delete goal',
@@ -1315,51 +1328,53 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
 // tasks list
-  Column task_in_team_UI(BuildContext context) {
-    return Column(
-      children: [
-        //
-        header_UI(context),
-        //
-        if (str_main_loader == 'tasks_loader_start')
-          const CustomeLoaderPopUp(
-            str_custom_loader: 'please wait...',
-            str_status: '3',
-          )
-        else if (str_main_loader == 'tasks_data_empty')
-          const CustomeLoaderPopUp(
-            str_custom_loader: 'Task not Added yet.',
-            str_status: '4',
-          )
-        else
-          for (int i = 0; i < arr_task_list.length; i++) ...[
-            InkWell(
-              onTap: () {
-                print('fd 2');
+  SingleChildScrollView task_in_team_UI(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          //
+          header_UI(context),
+          //
+          if (str_main_loader == 'tasks_loader_start')
+            const CustomeLoaderPopUp(
+              str_custom_loader: 'please wait...',
+              str_status: '3',
+            )
+          else if (str_main_loader == 'tasks_data_empty')
+            const CustomeLoaderPopUp(
+              str_custom_loader: 'Task not Added yet.',
+              str_status: '4',
+            )
+          else
+            for (int i = 0; i < arr_task_list.length; i++) ...[
+              InkWell(
+                onTap: () {
+                  if (kDebugMode) {
+                    print('fd 2');
+                  }
 
-                func_push_to_task(
-                  context,
-                  arr_task_list[i]['name'].toString(),
-                  arr_task_list[i]['experiencePoint'].toString(),
-                  arr_task_list[i]['experiencePointDeduct'].toString(),
-                  '\$',
-                  arr_task_list[i]['taskId'].toString(),
-                  arr_task_list[i]['reminderWarning'].toString(),
-                  arr_task_list[i]['addreminder'].toString(),
-                  arr_task_list[i]['description'].toString(),
-                  arr_task_list[i]['due_date'].toString(),
-                );
-              },
-              child: Container(
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                  func_push_to_task(
+                    context,
+                    arr_task_list[i]['name'].toString(),
+                    arr_task_list[i]['experiencePoint'].toString(),
+                    arr_task_list[i]['experiencePointDeduct'].toString(),
+                    '\$',
+                    arr_task_list[i]['taskId'].toString(),
+                    arr_task_list[i]['reminderWarning'].toString(),
+                    arr_task_list[i]['addreminder'].toString(),
+                    arr_task_list[i]['description'].toString(),
+                    arr_task_list[i]['due_date'].toString(),
+                  );
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     InkWell(
                       onTap: () {
-                        print('object');
+                        if (kDebugMode) {
+                          print('object');
+                        }
                       },
                       child: Container(
                         margin: const EdgeInsets.only(
@@ -1369,10 +1384,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           child: Text(
                             //
                             arr_task_list[i]['name'].toString(),
+                            // 'hello',
+
                             //
                             style: TextStyle(
                               fontFamily: font_style_name,
-                              fontSize: 18.0,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -1452,14 +1469,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   ],
                 ),
               ),
-            ),
-            Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey,
-            )
-          ],
-      ],
+              Container(
+                height: 1,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.grey,
+              )
+            ],
+        ],
+      ),
     );
   }
 
@@ -1757,6 +1774,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           str_goal_cat_id:
                               arr_sub_goals[index]['goalId'].toString(),
                           str_image: arr_sub_goals[index]['image'].toString(),
+                          strFromViewDetails: 'no',
                         ),
                       ),
                     );
@@ -2376,7 +2394,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             Expanded(
-                              flex: 2,
+                              // flex: 1,
                               child: Container(
                                 margin: const EdgeInsets.only(
                                   bottom: 6.0,
@@ -2423,7 +2441,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                     //
                                     style: TextStyle(
                                       fontFamily: font_style_name,
-                                      fontSize: 14.0,
+                                      fontSize: 10.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -2458,7 +2476,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                     Icons.chat,
                                   ),
                                   onPressed: () {
-                                    print('chat click');
+                                    if (kDebugMode) {
+                                      print('chat click');
+                                    }
                                   },
                                 ),
                               ),
@@ -2895,9 +2915,13 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     children: <Widget>[
                       InkWell(
                         onTap: () {
-                          print('mission 2');
+                          if (kDebugMode) {
+                            print('mission 2');
+                          }
 
-                          get_mission_list_WB();
+                          (widget.strFromViewDetails == 'yes')
+                              ? get_mission_list_WB_without_user_id()
+                              : get_mission_list_WB();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -2949,7 +2973,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 ),
                 InkWell(
                   onTap: () {
-                    func_get_task_list_WB();
+                    (widget.strFromViewDetails == 'yes')
+                        ? func_get_task_list_WB_remove_user_id()
+                        : func_get_task_list_WB();
                   },
                   child: Container(
                     // width: 40,
@@ -3124,10 +3150,67 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     bottom: 10.0,
                   ),
                 ),
+                Container(
+                  // width: 40,
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: () {
+                          if (kDebugMode) {
+                            print('mission 2');
+                          }
+
+                          (widget.strFromViewDetails == 'yes')
+                              ? get_mission_list_WB_without_user_id()
+                              : get_mission_list_WB();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Mission'.toUpperCase(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: font_style_name,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.circular(
+                              14.0,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              //
+                              str_mission_count.toString(),
+                              //
+                              style: TextStyle(
+                                fontFamily: font_style_name,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 InkWell(
                   onTap: () {
                     //
-                    func_get_task_list_WB();
+                    (widget.strFromViewDetails == 'yes')
+                        ? func_get_task_list_WB_remove_user_id()
+                        : func_get_task_list_WB();
                     //
                   },
                   child: Container(
@@ -3251,7 +3334,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     child: InkWell(
                       onTap: () {
                         //
-                        func_get_task_list_WB();
+                        (widget.strFromViewDetails == 'yes')
+                            ? func_get_task_list_WB_remove_user_id()
+                            : func_get_task_list_WB();
                         //
                       },
                       child: Container(
@@ -3635,9 +3720,71 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     }
   }
 
+// QUOTES
+  Future func_quotes_WB_without_userId() async {
+    print('=====> POST : QUOTES 3.0');
+
+    setState(() {
+      str_main_loader = 'quotes_loader_start';
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'quotlist',
+          // 'userId': prefs.getInt('userId').toString(),
+          'pageNo': '',
+          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalType': widget.str_professional_type.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    // print(get_data);
+    // print(get_data['data'][0]['id']);
+    if (resposne.statusCode == 200) {
+      //
+      arr_quotes_list.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          // print('object');
+
+          arr_quotes_list.add(i);
+        }
+
+        if (arr_quotes_list.isEmpty) {
+          setState(() {
+            str_main_loader = 'quotes_data_empty';
+          });
+        } else {
+          setState(() {
+            str_main_loader = 'quotes_loader_stop';
+          });
+        }
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
   // QUOTES
   Future func_quotes_WB() async {
-    print('=====> POST : QUOTES');
+    print('=====> POST : QUOTES 3.0');
 
     setState(() {
       str_main_loader = 'quotes_loader_start';
@@ -3826,8 +3973,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     }
   }
 
-  func_get_task_list_WB() async {
-    print('=====> POST : TASKS LIST');
+  func_get_task_list_WB_remove_user_id() async {
+    if (kDebugMode) {
+      print('=====> POST : TASKS LIST 2.0');
+    }
 
     str_show_ui = 'tasks';
 
@@ -3848,9 +3997,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       body: jsonEncode(
         <String, String>{
           'action': 'tasklist',
-          'userId': prefs.getInt('userId').toString(),
+          // 'userId': prefs.getInt('userId').toString(),
           'profesionalId': widget.str_get_goal_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
+          'completed': '0,1,3',
           'pageNo': ''
         },
       ),
@@ -3882,8 +4032,74 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         setState(() {});
 
         // mission_info_list_WB();
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
 
-        // get_mission_list_WB();
+  func_get_task_list_WB() async {
+    print('=====> POST : TASKS LIST 2.0');
+
+    str_show_ui = 'tasks';
+
+    str_tab_press = 'tasks';
+
+    str_main_loader = 'tasks_loader_start';
+    setState(() {});
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'tasklist',
+          'userId': prefs.getInt('userId').toString(),
+          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalType': widget.str_professional_type.toString(),
+          'completed': '0,1,3',
+          'pageNo': ''
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        arr_task_list.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          // print(get_data['data'][i]);
+          arr_task_list.add(get_data['data'][i]);
+        }
+
+        str_task_count = arr_task_list.length.toString();
+
+        if (arr_task_list.isEmpty) {
+          str_main_loader = 'tasks_data_empty';
+        } else {
+          str_main_loader = 'tasks_loader_stop';
+        }
+
+        setState(() {});
+
+        // mission_info_list_WB();
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -4457,7 +4673,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
         arr_quotes_list = [];
         //
-        func_quotes_WB();
+        (widget.strFromViewDetails == 'yes')
+            ? func_quotes_WB_without_userId()
+            : func_quotes_WB();
         //
       } else {
         print(
@@ -4489,7 +4707,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     // team_task_loader = '0';
     setState(() {});
-    func_get_task_list_WB();
+    (widget.strFromViewDetails == 'yes')
+        ? func_get_task_list_WB_remove_user_id()
+        : func_get_task_list_WB();
   }
 
   Future<void> _navigateAndDisplaySelection_edit_quote(
@@ -4516,7 +4736,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       arr_quotes_list.clear();
 
       setState(() {
-        func_quotes_WB();
+        (widget.strFromViewDetails == 'yes')
+            ? func_quotes_WB_without_userId()
+            : func_quotes_WB();
       });
     }
   }
@@ -4540,8 +4762,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       // arr_notes_list.clear();
       // str_quotes = '0';
       setState(() {});
-      print('YES I CAME FROM ADD QUOTE');
-      func_quotes_WB();
+      if (kDebugMode) {
+        print('YES I CAME FROM ADD QUOTE');
+      }
+      (widget.strFromViewDetails == 'yes')
+          ? func_quotes_WB_without_userId()
+          : func_quotes_WB();
     }
   }
 
@@ -4649,7 +4875,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
-        func_get_task_list_WB();
+        (widget.strFromViewDetails == 'yes')
+            ? func_get_task_list_WB_remove_user_id()
+            : func_get_task_list_WB();
         //
       } else {
         print(
@@ -4715,8 +4943,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_main_loader = 'quest_loader_stop';
           setState(() {});
         }
-
-        // get_mission_list_WB();
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -4728,9 +4954,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     }
   }
 
-  // get mission details
-  get_mission_list_WB() async {
-    print('=====> POST : MISSION LIST');
+// get mission details
+  get_mission_list_WB_without_user_id() async {
+    if (kDebugMode) {
+      print('=====> POST : MISSION LIST');
+    }
 
     str_show_ui = 'mission';
 
@@ -4748,12 +4976,100 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
+      //   [action] => missionlist
+      // [userId] => 2
+      // [profesionalId] => 6
+      // [profesionalType] => Goal
+      // [pageNo] => 1
+
+      // 'profesionalId': widget.str_get_goal_id.toString(),
+      //       'profesionalType': widget.str_professional_type.toString(),
+
+      body: jsonEncode(
+        <String, String>{
+          'action': 'missionlist',
+          // 'userId': prefs.getInt('userId').toString(),
+          'profesionalId': widget.str_get_goal_id,
+          'profesionalType': 'Goal',
+          'pageNo': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    // print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        arr_mission_list.clear();
+
+        for (var i = 0; i < get_data['data'].length; i++) {
+          arr_mission_list.add(get_data['data'][i]);
+        }
+        // str_mission_loader = '1';
+        str_mission_count = arr_mission_list.length.toString();
+        print('total number of mission =====> $str_mission_count');
+
+        if (arr_mission_list.isEmpty) {
+          str_main_loader = 'mission_data_empty';
+        } else {
+          str_main_loader = 'mission_loader_stop';
+        }
+
+        setState(() {});
+
+        // get_quest_list_WB();
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  // get mission details
+  get_mission_list_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : MISSION LIST');
+    }
+
+    str_show_ui = 'mission';
+
+    str_tab_press = 'mission';
+
+    str_main_loader = 'mission_loader_start';
+    setState(() {});
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      //   [action] => missionlist
+      // [userId] => 2
+      // [profesionalId] => 6
+      // [profesionalType] => Goal
+      // [pageNo] => 1
+
+      // 'profesionalId': widget.str_get_goal_id.toString(),
+      //       'profesionalType': widget.str_professional_type.toString(),
+
       body: jsonEncode(
         <String, String>{
           'action': 'missionlist',
           'userId': prefs.getInt('userId').toString(),
-          'goalId': widget.str_get_goal_id,
-          'pageNo': ''
+          'profesionalId': widget.str_get_goal_id,
+          'profesionalType': 'Goal',
+          'pageNo': '1'
         },
       ),
     );
@@ -5270,18 +5586,23 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
+          strFromViewDetails: 'no',
         ),
       ),
     );
 
-    print('result =====> ' + result);
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
 
     if (!mounted) return;
     /*ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text('$result')));*/
 
-    get_mission_list_WB();
+    (widget.strFromViewDetails == 'yes')
+        ? get_mission_list_WB_without_user_id()
+        : get_mission_list_WB();
 
     // setState(() {});
   }
@@ -5316,6 +5637,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
+          strFromViewDetails: 'no',
         ),
       ),
     );
@@ -5327,7 +5649,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text('$result')));*/
 
-    get_mission_list_WB();
+    (widget.strFromViewDetails == 'yes')
+        ? get_mission_list_WB_without_user_id()
+        : get_mission_list_WB();
 
     // setState(() {});
   }
@@ -5643,7 +5967,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     if (!mounted) return;
 
-    func_get_task_list_WB();
+    (widget.strFromViewDetails == 'yes')
+        ? func_get_task_list_WB_remove_user_id()
+        : func_get_task_list_WB();
   }
 }
 

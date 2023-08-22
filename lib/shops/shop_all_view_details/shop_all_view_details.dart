@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/single_classes/single_class.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -146,7 +147,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                 strScreenLoader = '0';
               });
 
-              funcTasksWB();
+              // funcTasksWB();
             } else if (value == 5) {
               setState(() {
                 strScreenLoader = '0';
@@ -162,11 +163,11 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
         children: [
           // tab 1
           tabOneInfoUI(context),
-          tabTwpSubGoalUI(context),
-          tabThreeQuotesUI(context),
-          tabFourMissionUI(context),
-          tabFourMissionUI(context),
-          tabTwpSubGoalUI(context)
+          // tabTwpSubGoalUI(context),
+          // tabThreeQuotesUI(context),
+          // tabFourMissionUI(context),
+          // tabFourMissionUI(context),
+          // tabTwpSubGoalUI(context)
           // tabOneInfoUI(context),
           /*tabTwpSubGoalUI(context),
           tabThreeQuotesUI(context),
@@ -174,7 +175,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
           tabFiveTaskUI(context),
           tabSixRewardsUI(context)*/
           // tab 2
-          /*(strScreenLoader == '0')
+          (strScreenLoader == '0')
               ? const Center(
                   child: SizedBox(
                     height: 40,
@@ -229,7 +230,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                     child: CircularProgressIndicator(),
                   ),
                 )
-              : tabSixRewardsUI(context),*/
+              : tabSixRewardsUI(context),
         ],
       ),
     );
@@ -371,54 +372,89 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
     return Column(
       children: [
         for (int i = 0; i < arrAllDetails.length; i++) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: text_regular_style_custom(
-                //
-                arrAllDetails[i]['name'].toString(),
-                Colors.black,
-                14.0,
-              ),
-              leading: Container(
-                height: 60,
-                width: 60,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    40.0,
+          GestureDetector(
+            onTap: () {
+              //
+              if (kDebugMode) {
+                print('========================');
+                print('====== GOAL ID ========');
+                print(arrAllDetails[i]['goalId'].toString());
+              }
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RealMainDetailsScreen(
+                    str_navigation_title: 'Mission',
+                    str_category_name:
+                        arrAllDetails[i]['categoryName'].toString(),
+                    str_name: arrAllDetails[i]['name'].toString(),
+                    str_due_date: arrAllDetails[i]['deadline'].toString(),
+                    str_get_about_goal:
+                        arrAllDetails[i]['description'].toString(),
+                    str_get_goal_id:
+                        widget.getFullDataInViewDetails['goalId'].toString(),
+                    str_category_id: arrAllDetails[i]['categoryId'].toString(),
+                    str_professional_type: 'Mission',
+                    str_tray_value: 'mission',
+                    str_parent_name: arrAllDetails[i]['parentName'].toString(),
+                    str_goal_cat_id: arrAllDetails[i]['missionId'].toString(),
+                    str_image: arrAllDetails[i]['image'].toString(),
+                    strFromViewDetails: 'yes',
                   ),
-                  child: (widget.getFullDataInViewDetails['image'].toString() ==
-                          '')
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.network(
-                          //
-                          arrAllDetails[i]['image'].toString(),
-                          fit: BoxFit.cover,
-                        ),
                 ),
-              ),
-              trailing: (parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['deadline'].toString()) ==
-                      'overdue')
-                  ? text_regular_style_custom(
-                      'overdue',
-                      Colors.black,
-                      14.0,
-                    )
-                  : text_regular_style_custom(
-                      parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['deadline'].toString()),
-                      Colors.black,
-                      14.0,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: text_regular_style_custom(
+                  //
+                  arrAllDetails[i]['name'].toString(),
+                  Colors.black,
+                  14.0,
+                ),
+                leading: Container(
+                  height: 60,
+                  width: 60,
+                  color: Colors.transparent,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      40.0,
                     ),
+                    child:
+                        (widget.getFullDataInViewDetails['image'].toString() ==
+                                '')
+                            ? SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Image.network(
+                                //
+                                arrAllDetails[i]['image'].toString(),
+                                fit: BoxFit.cover,
+                              ),
+                  ),
+                ),
+                trailing: (parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['deadline'].toString()) ==
+                        'overdue')
+                    ? text_regular_style_custom(
+                        'overdue',
+                        Colors.black,
+                        14.0,
+                      )
+                    : text_regular_style_custom(
+                        parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['deadline'].toString()),
+                        Colors.black,
+                        14.0,
+                      ),
+              ),
             ),
           ),
           //
@@ -501,39 +537,81 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
     return Column(
       children: [
         for (int i = 0; i < arrAllDetails.length; i++) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: text_regular_style_custom(
-                //
-                arrAllDetails[i]['name'].toString(),
-                Colors.black,
-                14.0,
-              ),
-              leading: Container(
-                height: 60,
-                width: 60,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    40.0,
+          GestureDetector(
+            onTap: () {
+              //
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RealMainDetailsScreen(
+                    str_navigation_title: 'Goal',
+                    str_category_name:
+                        arrAllDetails[i]['categoryName'].toString(),
+                    str_name: arrAllDetails[i]['name'].toString(),
+                    str_due_date: arrAllDetails[i]['deadline'].toString(),
+                    str_get_about_goal:
+                        arrAllDetails[i]['aboutGoal'].toString(),
+                    str_get_goal_id: arrAllDetails[i]['goalId'].toString(),
+                    str_category_id: arrAllDetails[i]['categoryId'].toString(),
+                    str_professional_type: 'Goal',
+                    str_tray_value: 'sub_goal',
+                    str_parent_name: arrAllDetails[i]['parentName'].toString(),
+                    str_goal_cat_id: arrAllDetails[i]['goalId'].toString(),
+                    str_image: arrAllDetails[i]['image'].toString(),
+                    strFromViewDetails: 'yes',
                   ),
-                  child: (widget.getFullDataInViewDetails['image'].toString() ==
-                          '')
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.network(
-                          //
-                          arrAllDetails[i]['image'].toString(),
-                          fit: BoxFit.cover,
-                        ),
                 ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: text_regular_style_custom(
+                  //
+                  arrAllDetails[i]['name'].toString(),
+                  Colors.black,
+                  14.0,
+                ),
+                leading: Container(
+                  height: 60,
+                  width: 60,
+                  color: Colors.transparent,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      40.0,
+                    ),
+                    child:
+                        (widget.getFullDataInViewDetails['image'].toString() ==
+                                '')
+                            ? SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Image.network(
+                                //
+                                arrAllDetails[i]['image'].toString(),
+                                fit: BoxFit.cover,
+                              ),
+                  ),
+                ),
+                trailing: (parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['deadline'].toString()) ==
+                        'overdue')
+                    ? text_regular_style_custom(
+                        'overdue',
+                        Colors.black,
+                        14.0,
+                      )
+                    : text_regular_style_custom(
+                        parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['deadline'].toString()),
+                        Colors.black,
+                        14.0,
+                      ),
               ),
             ),
           ),

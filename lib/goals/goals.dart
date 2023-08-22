@@ -1488,6 +1488,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
           str_parent_name: str_get_parent_name.toString(),
           str_goal_cat_id: str_get_goal_id.toString(),
           str_image: str_get_profile,
+          strFromViewDetails: 'no',
         ),
       ),
     );

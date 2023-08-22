@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 // import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/goals/goals_details/goal_common_header/goal_common_header.dart';
@@ -1406,7 +1407,9 @@ class _TeamScreenState extends State<TeamScreen> {
   }
 
   get_task_list_WB() async {
-    print('=====> POST : GOAL LIST');
+    if (kDebugMode) {
+      print('=====> POST : TASK LIST 2.0');
+    }
 
     // team_task_loader = '0';
     // setState(() {});

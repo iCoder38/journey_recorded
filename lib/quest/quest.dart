@@ -801,6 +801,7 @@ class _QuestScreenState extends State<QuestScreen> {
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
+          strFromViewDetails: 'no',
         ),
       ),
     );

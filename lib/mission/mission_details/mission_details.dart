@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 
@@ -80,10 +81,10 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
   //
   @override
   void initState() {
-    // TODO: implement initState
+    // // TODO: implement initState
     super.initState();
-    print('object');
-    print(widget.str_deadline);
+    // print('object');
+    // print(widget.str_deadline);
   }
 
   @override
@@ -106,12 +107,10 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Info'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
+                    Colors.black,
+                    14.0,
                   ),
                 ),
                 Padding(
@@ -167,7 +166,9 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
               ],
               onTap: (value) {
                 if (value == 1) {
-                  print('NOTES BUTTON CLICK FROM BAR');
+                  if (kDebugMode) {
+                    print('NOTES BUTTON CLICK FROM BAR');
+                  }
                   GoalNotesScreen(
                     str_get_goal_id: widget.str_get_mission_id.toString(),
                     str_get_due_date: widget.str_deadline,
@@ -176,7 +177,9 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
                     str_professional_type: 'Mission',
                   );
                 } else if (value == 2) {
-                  print('QUOTES BUTTON CLICK FROM BAR');
+                  if (kDebugMode) {
+                    print('QUOTES BUTTON CLICK FROM BAR');
+                  }
                   GoalQuotesScreen(
                     str_get_goal_id: widget.str_get_mission_id.toString(),
                     str_get_due_date: widget.str_deadline,
@@ -185,6 +188,9 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
                     str_professional_type: 'Mission',
                   );
                 } else if (value == 3) {
+                  if (kDebugMode) {
+                    print('TEAM BUTTON CLICK FROM BAR');
+                  }
                   TeamScreen(
                     str_get_goal_id: widget.str_get_mission_id.toString(),
                     str_get_parse_name: widget.str_get_mission_goal_name,
@@ -1330,7 +1336,6 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
         //
         func_notes_WB();
         //
-
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -1492,7 +1497,6 @@ class _MissionDetailsScreenState extends State<MissionDetailsScreen> {
         //
         func_quotes_WB();
         //
-
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',

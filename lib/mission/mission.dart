@@ -485,6 +485,7 @@ class _MissionScreenState extends State<MissionScreen> {
       String str_mission_parent_name,
       String str_goal_cat_id,
       String str_image) async {
+    // print('push to mission');
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -501,6 +502,7 @@ class _MissionScreenState extends State<MissionScreen> {
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
+          strFromViewDetails: 'no',
         ),
       ),
     );

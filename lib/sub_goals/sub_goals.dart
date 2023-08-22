@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/real_main_details/real_main_details.dart';
@@ -351,8 +352,8 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () async {
-                      print('object');
-                      print(arr_sub_goals);
+                      // print('object');
+                      // print(arr_sub_goals);
 
                       final result = await Navigator.push(
                         context,
@@ -377,12 +378,15 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
                             str_goal_cat_id:
                                 arr_sub_goals[index]['goalId'].toString(),
                             str_image: arr_sub_goals[index]['image'].toString(),
+                            strFromViewDetails: 'no',
                           ),
                         ),
                       );
 
                       // ignore: prefer_interpolation_to_compose_strings
-                      print('result =====> ' + result);
+                      if (kDebugMode) {
+                        print('result =====> ' + result);
+                      }
 
                       if (result == 'sub_goal') {
                         str_sub_goal_loader = '0';
