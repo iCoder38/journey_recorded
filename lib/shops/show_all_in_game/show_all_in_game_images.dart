@@ -25,6 +25,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
   var strShowLoader = '0';
   var arrAllInOneArray = [];
 
+  var arrGoalList = [];
   //
   @override
   void initState() {
@@ -169,6 +170,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
       print('MANAGE DATA FROM HERE');
 
       print(data);
+      print(widget.getNumberToParse);
     }
     if (widget.getNumberToParse == '1') {
       //
@@ -179,7 +181,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'price': i['price'].toString(),
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
-          'productId': i['productId'].toString(),
+          'productId': i['skillId'].toString(),
         };
 
         //
@@ -196,6 +198,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
           'productId': i['productId'].toString(),
+          'category': i['categoryName'].toString(),
         };
 
         //
@@ -209,13 +212,16 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'image': i['image'].toString(),
           'name': i['name'].toString(),
           'price': i['price'].toString(),
-          'description': i['description'].toString(),
+          'description': i['aboutGoal'].toString(),
           'Quantity': i['Quantity'].toString(),
           'productId': i['goalId'].toString(),
+          'category': i['categoryName'].toString(),
         };
 
         //
         arrAllInOneArray.add(custom);
+        //
+        arrGoalList.add(i);
       }
       //
     } else if (widget.getNumberToParse == '4') {
@@ -228,6 +234,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
           'productId': i['missionId'].toString(),
+          'category': i['categoryName'].toString(),
         };
 
         //
@@ -244,6 +251,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'description': i['description'].toString(),
           'Quantity': i['Quantity'].toString(),
           'productId': i['questId'].toString(),
+          'category': i['categoryName'].toString(),
         };
 
         //
@@ -308,6 +316,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                               builder: (context) => ShopitemDetailsScreen(
                                 getFullDataOfproduct: arrAllInOneArray[i],
                                 strProfileNumber: 'actions',
+                                getAnotherFullDataToPush: arrGoalList[i],
                               ),
                             ),
                           );

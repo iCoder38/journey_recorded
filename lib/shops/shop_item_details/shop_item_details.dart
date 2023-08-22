@@ -13,6 +13,7 @@ import 'package:journey_recorded/shops/cart_list/cart_list.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_goals_payment_Screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_payment_screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_skill_payment_screen.dart';
+import 'package:journey_recorded/shops/shop_all_view_details/shop_all_view_details.dart';
 
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -285,17 +286,27 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 height: 240,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    0,
-                  ),
-                  child: Image.network(
-                    //
-                    widget.getFullDataOfproduct['image'].toString(),
-                    fit: BoxFit.cover,
-                    //
-                  ),
-                ),
+                child: (widget.getFullDataOfproduct['image'].toString() == '')
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.network(
+                          //
+                          widget.getFullDataOfproduct['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
               ),
               //
               text_bold_style_custom(
@@ -315,7 +326,20 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 16.0,
               ),
               //
-
+              //
+              const SizedBox(
+                height: 20,
+              ),
+              text_regular_style_custom(
+                //
+                'Category Name : ${widget.getFullDataOfproduct['category']}',
+                Colors.black,
+                16.0,
+              ),
+              //
+              const SizedBox(
+                height: 10,
+              ),
               GestureDetector(
                 onTap: () {
                   //
@@ -329,7 +353,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                         arr_goal_list[index]['parentName'].toString(),
                         arr_goal_list[index]['image'].toString(),
                          */
-                  Navigator.push(
+                  /*Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => RealMainDetailsScreen(
@@ -361,6 +385,15 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                             .toString(),
                         str_image:
                             widget.getAnotherFullDataToPush['image'].toString(),
+                      ),
+                    ),
+                  );*/
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShopAllViewDetailsScreen(
+                        getFullDataInViewDetails:
+                            widget.getAnotherFullDataToPush,
                       ),
                     ),
                   );
@@ -494,17 +527,27 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 height: 240,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    0,
-                  ),
-                  child: Image.network(
-                    //
-                    widget.getFullDataOfproduct['image'].toString(),
-                    fit: BoxFit.cover,
-                    //
-                  ),
-                ),
+                child: (widget.getFullDataOfproduct['image'].toString() == '')
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.network(
+                          //
+                          widget.getFullDataOfproduct['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
               ),
               //
               text_bold_style_custom(
@@ -671,17 +714,27 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 height: 240,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    0,
-                  ),
-                  child: Image.network(
-                    //
-                    widget.getFullDataOfproduct['image'].toString(),
-                    fit: BoxFit.cover,
-                    //
-                  ),
-                ),
+                child: (widget.getFullDataOfproduct['image'].toString() == '')
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.network(
+                          //
+                          widget.getFullDataOfproduct['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
               ),
               //
               text_bold_style_custom(
@@ -848,17 +901,27 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 height: 240,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    0,
-                  ),
-                  child: Image.network(
-                    //
-                    widget.getFullDataOfproduct['image'].toString(),
-                    fit: BoxFit.cover,
-                    //
-                  ),
-                ),
+                child: (widget.getFullDataOfproduct['image'].toString() == '')
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.network(
+                          //
+                          widget.getFullDataOfproduct['image'].toString(),
+                          fit: BoxFit.cover,
+                          //
+                        ),
+                      ),
               ),
               //
               text_bold_style_custom(
@@ -968,17 +1031,27 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 height: 240,
                 width: MediaQuery.of(context).size.width,
                 color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    0,
-                  ),
-                  child: Image.network(
-                    //
-                    widget.getFullDataOfproduct['image'].toString(),
-                    fit: BoxFit.contain,
-                    //
-                  ),
-                ),
+                child: (widget.getFullDataOfproduct['image'].toString() == '')
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.contain,
+                        ),
+                      )
+                    : ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          0,
+                        ),
+                        child: Image.network(
+                          //
+                          widget.getFullDataOfproduct['image'].toString(),
+                          fit: BoxFit.contain,
+                          //
+                        ),
+                      ),
               ),
               //
               text_bold_style_custom(

@@ -31,64 +31,12 @@ class _GameScreenState extends State<GameScreen> {
   var arr_skill_list = [];
   var arr_product_list = [];
   //
+
+  //
   @override
   void initState() {
     super.initState();
-    product_list_WB();
-  }
-
-  // product list
-  product_list_WB() async {
-    if (kDebugMode) {
-      print('=====> POST : PRODUCT LIST');
-    }
-
-    setState(() {
-      str_main_loader = '0';
-    });
-
-    final resposne = await http.post(
-      Uri.parse(
-        application_base_url,
-      ),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, String>{
-          'action': 'productlist',
-          // 'pageNo': '1',
-        },
-      ),
-    );
-
-    // convert data to dict
-    var get_data = jsonDecode(resposne.body);
-    if (kDebugMode) {
-      print(get_data);
-    }
-
-    if (resposne.statusCode == 200) {
-      //
-      arr_product_list.clear();
-      //
-      if (get_data['status'].toString().toLowerCase() == 'success') {
-        for (Map i in get_data['data']) {
-          //
-          arr_product_list.add(i);
-          //
-        }
-        //
-        actionList();
-        //
-      } else {
-        print(
-          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-        );
-      }
-    } else {
-      // return postList;
-    }
+    actionList();
   }
 
   // action list
@@ -133,7 +81,7 @@ class _GameScreenState extends State<GameScreen> {
           //
         }
         //
-        skillList();
+        skillListWB();
         //
       } else {
         print(
@@ -146,7 +94,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   // product list
-  skillList() async {
+  skillListWB() async {
     if (kDebugMode) {
       print('=====> POST : SKILL LIST');
     }
@@ -183,8 +131,63 @@ class _GameScreenState extends State<GameScreen> {
           //
         }
         //
+        product_list_WB();
+
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+// product list
+  product_list_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : PRODUCT LIST');
+    }
+
+    setState(() {
+      str_main_loader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'productlist',
+          // 'pageNo': '1',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arr_product_list.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arr_product_list.add(i);
+          //
+        }
+        //
         setState(() {
-          str_main_loader = '2';
+          // str_main_loader = '2';
         });
         //
       } else {
@@ -229,12 +232,12 @@ class _GameScreenState extends State<GameScreen> {
 
     if (resposne.statusCode == 200) {
       //
-      // arr_product_list.clear();
+      arr_product_list.clear();
       //
       if (get_data['status'].toString().toLowerCase() == 'success') {
         for (Map i in get_data['data']) {
           //
-          // arr_product_list.add(i);
+          arr_product_list.add(i);
           //
         }
         //
@@ -335,19 +338,20 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ],
           ),
-          body: (str_main_loader == '0')
+          body: /*(str_main_loader == '0')
               ? const Align(
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(),
                 )
-              : TabBarView(
-                  children: <Widget>[
-                    //
-                    tabbar_in_games_UI(context),
-                    //
-                    tabbar_OUT_GAMES_ui(context),
-                    //
-                    /*ListView.builder(
+              : */
+              TabBarView(
+            children: <Widget>[
+              //
+              tabbar_in_games_UI(context),
+              //
+              tabbar_OUT_GAMES_ui(context),
+              //
+              /*ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 //scrollDirection: Axis.vertical,
@@ -386,8 +390,8 @@ class _GameScreenState extends State<GameScreen> {
                   );
                 },
               ),*/
-                  ],
-                ),
+            ],
+          ),
         ),
       ),
     );
@@ -639,7 +643,7 @@ class _GameScreenState extends State<GameScreen> {
             //
             if (arr_action_list.isEmpty) ...[
               //
-              text_with_regular_style('NO DATA FOUND'),
+              text_with_regular_style('please wait...'),
               //
             ] else if (arr_action_list.length == 1) ...[
               //
@@ -722,7 +726,7 @@ class _GameScreenState extends State<GameScreen> {
             //
             if (arr_skill_list.isEmpty) ...[
               //
-              text_with_regular_style('NO DATA FOUND'),
+              text_with_regular_style('please wait...'),
               //
             ] else if (arr_skill_list.length == 1) ...[
               //
@@ -804,7 +808,7 @@ class _GameScreenState extends State<GameScreen> {
             //
             if (arr_product_list.isEmpty) ...[
               //
-              text_with_regular_style('NO DATA FOUND'),
+              text_with_regular_style('please wait...'),
               //
             ] else if (arr_product_list.length == 1) ...[
               //
@@ -1471,8 +1475,7 @@ class _GameScreenState extends State<GameScreen> {
       'category': actionClickedData['categoryName'].toString(),
     };
 
-    // //
-
+    //
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -1493,6 +1493,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
     );
 
     //
+    print('vedica');
     print(result);
     //
     if (!mounted) return;
