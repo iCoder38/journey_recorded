@@ -571,19 +571,52 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               GestureDetector(
                 onTap: () {
                   //
-                  /*Navigator.push(
+                  /*
+                  arr_mission_list[index]['categoryName'].toString(),
+                        arr_mission_list[index]['name'].toString(),
+                        arr_mission_list[index]['deadline'].toString(),
+                        arr_mission_list[index]['description'].toString(),
+                        arr_mission_list[index]['goalId'].toString(),
+                        arr_mission_list[index]['categoryId'].toString(),
+                        arr_mission_list[index]['parentName'].toString(),
+                        arr_mission_list[index]['missionId'].toString(),
+                        arr_mission_list[index]['image'].toString(), */
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BuyNowGoalsPaymentScreen(
-                        strProductId:
-                            widget.getFullDataOfproduct['productId'].toString(),
-                        strTotalPrice: strTotalPriceIs,
-                        strProductName:
-                            widget.getFullDataOfproduct['name'].toString(),
-                        strProductQuantity: strQuantityCounter.toString(),
+                      builder: (context) => RealMainDetailsScreen(
+                        str_navigation_title: 'Mission',
+                        str_category_name: widget
+                            .getAnotherFullDataToPush['categoryName']
+                            .toString(),
+                        str_name:
+                            widget.getAnotherFullDataToPush['name'].toString(),
+                        str_due_date: widget
+                            .getAnotherFullDataToPush['deadline']
+                            .toString(),
+                        str_get_about_goal: widget
+                            .getAnotherFullDataToPush['description']
+                            .toString(),
+                        str_get_goal_id: widget
+                            .getAnotherFullDataToPush['missionId']
+                            .toString(),
+                        str_category_id: widget
+                            .getAnotherFullDataToPush['categoryId']
+                            .toString(),
+                        str_professional_type: 'Mission',
+                        str_tray_value: 'mission',
+                        str_parent_name: widget
+                            .getAnotherFullDataToPush['parentName']
+                            .toString(),
+                        str_goal_cat_id: widget
+                            .getAnotherFullDataToPush['missionId']
+                            .toString(),
+                        str_image:
+                            widget.getAnotherFullDataToPush['image'].toString(),
+                        strFromViewDetails: 'yes',
                       ),
                     ),
-                  );*/
+                  );
                 },
                 child: Row(
                   children: [
@@ -758,19 +791,51 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               GestureDetector(
                 onTap: () {
                   //
-                  /*Navigator.push(
+                  /*arr_quest_list[index]['categoryName'].toString(),
+                        arr_quest_list[index]['name'].toString(),
+                        arr_quest_list[index]['deadline'].toString(),
+                        arr_quest_list[index]['description'].toString(),
+                        arr_quest_list[index]['goalId'].toString(),
+                        arr_quest_list[index]['categoryId'].toString(),
+                        arr_quest_list[index]['parentName'].toString(),
+                        arr_quest_list[index]['questId'].toString(),
+                        arr_quest_list[index]['image'].toString(), */
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => BuyNowGoalsPaymentScreen(
-                        strProductId:
-                            widget.getFullDataOfproduct['productId'].toString(),
-                        strTotalPrice: strTotalPriceIs,
-                        strProductName:
-                            widget.getFullDataOfproduct['name'].toString(),
-                        strProductQuantity: strQuantityCounter.toString(),
+                      builder: (context) => RealMainDetailsScreen(
+                        str_navigation_title: 'Quest',
+                        str_category_name: widget
+                            .getAnotherFullDataToPush['categoryName']
+                            .toString(),
+                        str_name:
+                            widget.getAnotherFullDataToPush['name'].toString(),
+                        str_due_date: widget
+                            .getAnotherFullDataToPush['deadline']
+                            .toString(),
+                        str_get_about_goal: widget
+                            .getAnotherFullDataToPush['description']
+                            .toString(),
+                        str_get_goal_id: widget
+                            .getAnotherFullDataToPush['questId']
+                            .toString(),
+                        str_category_id: widget
+                            .getAnotherFullDataToPush['categoryId']
+                            .toString(),
+                        str_professional_type: 'Quest',
+                        str_tray_value: 'quest',
+                        str_parent_name: widget
+                            .getAnotherFullDataToPush['parentName']
+                            .toString(),
+                        str_goal_cat_id: widget
+                            .getAnotherFullDataToPush['questId']
+                            .toString(),
+                        str_image:
+                            widget.getAnotherFullDataToPush['image'].toString(),
+                        strFromViewDetails: 'yes',
                       ),
                     ),
-                  );*/
+                  );
                 },
                 child: Row(
                   children: [
@@ -795,7 +860,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                           ),
                           child: Center(
                             child: text_bold_style_custom(
-                              'View Details',
+                              'View Details q',
                               Colors.black,
                               14.0,
                             ),

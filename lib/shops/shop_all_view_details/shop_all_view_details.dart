@@ -29,6 +29,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
   // var arrSubGoal = [];
   var arrAllDetails = [];
   //
+  var strUserClickWhichPanel = '1';
   @override
   void initState() {
     //
@@ -44,75 +45,75 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: text_bold_style_custom(
-          'View Details',
-          Colors.white,
-          16.0,
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.chevron_left,
-            color: Colors.white,
+        appBar: AppBar(
+          title: text_bold_style_custom(
+            'View Details',
+            Colors.white,
+            16.0,
           ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: navigation_color,
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.lime,
-          isScrollable: true,
-          tabs: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'INFO',
-                Colors.white,
-                14.0,
-              ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.chevron_left,
+              color: Colors.white,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'SUB GOAL',
-                Colors.white,
-                14.0,
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          backgroundColor: navigation_color,
+          /*bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.lime,
+            isScrollable: true,
+            tabs: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'INFO',
+                  Colors.white,
+                  14.0,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'QUOTES',
-                Colors.white,
-                14.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'SUB GOAL',
+                  Colors.white,
+                  14.0,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'MISSIONS',
-                Colors.white,
-                14.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'QUOTES',
+                  Colors.white,
+                  14.0,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'TASKS',
-                Colors.white,
-                14.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'MISSIONS',
+                  Colors.white,
+                  14.0,
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: text_regular_style_custom(
-                'REWARDS',
-                Colors.white,
-                14.0,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'TASKS',
+                  Colors.white,
+                  14.0,
+                ),
               ),
-            ),
-          ],
-          onTap: (value) {
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: text_regular_style_custom(
+                  'REWARDS',
+                  Colors.white,
+                  14.0,
+                ),
+              ),
+            ],
+            /*onTap: (value) {
             if (kDebugMode) {
               print('tab id ====> $value');
             }
@@ -154,10 +155,392 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
               });
               funcRewardsWB();
             }
-          },
+          },*/
+          ),*/
         ),
-      ),
-      body: TabBarView(
+        body: Column(
+          children: [
+            Container(
+              height: 40,
+              width: MediaQuery.of(context).size.width,
+              color: navigation_color,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    (strUserClickWhichPanel == '1')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '1';
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'INFO',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '1';
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'INFO',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                    /***********************************************/
+                    /***********************************************/
+                    (strUserClickWhichPanel == '2')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '2';
+                                //
+                                strScreenLoader = '0';
+                                funcGetSubGoal();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'SUB GOAL',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '2';
+                                //
+                                strScreenLoader = '0';
+                                funcGetSubGoal();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'SUB GOAL',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                    /***********************************************/
+                    /***********************************************/
+                    (strUserClickWhichPanel == '3')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '3'; //
+                                strScreenLoader = '0';
+                                funcQuestWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'QUOTES',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '3'; //
+                                strScreenLoader = '0';
+                                funcQuestWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'QUOTES',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                    /***********************************************/
+                    /***********************************************/
+                    (strUserClickWhichPanel == '4')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '4'; //
+                                strScreenLoader = '0';
+                                funcMissionWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'MISSIONS',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '4'; //
+                                strScreenLoader = '0';
+                                funcMissionWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'MISSIONS',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                    /***********************************************/
+                    /***********************************************/
+                    (strUserClickWhichPanel == '5')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '5'; //
+                                strScreenLoader = '0';
+                                funcTasksWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'TASK',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '5'; //
+                                strScreenLoader = '0';
+                                funcTasksWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'TASK',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                    /***********************************************/
+                    /***********************************************/
+                    (strUserClickWhichPanel == '6')
+                        ? GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '6'; //
+                                strScreenLoader = '0';
+                                funcRewardsWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 120,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'REWARDS',
+                                  Colors.white,
+                                  18.0,
+                                ),
+                              ),
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              setState(() {
+                                strUserClickWhichPanel = '6'; //
+                                strScreenLoader = '0';
+                                funcRewardsWB();
+                              });
+                            },
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              color: Colors.transparent,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  'REWARDS',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                height: 60,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.transparent,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    children: [
+                      if (strUserClickWhichPanel == '1') ...[
+                        //
+                        tabOneInfoUI(context),
+                      ] else if (strUserClickWhichPanel == '2') ...[
+                        //
+                        if (strScreenLoader == '0') ...[
+                          const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ] else ...[
+                          //
+                          tabTwpSubGoalUI(context),
+                        ],
+                      ] else if (strUserClickWhichPanel == '3') ...[
+                        //
+                        if (strScreenLoader == '0') ...[
+                          const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ] else ...[
+                          //
+                          tabThreeQuotesUI(context),
+                        ],
+                      ] else if (strUserClickWhichPanel == '4') ...[
+                        //
+                        if (strScreenLoader == '0') ...[
+                          const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ] else ...[
+                          //
+                          tabFourMissionUI(context),
+                        ],
+                      ] else if (strUserClickWhichPanel == '5') ...[
+                        //
+                        if (strScreenLoader == '0') ...[
+                          const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ] else ...[
+                          //
+                          tabFiveTaskUI(context),
+                        ],
+                      ] else if (strUserClickWhichPanel == '6') ...[
+                        //
+                        if (strScreenLoader == '0') ...[
+                          const Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                        ] else ...[
+                          //
+                          tabSixRewardsUI(context),
+                        ],
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ],
+        )
+        /*TabBarView(
         physics: const NeverScrollableScrollPhysics(),
         controller: _tabController,
         children: [
@@ -232,73 +615,72 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                 )
               : tabSixRewardsUI(context),
         ],
-      ),
-    );
+      ),*/
+        );
   }
 
   Column tabFiveTaskUI(BuildContext context) {
     return Column(
       children: [
-        // for (int i = 0; i < arrAllDetails.length; i++) ...[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: ListTile(
-            title: text_regular_style_custom(
-              //
-              arrAllDetails[0]['name'].toString(),
-              Colors.black,
-              14.0,
-            ),
-            /*leading: Container(
-                          height: 60,
-                          width: 60,
-                          color: Colors.transparent,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(
-                              40.0,
-                            ),
-                            child: (widget.getFullDataInViewDetails['image']
-                                        .toString() ==
-                                    '')
-                                ? SizedBox(
-                                    height: 40,
-                                    width: 40,
-                                    child: Image.asset(
-                                      'assets/images/logo.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Image.network(
-                                    //
-                                    arrAllDetails[i]['image'].toString(),
-                                    fit: BoxFit.cover,
-                                  ),
+        for (int i = 0; i < arrAllDetails.length; i++) ...[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: text_regular_style_custom(
+                //
+                arrAllDetails[i]['name'].toString(),
+                Colors.black,
+                14.0,
+              ),
+              leading: Container(
+                height: 60,
+                width: 60,
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(
+                    40.0,
+                  ),
+                  child: (widget.getFullDataInViewDetails['profile_picture']
+                              .toString() ==
+                          '')
+                      ? SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: Image.asset(
+                            'assets/images/logo.png',
+                            fit: BoxFit.cover,
                           ),
-                        ),*/
-            /*trailing: (parseDayLeft.func_difference_between_date(
-                                    arrAllDetails[i]['due_date']
-                                        .toString()) ==
-                                'overdue')
-                            ? text_regular_style_custom(
-                                'overdue',
-                                Colors.black,
-                                14.0,
-                              )
-                            : text_regular_style_custom(
-                                parseDayLeft.func_difference_between_date(
-                                    arrAllDetails[i]['due_date'].toString()),
-                                Colors.black,
-                                14.0,
-                              ),*/
+                        )
+                      : Image.network(
+                          //
+                          arrAllDetails[i]['profile_picture'].toString(),
+                          fit: BoxFit.cover,
+                        ),
+                ),
+              ),
+              trailing: (parseDayLeft.func_difference_between_date(
+                          arrAllDetails[i]['due_date'].toString()) ==
+                      'overdue')
+                  ? text_regular_style_custom(
+                      'overdue',
+                      Colors.black,
+                      14.0,
+                    )
+                  : text_regular_style_custom(
+                      parseDayLeft.func_difference_between_date(
+                          arrAllDetails[i]['due_date'].toString()),
+                      Colors.black,
+                      14.0,
+                    ),
+            ),
           ),
-        ),
-        //
-        Container(
-          height: 0.4,
-          width: MediaQuery.of(context).size.width,
-          color: Colors.black,
-        ),
-        //  ],
+          //
+          Container(
+            height: 0.4,
+            width: MediaQuery.of(context).size.width,
+            color: Colors.black,
+          ),
+        ],
       ],
     );
   }

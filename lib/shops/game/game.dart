@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/shop_click_details/shop_click_details.dart';
 import 'package:journey_recorded/shops/in_game_details/in_game_action_details.dart';
+import 'package:journey_recorded/shops/shop_history/shop_history.dart';
 import 'package:journey_recorded/shops/shop_item_details/shop_item_details.dart';
 import 'package:journey_recorded/shops/show_all_in_game/show_all_in_game_images.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
@@ -227,7 +228,7 @@ class _GameScreenState extends State<GameScreen> {
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
     if (kDebugMode) {
-      // print(get_data);
+      print(get_data);
     }
 
     if (resposne.statusCode == 200) {
@@ -329,9 +330,17 @@ class _GameScreenState extends State<GameScreen> {
                   right: 20.0,
                 ),
                 child: InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    //
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShopHistoryScreen(),
+                      ),
+                    );
+                  },
                   child: const Icon(
-                    Icons.shopping_cart,
+                    Icons.dashboard_customize_rounded,
                     color: Colors.white,
                   ),
                 ),
@@ -1392,7 +1401,7 @@ class _GameScreenState extends State<GameScreen> {
               onTap: () {
                 //
                 //
-                funcSkillManageToDetails(arr_skill_list);
+                funcSkillManageToDetails(arr_skill_list[i]);
               },
               child: Container(
                 height: 200,

@@ -488,6 +488,7 @@ class _InGameActionDetailsScreenState extends State<InGameActionDetailsScreen> {
         builder: (context) => ShopitemDetailsScreen(
           getFullDataOfproduct: custom,
           strProfileNumber: 'quests',
+          getAnotherFullDataToPush: actionClickedData,
         ),
       ),
     );
@@ -732,6 +733,7 @@ class _InGameActionDetailsScreenState extends State<InGameActionDetailsScreen> {
         builder: (context) => ShopitemDetailsScreen(
           getFullDataOfproduct: custom,
           strProfileNumber: 'missions',
+          getAnotherFullDataToPush: actionClickedData,
         ),
       ),
     );

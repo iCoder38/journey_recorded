@@ -5,6 +5,7 @@ import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/dashboard/dashboard.dart';
 import 'package:journey_recorded/edit_profile/edit_profile.dart';
 import 'package:journey_recorded/login/login.dart';
+import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
 // import 'package:journey_recorded/splash/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -223,6 +224,32 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     // ...
                     // Then close the drawer
                     Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.help,
+                  ),
+                  iconColor: Colors.white,
+                  title: Text(
+                    'Order history',
+                    style: TextStyle(
+                      fontFamily: font_style_name,
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ShopOrderHistoryScreen(
+                            // get_login_sender_chat_id: 'Dashboard',
+                            ),
+                      ),
+                    );
+                    // Then close the drawer
+                    // Navigator.pop(context);
                   },
                 ),
                 ListTile(

@@ -141,7 +141,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     if (kDebugMode) {
       print('========================');
-      print('====== GOAL ID ========');
+      print('====== GOAL ID  ========');
       print(widget.str_get_goal_id);
       print('========================');
       print('======= VIEW PROFILE =======');
@@ -173,14 +173,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         length: 6,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: text_bold_style_custom(
               //
-              widget.str_name.toString().toUpperCase(),
-              //
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              widget.str_name.toString().toUpperCase(), Colors.white, 16.0,
             ),
             leading: IconButton(
               icon: const Icon(
@@ -199,68 +194,57 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Info'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Notes'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                    ),
+                  child: text_regular_style_custom(
+                    'notes'.toUpperCase(),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Quotes'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                    ),
+                  child: text_regular_style_custom(
+                    'quotes'.toUpperCase(),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Team'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                    ),
+                  child: text_regular_style_custom(
+                    'team'.toUpperCase(),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Reward'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                    ),
+                  child: text_regular_style_custom(
+                    'reward'.toUpperCase(),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Link'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 18,
-                    ),
+                  child: text_regular_style_custom(
+                    'link'.toUpperCase(),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
               ],
               onTap: (value) {
-                print(value);
+                if (kDebugMode) {
+                  print(value);
+                }
                 str_show_ui = 'n.a.';
                 str_which_tab_bar_index_selected = value;
 
@@ -363,6 +347,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     },
                     icon: const Icon(
                       Icons.delete_forever,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -465,6 +450,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     },
                     icon: const Icon(
                       Icons.delete_forever,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -530,6 +516,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     },
                     icon: const Icon(
                       Icons.delete_forever,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -564,6 +551,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     },
                     icon: const Icon(
                       Icons.edit,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -1368,6 +1356,45 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   );
                 },
                 child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        height: 40,
+                        color: Colors.transparent,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: text_bold_style_custom(
+                            //
+                            '  ' + arr_task_list[i]['name'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 40,
+                          color: Colors.transparent,
+                          child: Center(
+                            child: text_regular_style_custom(
+                              //
+                              func_difference_between_date(
+                                arr_task_list[i]['due_date'].toString(),
+                              ),
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                /*child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     InkWell(
@@ -1427,47 +1454,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                               ),
                             ),
                           ),
-                          /*ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(
-                                  235,
-                                  0,
-                                  65,
-                                  1,
-                                ),
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(0)),
-                            child: const Icon(
-                              Icons.edit,
-                              size: 18,
-                            ),
-                            onPressed: () {
-                              //
-                              // print('object 2');
-                              //
-                            },
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(0)),
-                            child: const Icon(
-                              Icons.close,
-                              size: 18,
-                            ),
-                            onPressed: () {
-                              _showMyDialog(
-                                'Are you sure your want to delete ${arr_task_list[i]['name']} ?',
-                                arr_task_list[i]['taskId'].toString(),
-                              );
-                            },
-                          ),*/
                         ],
                       ),
                     ),
                   ],
-                ),
+                ),*/
               ),
               Container(
                 height: 1,
@@ -3985,7 +3976,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     str_main_loader = 'tasks_loader_start';
     setState(() {});
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
       Uri.parse(
@@ -4008,7 +3999,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
-    print(get_data);
+    if (kDebugMode) {
+      print(get_data);
+    }
 
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
@@ -4033,13 +4026,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
         // mission_info_list_WB();
       } else {
-        print(
-          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-        );
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
 

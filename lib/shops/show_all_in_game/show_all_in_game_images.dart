@@ -26,6 +26,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
   var arrAllInOneArray = [];
 
   var arrGoalList = [];
+  var arrMissionList = [];
+  var arrQuestList = [];
   //
   @override
   void initState() {
@@ -239,6 +241,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
 
         //
         arrAllInOneArray.add(custom);
+        //
+        arrMissionList.add(i);
       }
       //
     } else if (widget.getNumberToParse == '5') {
@@ -256,14 +260,16 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
 
         //
         arrAllInOneArray.add(custom);
+        //
+        arrQuestList.add(i);
       }
       //
     }
     //
     if (kDebugMode) {
       print('OUTPUT IS');
-      print(arrAllInOneArray[0]);
-      print(arrAllInOneArray[1]);
+      print(arrAllInOneArray);
+      // print(arrAllInOneArray[1]);
       print(arrAllInOneArray.length);
     }
     setState(() {});
@@ -329,6 +335,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                               builder: (context) => ShopitemDetailsScreen(
                                 getFullDataOfproduct: arrAllInOneArray[i],
                                 strProfileNumber: 'missions',
+                                getAnotherFullDataToPush: arrMissionList[i],
                               ),
                             ),
                           );
@@ -341,6 +348,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                               builder: (context) => ShopitemDetailsScreen(
                                 getFullDataOfproduct: arrAllInOneArray[i],
                                 strProfileNumber: 'quests',
+                                getAnotherFullDataToPush: arrQuestList[i],
                               ),
                             ),
                           );
