@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings, avoid_print
 
 // all scroll blue 'Container type_UI(BuildContext context)'
 import 'dart:convert';
@@ -1497,7 +1497,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    print('push to quest portal');
+                    print('LINE NUMBER ====> 1500');
+                    print(arr_quest_list[index]);
 
                     push_to_quest_details(
                       context,
@@ -1505,10 +1506,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       arr_quest_list[index]['name'].toString(),
                       arr_quest_list[index]['deadline'].toString(),
                       arr_quest_list[index]['description'].toString(),
-                      arr_quest_list[index]['goalId'].toString(),
+                      arr_quest_list[index]['questId'].toString(),
                       arr_quest_list[index]['categoryId'].toString(),
                       arr_quest_list[index]['parentName'].toString(),
-                      arr_quest_list[index]['missionId'].toString(),
+                      arr_quest_list[index]['questId'].toString(),
                       arr_quest_list[index]['image'].toString(),
                     );
                   },
@@ -1520,15 +1521,18 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     color: Colors.transparent,
                     child: ListTile(
                       // iconColor: Colors.pink,
-                      leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: (arr_quest_list[index]['image'].toString() == '')
-                            ? Image.asset('assets/images/logo.png')
-                            : FadeInImage.assetNetwork(
-                                placeholder: 'assets/images/loader.gif',
-                                image:
-                                    arr_quest_list[index]['image'].toString(),
-                              ),
+                      leading: SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            30.0,
+                          ),
+                          child: Image.network(
+                            arr_quest_list[index]['image'].toString(),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       ),
                       // const CircleAvatar(
                       //   radius: 30,
@@ -1536,30 +1540,18 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       //     'assets/images/3.png',
                       //   ),
                       // ),
-                      title: Text(
-                        //
+                      /*
+                       */
+                      title: text_bold_style_custom(
                         arr_quest_list[index]['name'].toString(),
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        Colors.black,
+                        14.0,
                       ),
-                      subtitle: Text(
+                      subtitle: text_regular_style_custom(
                         //
                         arr_quest_list[index]['categoryName'].toString(),
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 14.0,
-                          color: const Color.fromRGBO(
-                            30,
-                            58,
-                            118,
-                            1,
-                          ),
-                        ),
+                        Colors.black,
+                        12.0,
                       ),
                       trailing: Container(
                         height: 40,
@@ -1573,16 +1565,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           ),
                         ),
                         child: Center(
-                          child: Text(
+                          child: text_regular_style_custom(
                             //
                             parse_days_left.func_difference_between_date(
                                 arr_quest_list[index]['deadline'].toString()),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            Colors.black,
+                            12.0,
                           ),
                         ),
                       ),
@@ -1596,6 +1584,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     );
   }
 
+  /// ******** MISSION LIST UI **************
+  /// ***************************************
   SingleChildScrollView mission_list_UI() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -1623,8 +1613,13 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
                   onTap: () {
-                    print('push to mission portal');
-                    // print(arr_sub_goals);
+                    if (kDebugMode) {
+                      print('push to mission portal');
+                    }
+                    if (kDebugMode) {
+                      print('LINE NUMBER ====> 1632');
+                      print(arr_mission_list[index]);
+                    }
 
                     push_to_mission_details(
                         context,
@@ -1632,7 +1627,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         arr_mission_list[index]['name'].toString(),
                         arr_mission_list[index]['deadline'].toString(),
                         arr_mission_list[index]['description'].toString(),
-                        arr_mission_list[index]['goalId'].toString(),
+                        arr_mission_list[index]['missionId'].toString(),
                         arr_mission_list[index]['categoryId'].toString(),
                         arr_mission_list[index]['parentName'].toString(),
                         arr_mission_list[index]['missionId'].toString(),
@@ -1646,15 +1641,24 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     color: Colors.transparent,
                     child: ListTile(
                       // iconColor: Colors.pink,
-                      leading: const CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage(
-                          'assets/images/3.png',
+                      leading: SizedBox(
+                        height: 50,
+                        width: 50,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            25.0,
+                          ),
+                          child: Image.network(
+                            arr_mission_list[index]['image'].toString(),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
+
                       title: Text(
                         //
                         arr_mission_list[index]['name'].toString(),
+                        // 'test',
                         //
                         style: TextStyle(
                           fontFamily: font_style_name,
@@ -1712,6 +1716,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     );
   }
 
+  /// ******** SUB - GOAL LIST UI **************
+  /// ***************************************
   SingleChildScrollView sub_goals_list_UI() {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
@@ -1881,6 +1887,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     );
   }
 
+  /// ******** 4 tabs with BLUE NAVIGATION **************
+  /// ***************************************
+  ///
 // tab 4
   SingleChildScrollView tab_4_team_UI() {
     return SingleChildScrollView(
@@ -2907,7 +2916,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       InkWell(
                         onTap: () {
                           if (kDebugMode) {
-                            print('mission 2');
+                            print('LINE NUMBER ====> 2931');
                           }
 
                           (widget.strFromViewDetails == 'yes')
@@ -3090,46 +3099,55 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     bottom: 10.0,
                   ),
                 ),
-                Container(
-                  // width: 40,
-                  color: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Quest'.toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: font_style_name,
-                            fontSize: 14.0,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            borderRadius: BorderRadius.circular(
-                              14.0,
+                GestureDetector(
+                  onTap: () {
+                    //
+                    if (kDebugMode) {
+                      print('LINE NUMBER ====> 3116');
+                    }
+                    get_quest_list_WB();
+                  },
+                  child: Container(
+                    // width: 40,
+                    color: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Quest'.toUpperCase(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontFamily: font_style_name,
+                              fontSize: 14.0,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              '0',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 16.0,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(
+                                14.0,
+                              ),
+                            ),
+                            child: Center(
+                              child: Text(
+                                '0',
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Container(
@@ -3150,7 +3168,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       InkWell(
                         onTap: () {
                           if (kDebugMode) {
-                            print('mission 2');
+                            print('LINE NUMBER ====> 3174');
                           }
 
                           (widget.strFromViewDetails == 'yes')
@@ -4889,7 +4907,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
   // get mission details
   get_quest_list_WB() async {
-    print('=====> POST : QUEST LIST');
+    if (kDebugMode) {
+      print('=====> POST : QUEST LIST');
+    }
 
     str_show_ui = 'quest';
 
@@ -4912,7 +4932,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'questlist',
           'userId': prefs.getInt('userId').toString(),
-          'goalId': widget.str_goal_cat_id.toString(),
+          // 'goalId': widget.str_goal_cat_id.toString(),
+          'profesionalId': widget.str_get_goal_id,
+          'profesionalType': 'Goal',
         },
       ),
     );
@@ -5583,7 +5605,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
-          strFromViewDetails: 'no',
+          strFromViewDetails: widget.strFromViewDetails,
+          // s
         ),
       ),
     );
@@ -5634,7 +5657,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
-          strFromViewDetails: 'no',
+          strFromViewDetails: widget.strFromViewDetails,
         ),
       ),
     );
@@ -5645,7 +5668,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     /*ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text('$result')));*/
-
+    if (kDebugMode) {
+      print('LINE NUMBER ====> 5670');
+    }
     (widget.strFromViewDetails == 'yes')
         ? get_mission_list_WB_without_user_id()
         : get_mission_list_WB();

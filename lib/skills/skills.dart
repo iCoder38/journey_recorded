@@ -471,6 +471,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
                                     arr_skills[i]['skillId'].toString(),
                                 str_training_id:
                                     arr_skills[i]['trainingId'].toString(),
+                                strUserIdEnabled: 'yes',
                               ),
                             ),
                           );

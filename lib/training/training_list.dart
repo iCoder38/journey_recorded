@@ -26,10 +26,14 @@ class TrainingListScreen extends StatefulWidget {
     super.key,
     required this.str_skill_id,
     required this.str_training_id,
+    required this.strUserIdEnabled,
+    this.strGetUserId,
   });
 
   final String str_skill_id;
   final String str_training_id;
+  final String strUserIdEnabled;
+  final strGetUserId;
 
   @override
   State<TrainingListScreen> createState() => _TrainingListScreenState();
@@ -71,21 +75,103 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
   //
   var dict_save_training_full_data;
   //
+  var strNewSkillClass = '';
+  //
   @override
   void initState() {
     super.initState();
     // var string = widget.str_date;
 
     if (kDebugMode) {
-      print('=====> dishant rajput');
-      print(widget.str_training_id);
+      print('Skill id =====>  ${widget.str_skill_id}');
+      print('Training id =====>  ${widget.str_training_id}');
     }
 
-    // [Hello, world!];
-    get_goals_list_WB();
+    //
+    funcValidationBeforeFetchTrainingList();
   }
 
-  get_goals_list_WB() async {
+  funcValidationBeforeFetchTrainingList() {
+    if (widget.strUserIdEnabled == 'yes') {
+      //
+      getTrainingListOld();
+    } else {
+      //
+      getTrainingListNew();
+    }
+  }
+
+  getTrainingListNew() async {
+    if (kDebugMode) {
+      print('=====> POST : SKILL => TRAINING LIST 2');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'traininglist',
+          'userId': widget.strGetUserId.toString(),
+          'pageNo': '',
+          'skillId': widget.str_skill_id.toString()
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        dict_save_training_full_data = get_data['data'][0];
+        //
+
+        //
+        final splitted = dict_save_training_full_data['SetReminder'].split(' ');
+        if (kDebugMode) {
+          print(splitted);
+        }
+        get_str_date = splitted[0].toString();
+        get_str_time = splitted[1].toString();
+        //
+        strNewSkillClass = dict_save_training_full_data['SkillClass'];
+        //
+        // get and parse data
+
+        if (kDebugMode) {
+          print('one');
+          print(dict_save_training_full_data);
+        }
+        setState(() {
+          str_main_loader = '1';
+        });
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
+  getTrainingListOld() async {
     if (kDebugMode) {
       print('=====> POST : SKILL => TRAINING LIST 2');
     }
@@ -130,17 +216,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         get_str_time = splitted[1].toString();
         //
         // get and parse data
-        /*arr_training_list.clear();
-        for (var i = 0; i < get_data['data'].length; i++) {
-          // print(get_data['data'][i]);
-          arr_training_list.add(get_data['data'][i]);
-        }
 
-        if (arr_training_list.isEmpty) {
-          str_main_loader = '2';
-        } else {
-          str_main_loader = '3';
-        }*/
         if (kDebugMode) {
           print(dict_save_training_full_data);
         }
@@ -148,13 +224,17 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
           str_main_loader = '1';
         });
       } else {
-        print(
-          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-        );
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
       }
     } else {
       // return postList;
-      print('something went wrong');
+      if (kDebugMode) {
+        print('something went wrong');
+      }
     }
   }
 
@@ -166,14 +246,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         length: 5,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
-              //
-              'Training',
-              //
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+            title: text_regular_style_custom(
+              'training details'.toUpperCase(),
+              Colors.white,
+              16.0,
             ),
             backgroundColor: navigation_color,
             leading: IconButton(
@@ -189,57 +265,50 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Info'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Notes'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
+                  // Text(
+                  //   'Notes'.toUpperCase(),
+                  //   style: TextStyle(
+                  //     fontFamily: font_style_name,
+                  //     fontSize: 16.0,
+                  //     backgroundColor: Colors.transparent,
+                  //   ),
+                  // ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Quotes'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Stats lvs'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Grinds'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                  child: text_regular_style_custom(
+                    'grinds'.toUpperCase(),
+                    Colors.white,
+                    16.0,
                   ),
                 )
               ],
@@ -1850,13 +1919,17 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                 margin: const EdgeInsets.only(
                   left: 20.0,
                 ),
-                height: 130,
-                width: 130,
+                height: 120,
+                width: 120,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.white,
-                    width: 5,
+                    width: 3,
                   ),
+                ),
+                child: Image.network(
+                  dict_save_training_full_data['image'].toString(),
+                  fit: BoxFit.cover,
                 ),
               ),
               const SizedBox(
@@ -1870,7 +1943,66 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               const SizedBox(
                 width: 10,
               ),
-              Expanded(
+              Padding(
+                padding: const EdgeInsets.all(0),
+                child: Container(
+                  // height: 180,
+                  // width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      text_bold_style_custom(
+                        //
+                        dict_save_training_full_data['skillName'].toString(),
+                        Colors.white,
+                        16.0,
+                      ), //
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      text_regular_style_custom(
+                        'Total Exp : 0',
+                        Colors.white,
+                        14.0,
+                      ),
+                      //
+                      const SizedBox(
+                        height: 8.0,
+                      ),
+                      Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              8,
+                            ),
+                          ),
+                          // border: Border.all(),
+                        ),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            //
+                            Image.asset(
+                              'assets/images/btn_round.png',
+                              height: 50,
+                              width: 160,
+                              fit: BoxFit.cover,
+                            ),
+                            //
+                            text_regular_style_custom(
+                              'Level : ${dict_save_training_full_data['currentLavel'].toString()}',
+                              Colors.black,
+                              12.0,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+              /*Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(
                     right: 10.0,
@@ -1887,7 +2019,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                             alignment: Alignment.centerLeft,
                             child: Text(
                               //
-                              dict_save_training_full_data['categoryName']
+                              dict_save_training_full_data['skillName']
                                   .toString()
                                   .toUpperCase(),
                               // '12',
@@ -1947,12 +2079,12 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
         Container(
-          height: 60,
+          height: 50,
           width: MediaQuery.of(context).size.width,
           color: const Color.fromRGBO(
             2,
@@ -1964,16 +2096,21 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
             children: <Widget>[
               Expanded(
                 child: Align(
-                  child: Text(
-                    'Skill Class : ${dict_save_training_full_data['skillClassName'].toString()}',
-                    // dict_save_training_full_data['skillClassName'].toString(),
-                    // '14',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      text_bold_style_custom(
+                        'SKILLS CLASS : ',
+                        Colors.white,
+                        14.0,
+                      ),
+                      text_regular_style_custom(
+                        //
+                        strNewSkillClass,
+                        Colors.white,
+                        14.0,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -2000,7 +2137,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
           ),
         ),
         Container(
-          height: 52,
+          height: 40,
           width: MediaQuery.of(context).size.width,
           color: const Color.fromRGBO(
             250,
@@ -2040,13 +2177,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                             ),
                           ),
                     child: Align(
-                      child: Text(
+                      child: text_regular_style_custom(
                         'Routine',
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
+                        Colors.white,
+                        14.0,
                       ),
                     ),
                   ),
@@ -2085,13 +2219,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                             ),
                           ),
                     child: Align(
-                      child: Text(
+                      child: text_regular_style_custom(
                         'Check List',
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
+                        Colors.white,
+                        14.0,
                       ),
                     ),
                   ),
@@ -2131,13 +2262,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                             ),
                           ),
                     child: Align(
-                      child: Text(
+                      child: text_regular_style_custom(
                         'Stats',
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
+                        Colors.white,
+                        14.0,
                       ),
                     ),
                   ),
@@ -2177,13 +2305,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                             ),
                           ),
                     child: Align(
-                      child: Text(
+                      child: text_regular_style_custom(
                         'Frequency',
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                        ),
+                        Colors.white,
+                        14.0,
                       ),
                     ),
                   ),
@@ -2223,7 +2348,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         <String, String>{
           'action': 'notelist',
           'pageNo': '',
-          'profesionalId': widget.str_skill_id.toString(),
+          'profesionalId': widget.str_training_id.toString(),
           'profesionalType': 'Training',
         },
       ),
@@ -2263,7 +2388,9 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
 
   // QUOTES
   Future func_quotes_WB() async {
-    print('=====> POST : QUOTES');
+    if (kDebugMode) {
+      print('=====> POST : QUOTES');
+    }
 
     str_UI_show = 'quotes';
     str_bottom_bar_color = '0';
@@ -2272,7 +2399,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       str_main_loader = 'quotes_loader_start';
     });
 
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
       Uri.parse(
@@ -2284,9 +2411,9 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       body: jsonEncode(
         <String, String>{
           'action': 'quotlist',
-          // 'userId': prefs.getInt('userId').toString(),
+          'userId': prefs.getInt('userId').toString(),
           'pageNo': '',
-          'profesionalId': widget.str_skill_id.toString(),
+          'profesionalId': widget.str_training_id.toString(),
           'profesionalType': 'Training',
         },
       ),

@@ -140,6 +140,7 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                                   arr_training_list[i]['skillId'].toString(),
                               str_training_id:
                                   arr_training_list[i]['trainingId'].toString(),
+                              strUserIdEnabled: 'yes',
                             ),
                           ),
                         );

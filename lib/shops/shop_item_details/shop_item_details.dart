@@ -14,6 +14,7 @@ import 'package:journey_recorded/shops/payment_list/buy_now_goals_payment_Screen
 import 'package:journey_recorded/shops/payment_list/buy_now_payment_screen.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_skill_payment_screen.dart';
 import 'package:journey_recorded/shops/shop_all_view_details/shop_all_view_details.dart';
+import 'package:journey_recorded/training/training_list.dart';
 
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,11 +24,13 @@ class ShopitemDetailsScreen extends StatefulWidget {
       {super.key,
       this.getFullDataOfproduct,
       this.strProfileNumber,
-      this.getAnotherFullDataToPush});
+      this.getAnotherFullDataToPush,
+      this.getSkillRealFullData});
 
   final strProfileNumber;
   final getFullDataOfproduct;
   final getAnotherFullDataToPush;
+  final getSkillRealFullData;
 
   @override
   State<ShopitemDetailsScreen> createState() => _ShopitemDetailsScreenState();
@@ -51,7 +54,8 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
       print('==================================');
       print(widget.getAnotherFullDataToPush);
       print('==================================');
-      print('==================================');
+      print('========== SKILL DATA =============');
+      print(widget.getSkillRealFullData);
       // print(widget.getFullDataOfproduct['image'].toString());
     }
     //
@@ -962,6 +966,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                 width: 40,
               ),
             ] else if (widget.strProfileNumber == '1') ...[
+              // skill
               Container(
                 height: 240,
                 width: MediaQuery.of(context).size.width,
@@ -1007,59 +1012,131 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               ),
               //
 
-              GestureDetector(
-                onTap: () {
-                  //
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => BuyNowSkillPaymentScreen(
-                        strProductId:
-                            widget.getFullDataOfproduct['productId'].toString(),
-                        strTotalPrice: strTotalPriceIs,
-                        strProductName:
-                            widget.getFullDataOfproduct['name'].toString(),
-                        strProductQuantity: strQuantityCounter.toString(),
-                      ),
-                    ),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Container(
-                    height: 60,
-                    // width: 100,
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BuyNowSkillPaymentScreen(
+                              strProductId: widget
+                                  .getFullDataOfproduct['productId']
+                                  .toString(),
+                              strTotalPrice: strTotalPriceIs,
+                              strProductName: widget
+                                  .getFullDataOfproduct['name']
+                                  .toString(),
+                              strProductQuantity: strQuantityCounter.toString(),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        height: 60,
+                        // width: 100,
 
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(170, 200, 240, 1),
-                      border: Border.all(width: 0.2),
-                      borderRadius: BorderRadius.circular(
-                        12.0,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                          blurRadius: 6.0,
-                        )
-                      ],
-                    ),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.credit_card),
-                          const SizedBox(
-                            width: 10,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(170, 200, 240, 1),
+                          border: Border.all(width: 0.2),
+                          borderRadius: BorderRadius.circular(
+                            12.0,
                           ),
-                          text_bold_style_custom(
-                            'Buy Now \$$strTotalPriceIs',
-                            Colors.black,
-                            14.0,
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 6.0,
+                            )
+                          ],
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.credit_card),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              text_bold_style_custom(
+                                'Buy Now \$$strTotalPriceIs',
+                                Colors.black,
+                                14.0,
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        //
+                        if (kDebugMode) {
+                          print(widget.getSkillRealFullData);
+                          print(widget.getSkillRealFullData['TrainingList'][0]
+                              ['trainingId']);
+                        }
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TrainingListScreen(
+                                str_skill_id: widget
+                                    .getSkillRealFullData['skillId']
+                                    .toString(),
+                                str_training_id: widget
+                                    .getSkillRealFullData['TrainingList'][0]
+                                        ['trainingId']
+                                    .toString(),
+                                strGetUserId: widget
+                                    .getSkillRealFullData['userId']
+                                    .toString(),
+                                strUserIdEnabled: 'no'),
+                          ),
+                        );
+                        //
+                      },
+                      child: Container(
+                        height: 60,
+                        // width: 100,
+
+                        decoration: BoxDecoration(
+                          color: Colors.greenAccent,
+                          border: Border.all(width: 0.2),
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                          boxShadow: const [
+                            BoxShadow(
+                              blurRadius: 6.0,
+                            )
+                          ],
+                        ),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // const Icon(Icons.credit_card),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              text_bold_style_custom(
+                                //
+                                'View Details',
+                                Colors.black,
+                                14.0,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(14.0),
