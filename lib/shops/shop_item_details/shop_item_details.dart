@@ -1019,6 +1019,9 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                     child: GestureDetector(
                       onTap: () {
                         //
+                        if (kDebugMode) {
+                          print('=============> line number 1023');
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -1075,11 +1078,11 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                     child: GestureDetector(
                       onTap: () {
                         //
-                        if (kDebugMode) {
+                        /*if (kDebugMode) {
                           print(widget.getSkillRealFullData);
                           print(widget.getSkillRealFullData['TrainingList'][0]
                               ['trainingId']);
-                        }
+                        }*/
                         //
                         Navigator.push(
                           context,

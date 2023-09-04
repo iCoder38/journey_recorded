@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, avoid_print
 
 import 'dart:convert';
 
@@ -75,6 +75,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
   //
   var dict_save_training_full_data;
   //
+  var boolFloatingButton = false;
   var strNewSkillClass = '';
   //
   @override
@@ -85,6 +86,12 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     if (kDebugMode) {
       print('Skill id =====>  ${widget.str_skill_id}');
       print('Training id =====>  ${widget.str_training_id}');
+    }
+
+    if (widget.strUserIdEnabled == 'yes') {
+      boolFloatingButton = true;
+    } else {
+      boolFloatingButton = false;
     }
 
     //
@@ -314,7 +321,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               ],
               onTap: (value) {
                 if (kDebugMode) {
-                  print(value);
+                  print('user click ==> $value');
                 }
 
                 if (value == 0) {
@@ -325,16 +332,17 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                   //
                 } else if (value == 1) {
                   // notes
-                  str_UI_show = 'notes';
-                  setState(() {});
+                  // str_UI_show = 'notes';
+                  // setState(() {});
                   func_notes_WB();
-
                   //
                 } else if (value == 2) {
                   // quotes
-                  str_UI_show = 'quotes';
-                  setState(() {});
+                  //str_UI_show = 'notes';
+                  // setState(() {});
+                  //
                   func_quotes_WB();
+                  //
                 } else if (value == 3) {
                   // stats
                   // stats
@@ -351,12 +359,15 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               },
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              func_push_from_floating_button();
-            },
-            backgroundColor: navigation_color,
-            child: const Icon(Icons.add),
+          floatingActionButton: Visibility(
+            visible: boolFloatingButton,
+            child: FloatingActionButton(
+              onPressed: () {
+                func_push_from_floating_button();
+              },
+              backgroundColor: navigation_color,
+              child: const Icon(Icons.add),
+            ),
           ),
           body: (str_main_loader == '0')
               ? const DialogExample(
@@ -430,6 +441,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                       //
                     ] else ...[
                       //
+                      // notes_UI(context)
                       quote_UI(context),
 
                       //
@@ -523,10 +535,8 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         children: [
           // header
           //
-          const TrainingHeaderScreen(
-              str_skill_class: '1', //widget.str_skill_class.toString(),
-              str_next_level_xp: '2' //widget.str_next_level_xp.toString(),
-              ),
+          //
+          header_UI(context),
           //
           if (str_main_loader == 'quotes_loader_start')
             const CustomeLoaderPopUp(
@@ -2392,7 +2402,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       print('=====> POST : QUOTES');
     }
 
-    str_UI_show = 'quotes';
+    str_UI_show = 'notes';
     str_bottom_bar_color = '0';
 
     setState(() {

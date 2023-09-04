@@ -31,6 +31,7 @@ class _GameScreenState extends State<GameScreen> {
   var arr_action_list = [];
   var arr_skill_list = [];
   var arr_product_list = [];
+  var arrOutGameList = [];
   //
 
   //
@@ -233,12 +234,12 @@ class _GameScreenState extends State<GameScreen> {
 
     if (resposne.statusCode == 200) {
       //
-      arr_product_list.clear();
+      arrOutGameList.clear();
       //
       if (get_data['status'].toString().toLowerCase() == 'success') {
         for (Map i in get_data['data']) {
           //
-          arr_product_list.add(i);
+          arrOutGameList.add(i);
           //
         }
         //
@@ -281,23 +282,18 @@ class _GameScreenState extends State<GameScreen> {
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'In Game',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Out Game',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
+                    Colors.white,
+                    16.0,
                   ),
                 ),
               ],
@@ -412,7 +408,7 @@ class _GameScreenState extends State<GameScreen> {
       child: Column(
         children: [
           Container(
-            height: 80,
+            height: 60,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: Colors.amber,
@@ -430,7 +426,7 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
           //
-          for (int i = 0; i < arr_product_list.length; i++) ...[
+          for (int i = 0; i < arrOutGameList.length; i++) ...[
             const SizedBox(
               height: 20,
             ),
@@ -451,7 +447,7 @@ class _GameScreenState extends State<GameScreen> {
                   left: 20.0,
                   right: 20.0,
                 ),
-                height: 120,
+                height: 100,
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(
@@ -466,7 +462,47 @@ class _GameScreenState extends State<GameScreen> {
                 ),
                 child: Row(
                   children: <Widget>[
-                    Container(
+                    (arrOutGameList[i]['profile_picture'].toString() == '')
+                        ? Container(
+                            margin: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                0,
+                              ),
+                            ),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : Container(
+                            margin: const EdgeInsets.all(
+                              10.0,
+                            ),
+                            height: 80,
+                            width: 80,
+                            decoration: BoxDecoration(
+                              color: Colors.amber,
+                              borderRadius: BorderRadius.circular(
+                                14.0,
+                              ),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                12.0,
+                              ),
+                              child: Image.network(
+                                arrOutGameList[i]['profile_picture'].toString(),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                    /*Container(
                       margin: const EdgeInsets.only(
                         left: 20.0,
                       ),
@@ -478,23 +514,24 @@ class _GameScreenState extends State<GameScreen> {
                           12.0,
                         ),
                       ),
-                      child: ClipRRect(
+                      child: 
+                      /*ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: (arr_product_list[i]['profile_picture']
-                                    .toString() ==
-                                '')
-                            ? Image.asset('assets/images/logo.png')
-                            : FadeInImage.assetNetwork(
-                                placeholder: 'assets/images/loader.gif',
-                                image: arr_product_list[i]['profile_picture']
-                                    .toString(),
-                              ),
-                      ),
-                    ),
+                        child:
+                            (arrOutGameList[i]['profile_picture'].toString() ==
+                                    '')
+                                ? Image.asset('assets/images/logo.png')
+                                : FadeInImage.assetNetwork(
+                                    placeholder: 'assets/images/loader.gif',
+                                    image: arrOutGameList[i]['profile_picture']
+                                        .toString(),
+                                  ),
+                      ),*/
+                    ),*/
                     Expanded(
                       child: Container(
                         margin: const EdgeInsets.only(
-                          left: 20.0,
+                          left: 0.0,
                           right: 20.0,
                         ),
                         height: 90,
@@ -510,75 +547,57 @@ class _GameScreenState extends State<GameScreen> {
                             Expanded(
                               child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: Text(
+                                child: text_bold_style_custom(
                                   //
-                                  arr_product_list[i]['businessName']
-                                      .toString(),
-                                  //
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  arrOutGameList[i]['businessName'].toString(),
+                                  Colors.black,
+                                  18.0,
                                 ),
                               ),
                             ),
                             Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      const TextSpan(
-                                        text: " ",
-                                      ),
-                                      const WidgetSpan(
-                                        child: Icon(
-                                          Icons.list,
-                                          size: 18,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            ' ${arr_product_list[i]['contactNumber']}',
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 16.0,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.phone,
+                                    color: Colors.black,
+                                    size: 18.0,
                                   ),
-                                ),
+                                  //
+                                  const SizedBox(
+                                    width: 8.0,
+                                  ),
+                                  //
+                                  text_regular_style_custom(
+                                    //
+                                    arrOutGameList[i]['contactNumber']
+                                        .toString(),
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
                               ),
                             ),
                             Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      const TextSpan(
-                                        text: " ",
-                                      ),
-                                      const WidgetSpan(
-                                        child: Icon(
-                                          Icons.list,
-                                          size: 14,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text:
-                                            '${arr_product_list[i]['businessAddress']}',
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 16.0,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ],
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.pin_drop,
+                                    color: Colors.black,
+                                    size: 18.0,
+                                  ), //
+                                  const SizedBox(
+                                    width: 8.0,
                                   ),
-                                ),
+                                  //
+                                  text_regular_style_custom(
+                                    //
+                                    arrOutGameList[i]['businessAddress']
+                                        .toString(),
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
                               ),
                             ),
                           ],

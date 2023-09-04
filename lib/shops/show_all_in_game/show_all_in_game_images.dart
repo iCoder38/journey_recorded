@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
@@ -28,6 +30,8 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
   var arrGoalList = [];
   var arrMissionList = [];
   var arrQuestList = [];
+  //
+  var arrSkillFullData;
   //
   @override
   void initState() {
@@ -173,6 +177,12 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
 
       print(data);
       print(widget.getNumberToParse);
+
+      if (widget.getNumberToParse == '1') {
+        print('skilllllllllls');
+        print(data['data'][0]);
+        arrSkillFullData = data['data'];
+      }
     }
     if (widget.getNumberToParse == '1') {
       //
@@ -367,12 +377,17 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                         } else if (widget.getNumberToParse == '1') {
                           //
                           //
+                          if (kDebugMode) {
+                            print('YOU PRESSED SKILL');
+                            print(arrSkillFullData[i]);
+                          }
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ShopitemDetailsScreen(
                                 getFullDataOfproduct: arrAllInOneArray[i],
                                 strProfileNumber: '1',
+                                getSkillRealFullData: arrSkillFullData[i],
                               ),
                             ),
                           );
