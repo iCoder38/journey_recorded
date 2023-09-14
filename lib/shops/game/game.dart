@@ -435,7 +435,8 @@ class _GameScreenState extends State<GameScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ShopClickDetailsScreen(),
+                    builder: (context) =>
+                        ShopClickDetailsScreen(getFullData: arrOutGameList[i]),
                   ),
                 );
               },

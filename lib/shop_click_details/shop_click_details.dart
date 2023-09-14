@@ -1,4 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously
+import 'dart:convert';
+
+// import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
@@ -6,7 +12,9 @@ import 'package:journey_recorded/shop_click_details/create_item/create_item.dart
 import 'package:journey_recorded/task/create_task/create_task.dart';
 
 class ShopClickDetailsScreen extends StatefulWidget {
-  const ShopClickDetailsScreen({super.key});
+  const ShopClickDetailsScreen({super.key, this.getFullData});
+
+  final getFullData;
 
   @override
   State<ShopClickDetailsScreen> createState() => _ShopClickDetailsScreenState();
@@ -14,7 +22,19 @@ class ShopClickDetailsScreen extends StatefulWidget {
 
 class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
   //
+  var strSpecialClick = '0';
+  var strServiceClick = '0';
+  var strItemsClick = '0';
+  var strContactInfoClick = '0';
+  var strEmplyeeClick = '0';
+  //
+  var dictProfileData;
+  //
+  var strLoader = '0';
   var arr_notes = [];
+  //
+  var arrOutGame = [];
+  //
   var custom_dict = [
     {
       'date': '5-December-2022',
@@ -57,6 +77,19 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
   ];
   //
   @override
+  void initState() {
+    if (kDebugMode) {
+      print('=================');
+      print('=================');
+      print(widget.getFullData);
+      print('=================');
+      print('=================');
+    }
+    funcSpecialListWB('Special');
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -71,64 +104,6 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               ),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            bottom: TabBar(
-              indicatorColor: Colors.lime,
-              isScrollable: true,
-              // labelColor: Colors.amber,
-              tabs: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Specials',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Services',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Items',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Contact Info',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Employee',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-              ],
-            ),
             backgroundColor: navigation_color,
             title: Text(
               ///
@@ -140,169 +115,103 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 fontSize: 18.0,
               ),
             ),
-            /*actions: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  right: 20.0,
-                ),
-                child: InkWell(
-                  onTap: () {},
-                  child: const Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],*/
           ),
-          body: TabBarView(
-            children: <Widget>[
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    header_UI(context),
-                    tabbar_SPECIAL_ui(),
-                  ],
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    header_UI(context),
-                    tabbar_SERVICES_ui(context),
+          body: Column(
+            children: [
+              //
+              header_UI(context),
+              //
+              tabsUI(context),
+              //
+              if (strSpecialClick == '1') ...[
+                //
 
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // arr_demo
-                  ],
-                ),
-              ),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    header_UI(context),
-                    tabbar_ITEMS_ui(),
+                (strLoader == '0')
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.purple,
+                        ),
+                      )
+                    : tabbar_SPECIAL_ui(),
+              ] else if (strServiceClick == '1') ...[
+                //
+                (strLoader == '0')
+                    ? const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.purple,
+                        ),
+                      )
+                    : tabbar_SERVICES_ui(context),
+              ] else if (strItemsClick == '1') ...[
+                //
+                if (arrOutGame.isEmpty)
+                  ...[]
+                else ...[
+                  tabbar_CONTACT_INFO_ui(),
+                ],
 
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // arr_demo
-                  ],
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                  ),
+                  height: 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.grey,
                 ),
-              ),
-              // tabbar_EMPLOYEE_ui
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    header_UI(context),
+                //
+              ] else if (strContactInfoClick == '1') ...[
+                //
+                //
+                tabbar_all_contact_info_ui(context),
+              ] else if (strEmplyeeClick == '1') ...[
+                //
 
-                    for (var i = 0; i < arr_contact_info.length; i++) ...[
-                      ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        //scrollDirection: Axis.vertical,
-                        //shrinkWrap: true,
-                        itemCount: 1,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              Container(
-                                height: 60,
-                                width: MediaQuery.of(context).size.width,
-                                color: Colors.transparent,
-                                child: Column(
-                                  children: <Widget>[
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                        top: 10.0,
-                                        left: 10.0,
-                                        right: 10.0,
-                                      ),
-                                      color: Colors.transparent,
-                                      // height: 30,
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          //
-                                          arr_contact_info[i]['title']
-                                              .toString(),
-                                          //
-                                          style: TextStyle(
-                                            fontFamily: font_style_name,
-                                            fontSize: 18.0,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                          // top: 10.0,
-                                          left: 10.0,
-                                          right: 10.0,
-                                          bottom: 0.0,
-                                        ),
-                                        color: Colors.transparent,
-                                        // height: 30,
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            //
-                                            arr_contact_info[i]['message']
-                                                .toString(),
-                                            //
-                                            style: TextStyle(
-                                              fontFamily: font_style_name,
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                (strLoader == '0')
+                    ? const Column(
+                        children: [
+                          SizedBox(
+                            height: 40,
+                          ),
+                          Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.brown,
+                            ),
+                          ),
+                        ],
+                      )
+                    : SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          children: [
+                            for (var j = 0; j < arrOutGame.length; j++) ...[
+                              ListTile(
+                                leading: SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                  ),
+                                ),
+                                title: text_bold_style_custom(
+                                  //
+                                  arrOutGame[j]['From_userName'],
+                                  Colors.black,
+                                  14.0,
+                                ),
+                                subtitle: text_regular_style_custom(
+                                  //
+                                  arrOutGame[j]['From_userAddress'],
+                                  Colors.black,
+                                  12.0,
                                 ),
                               ),
-                            ],
-                          );
-                        },
+                            ]
+                          ],
+                        ),
                       ),
-                      Container(
-                        height: 1,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.grey,
-                      ),
-                    ],
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // arr_demo
-                  ],
-                ),
-              ),
-              // tabbar_in_games_UI(context),
-              // tabbar_OUT_GAMES_ui(context),
-              SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  children: [
-                    header_UI(context),
-                    tabbar_EMPLOYEE_ui(),
-
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // arr_demo
-                  ],
-                ),
-              ),
+              ]
             ],
           ),
         ),
@@ -310,121 +219,511 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
     );
   }
 
-  Column tabbar_SERVICES_ui(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        for (var i = 0; i < custom_dict.length; i++) ...[
-          Container(
-            // height: 60,
-            width: MediaQuery.of(context).size.width,
-            color: const Color.fromRGBO(
-              244,
-              244,
-              244,
-              1,
-            ),
-            child: Row(
-              children: <Widget>[
-                const SizedBox(
-                  width: 20.0,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      //
-                      custom_dict[i]['date'].toString(),
-                      //
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+  Padding tabbar_all_contact_info_ui(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        // height: 100,
+        width: MediaQuery.of(context).size.width,
+
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border.all(
+            width: 0.2,
           ),
-          for (var i = 0; i < arr_demo.length; i++) ...[
-            Container(
-              height: 60,
-              width: MediaQuery.of(context).size.width,
-              color: const Color.fromRGBO(
-                255,
-                255,
-                255,
-                1,
-              ),
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
-                children: <Widget>[
-                  const SizedBox(
-                    width: 20.0,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text_regular_style_custom(
+                    'Phone : ',
+                    Colors.black,
+                    14.0,
                   ),
-                  Expanded(
-                    flex: 6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        //
-                        arr_demo[i],
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 18.0,
+                  (dictProfileData == null)
+                      ? text_regular_style_custom(
+                          'please wait...',
+                          Colors.black,
+                          12.0,
+                        )
+                      : text_regular_style_custom(
+                          //
+                          dictProfileData['businessPhone'].toString(),
+                          Colors.black,
+                          14.0,
                         ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
+            //
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+            ),
+            //
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text_regular_style_custom(
+                    'FAX : ',
+                    Colors.black,
+                    14.0,
+                  ),
+                  (dictProfileData == null)
+                      ? text_regular_style_custom(
+                          'please wait...',
+                          Colors.black,
+                          12.0,
+                        )
+                      : text_regular_style_custom(
+                          //
+                          dictProfileData['businessFax'].toString(),
+                          Colors.black,
+                          14.0,
+                        ),
+                ],
+              ),
+            ),
+            //
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+            ),
+            //
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text_regular_style_custom(
+                    'E-mail Address : ',
+                    Colors.black,
+                    14.0,
+                  ),
+                  (dictProfileData == null)
+                      ? text_regular_style_custom(
+                          'please wait...',
+                          Colors.black,
+                          12.0,
+                        )
+                      : text_regular_style_custom(
+                          //
+                          dictProfileData['businessEmail'].toString(),
+                          Colors.black,
+                          14.0,
+                        ),
+                ],
+              ),
+            ),
+            //
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+            ),
+            //
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text_regular_style_custom(
+                    'Web Address : ',
+                    Colors.black,
+                    14.0,
+                  ),
+                  (dictProfileData == null)
+                      ? text_regular_style_custom(
+                          'please wait...',
+                          Colors.black,
+                          12.0,
+                        )
+                      : text_regular_style_custom(
+                          //
+                          dictProfileData['businessWebSite'].toString(),
+                          Colors.black,
+                          14.0,
+                        ),
+                ],
+              ),
+            ),
+            //
+            Container(
+              height: 0.2,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+            ),
+            //
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  text_regular_style_custom(
+                    'Address : ',
+                    Colors.black,
+                    14.0,
+                  ),
+                  (dictProfileData == null)
+                      ? text_regular_style_custom(
+                          'please wait...',
+                          Colors.black,
+                          12.0,
+                        )
+                      : text_regular_style_custom(
+                          //
+                          dictProfileData['businessAddress'].toString(),
+                          Colors.black,
+                          12.0,
+                        ),
+                ],
+              ),
+            ),
+            //
           ],
-          Container(
-            height: 1,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
+        ),
+      ),
+    );
+  }
+
+  Column tabbar_CONTACT_INFO_ui() {
+    return Column(
+      children: [
+        for (var j = 0; j < arrOutGame.length; j++) ...[
+          ListTile(
+            leading: (arrOutGame[j]['image_1'] == '')
+                ? SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                    ),
+                  )
+                : SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Image.network(
+                      arrOutGame[j]['image_1'],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+            title: text_regular_style_custom(
+              //
+              arrOutGame[j]['name'],
+              Colors.black,
+              14.0,
+            ),
+            trailing: Container(
+              height: 30,
+              width: 80,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(
+                  250,
+                  0,
+                  60,
+                  1,
+                ),
+                borderRadius: BorderRadius.circular(
+                  20.0,
+                ),
+              ),
+              child: Center(
+                child: text_bold_style_custom(
+                  //
+                  '\$ ${arrOutGame[j]['salePrice']}',
+                  Colors.white,
+                  14.0,
+                ),
+              ),
+            ),
           ),
-        ],
+        ]
       ],
     );
   }
 
-  Column tabbar_EMPLOYEE_ui() {
-    return Column(
-      children: [
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          // scrollDirection: Axis.vertical,
-          //shrinkWrap: true,
-          itemCount: 20,
-          itemBuilder: (BuildContext context, int index) {
-            return InkWell(
-              onTap: () {},
+  Container tabsUI(BuildContext context) {
+    return Container(
+      height: 60,
+      width: MediaQuery.of(context).size.width,
+      color: const Color.fromRGBO(
+        250,
+        0,
+        60,
+        1,
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            /************************************/
+            /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strSpecialClick = '1';
+                  strServiceClick = '0';
+                  strItemsClick = '0';
+                  strContactInfoClick = '0';
+                  strEmplyeeClick = '0';
+                });
+                //
+                funcSpecialListWB('Special');
+              },
               child: Container(
-                margin: const EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 0.0,
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strSpecialClick == '0')
+                        ? text_regular_style_custom(
+                            'Special',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Special',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
                 ),
-                height: 80,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.white,
-                child: Card(
-                  child: ListTile(
-                    leading: const FlutterLogo(size: 72.0),
-                    title: Text(
-                      '2017 Doge Ram',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontWeight: FontWeight.w600,
-                      ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              height: 60,
+              width: 0.6,
+              color: Colors.white,
+            ),
+            /************************************/
+            /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strServiceClick = '1';
+                  strSpecialClick = '0';
+
+                  strItemsClick = '0';
+                  strContactInfoClick = '0';
+                  strEmplyeeClick = '0';
+                });
+                //
+                funcSpecialListWB('Service');
+              },
+              child: Container(
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strServiceClick == '0')
+                        ? text_regular_style_custom(
+                            'Service',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Service',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              height: 60,
+              width: 0.6,
+              color: Colors.white,
+            ),
+            /************************************/
+            /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strItemsClick = '1';
+                  strSpecialClick = '0';
+                  strServiceClick = '0';
+
+                  strContactInfoClick = '0';
+                  strEmplyeeClick = '0';
+                });
+                //
+                funcBusinessProductListWB();
+              },
+              child: Container(
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strItemsClick == '0')
+                        ? text_regular_style_custom(
+                            'Items',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Items',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              height: 60,
+              width: 0.6,
+              color: Colors.white,
+            ),
+            /************************************/
+            /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strContactInfoClick = '1';
+                  strSpecialClick = '0';
+                  strServiceClick = '0';
+                  strItemsClick = '0';
+
+                  strEmplyeeClick = '0';
+                });
+                //
+                funcProfileWB();
+              },
+              child: Container(
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strContactInfoClick == '0')
+                        ? text_regular_style_custom(
+                            'Contact Info',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Contact Info',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              height: 60,
+              width: 0.6,
+              color: Colors.white,
+            ),
+            /************************************/
+            /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strSpecialClick = '0';
+                  strServiceClick = '0';
+                  strItemsClick = '0';
+                  strContactInfoClick = '0';
+                  strEmplyeeClick = '1';
+                });
+                //
+                funcEmployeeWB();
+              },
+              child: Container(
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strEmplyeeClick == '0')
+                        ? text_regular_style_custom(
+                            'Employee',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Employee',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+
+            /************************************/
+            /************************************/
+          ],
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView tabbar_SERVICES_ui(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: <Widget>[
+          for (var i = 0; i < arrOutGame.length; i++) ...[
+            ExpansionTile(
+              title: text_bold_style_custom(
+                //
+                arrOutGame[i]['name'],
+                Colors.black,
+                16.0,
+              ),
+              subtitle: text_regular_style_custom(
+                //
+                'Service type : ${arrOutGame[i]['serviceType']}',
+                Colors.black,
+                14.0,
+              ),
+              children: <Widget>[
+                for (var j = 0;
+                    j < arrOutGame[i]['subServices'].length;
+                    j++) ...[
+                  ListTile(
+                    title: text_regular_style_custom(
+                      //
+                      arrOutGame[i]['subServices'][j]['name'],
+                      Colors.black,
+                      14.0,
                     ),
-                    /*subtitle: const Text(
-                      'A sufficiently long subtitle warrants three lines.',
-                    ),*/
                     trailing: Container(
-                      height: 40,
+                      height: 30,
                       width: 80,
                       decoration: BoxDecoration(
                         color: const Color.fromRGBO(
@@ -438,47 +737,127 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                         ),
                       ),
                       child: Center(
-                        child: Text(
-                          '\$500',
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        child: text_bold_style_custom(
+                          //
+                          '\$ ${arrOutGame[i]['subServices'][j]['price']}',
+                          Colors.white,
+                          14.0,
                         ),
                       ),
                     ),
-                    subtitle: Text(
-                      'Skills: English, Teaching...',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        color: Colors.orange,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // isThreeLine: true,
                   ),
-                ),
-              ),
-            );
-          },
-        ),
-      ],
+                  //
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                    ),
+                    height: 0.2,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.grey,
+                  ),
+                  //
+                ],
+              ],
+            ),
+          ],
+        ],
+      ),
     );
   }
 
-  Column tabbar_ITEMS_ui() {
+  SingleChildScrollView tabbar_EMPLOYEE_ui() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.vertical,
+      child: Column(
+        children: [
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            // scrollDirection: Axis.vertical,
+            //shrinkWrap: true,
+            itemCount: 20,
+            itemBuilder: (BuildContext context, int index) {
+              return InkWell(
+                onTap: () {},
+                child: Container(
+                  margin: const EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 0.0,
+                  ),
+                  height: 80,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  child: Card(
+                    child: ListTile(
+                      leading: const FlutterLogo(size: 72.0),
+                      title: Text(
+                        '2017 Doge Ram',
+                        style: TextStyle(
+                          fontFamily: font_style_name,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      /*subtitle: const Text(
+                        'A sufficiently long subtitle warrants three lines.',
+                      ),*/
+                      trailing: Container(
+                        height: 40,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(
+                            250,
+                            0,
+                            60,
+                            1,
+                          ),
+                          borderRadius: BorderRadius.circular(
+                            20.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '\$500',
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      subtitle: Text(
+                        'Skills: English, Teaching...',
+                        style: TextStyle(
+                          fontFamily: font_style_name,
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      // isThreeLine: true,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*Column tabbar_ITEMS_ui() {
     return Column(
       children: [
-        InkWell(
+        /*InkWell(
           onTap: () {
-            Navigator.push(
+            /*Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const CreateItemScreen(),
               ),
-            );
+            );*/
           },
           child: Container(
             height: 60,
@@ -513,8 +892,8 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               ),
             ),
           ),
-        ),
-        ListView.builder(
+        ),*/
+        /*ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           // scrollDirection: Axis.vertical,
@@ -576,10 +955,10 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               ),
             );
           },
-        ),
+        ),*/
       ],
     );
-  }
+  }*/
 
   ListView tabbar_SPECIAL_ui() {
     return ListView.builder(
@@ -587,59 +966,64 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
       shrinkWrap: true,
       // scrollDirection: Axis.vertical,
       //shrinkWrap: true,
-      itemCount: 10,
+      itemCount: arrOutGame.length,
       itemBuilder: (BuildContext context, int index) {
         return InkWell(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.only(
-              top: 10.0,
-              bottom: 0.0,
+          onTap: () {
+            //
+          },
+          child: ListTile(
+            leading: (arrOutGame[index]['image'] == '')
+                ? SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                    ),
+                  )
+                : SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: Image.network(
+                      arrOutGame[index]['image'],
+                    ),
+                  ),
+            title: text_bold_style_custom(
+              //
+              arrOutGame[index]['name'],
+              Colors.black,
+              16.0,
             ),
-            height: 100,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: Card(
-              child: ListTile(
-                leading: const FlutterLogo(size: 72.0),
-                title: Text(
-                  'Three-line ListTile',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontWeight: FontWeight.w600,
-                  ),
+            subtitle: text_regular_style_custom(
+              //
+              'Service type : ${arrOutGame[index]['serviceType']}',
+              Colors.black,
+              12.0,
+            ),
+            trailing: Container(
+              height: 40,
+              width: 80,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(
+                  250,
+                  0,
+                  60,
+                  1,
                 ),
-                subtitle: const Text(
-                    'A sufficiently long subtitle warrants three lines.'),
-                trailing: Container(
-                  height: 40,
-                  width: 80,
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(
-                      250,
-                      0,
-                      60,
-                      1,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      '\$500',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 14.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                borderRadius: BorderRadius.circular(
+                  20.0,
                 ),
-                isThreeLine: true,
+              ),
+              child: Center(
+                child: text_bold_style_custom(
+                  //
+                  '\$ ${arrOutGame[index]['price']}',
+                  Colors.white,
+                  14.0,
+                ),
               ),
             ),
+            // isThreeLine: true,
           ),
         );
       },
@@ -649,7 +1033,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
   Container header_UI(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: 220,
+      // height: 220,
       color: Colors.black,
       child: Column(
         children: [
@@ -672,40 +1056,33 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                           flex: 2,
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Nevada Insurance',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                            child: text_bold_style_custom(
+                              //
+                              widget.getFullData['fullName'].toString(),
+                              Colors.white,
+                              18.0,
                             ),
                           ),
                         ),
                         Expanded(
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Phone: #702-772- 7224',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 16.0,
-                                color: Colors.white,
-                              ),
+                            child: text_regular_style_custom(
+                              //
+                              'Phone : ${widget.getFullData['contactNumber']}',
+                              Colors.orange,
+                              14.0,
                             ),
                           ),
                         ),
                         Expanded(
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(
-                              '2nd Phone: #702-772-7224',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 16.0,
-                                color: Colors.white,
-                              ),
+                            child: text_regular_style_custom(
+                              //
+                              'E-mail Address : ${widget.getFullData['businessEmail']}',
+                              Colors.orange,
+                              14.0,
                             ),
                           ),
                         ),
@@ -714,7 +1091,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   ),
                 ),
               ),
-              Container(
+              /*Container(
                 margin: const EdgeInsets.only(
                   right: 20.0,
                   top: 20.0,
@@ -768,8 +1145,11 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                     ),
                   ],
                 ),
-              )
+              )*/
             ],
+          ),
+          const SizedBox(
+            height: 10,
           ),
           Align(
             alignment: Alignment.centerLeft,
@@ -792,7 +1172,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               ),
               child: Center(
                 child: Text(
-                  'Rate : 10',
+                  'Rate : 0',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: font_style_name,
@@ -801,9 +1181,261 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 ),
               ),
             ),
-          )
+          ),
+          const SizedBox(
+            height: 10,
+          ),
         ],
       ),
     );
+  }
+
+  //
+  // action list
+  funcSpecialListWB(serviceType) async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (kDebugMode) {
+      print('POST ====> $serviceType');
+    }
+
+    setState(() {
+      strLoader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'speciallist',
+          'userId': widget.getFullData['userId']
+              .toString(), // prefs.getInt('userId').toString(),
+          'serviceType': serviceType.toString(),
+          'pageNo': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arrOutGame.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arrOutGame.add(i);
+          //
+        }
+        setState(() {
+          strLoader = '1';
+        });
+        //
+        // Navigator.pop(context);
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  //
+  // action list
+  funcBusinessProductListWB() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (kDebugMode) {
+      print('POST ====> ITEM LIST');
+    }
+
+    setState(() {
+      strLoader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'action': 'businessproductlist',
+          'userId': widget.getFullData['userId'].toString(),
+          'forSell': '1'.toString(),
+          'pageNo': '1'.toString()
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arrOutGame.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arrOutGame.add(i);
+          //
+        }
+        setState(() {
+          strLoader = '1';
+        });
+        //
+        // Navigator.pop(context);
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  //
+  // action list
+  funcProfileWB() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (kDebugMode) {
+      print('POST ====> PROFILE');
+    }
+
+    // setState(() {
+    //   strLoader = '0';
+    // });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'profile',
+          'userId': widget.getFullData['userId'].toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      // arrOutGame.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        /*for (Map i in get_data['data']) {
+          //
+          arrOutGame.add(i);
+          //
+        }*/
+        //
+        dictProfileData = get_data['data'];
+        setState(() {
+          strLoader = '1';
+        });
+        //
+        // Navigator.pop(context);
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  //
+  // action list
+  funcEmployeeWB() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (kDebugMode) {
+      print('POST ====> EMPLOYEE');
+    }
+
+    setState(() {
+      strLoader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'invitelist',
+          'userId': widget.getFullData['userId'].toString(),
+          'status': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arrOutGame.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arrOutGame.add(i);
+          //
+        }
+        //
+
+        setState(() {
+          strLoader = '1';
+        });
+        //
+        // Navigator.pop(context);
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
   }
 }

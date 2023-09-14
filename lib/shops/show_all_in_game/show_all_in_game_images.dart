@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/rendering.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class ShowAllInGameImagesScreen extends StatefulWidget {
 }
 
 class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
+  //
+  //
+  var pageNumber = 1;
   //
   var strNavigationTitleName = '';
   var strShowLoader = '0';
@@ -50,6 +54,15 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
       strNavigationTitleName = 'Quests';
     }
     //
+    if (kDebugMode) {
+      print('===============================');
+      print('====== YOU CLICKED ON =========');
+      print(widget.getNumberToParse);
+      print(strNavigationTitleName);
+      print('===============================');
+      print('===============================');
+    }
+    //
     allInOneWB();
 
     super.initState();
@@ -61,6 +74,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
       print('=====> POST : ALL');
     }
 
+    // startLoadingUI(context, 'message');
     setState(() {
       strShowLoader = '0';
     });
@@ -75,9 +89,9 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'skilllist',
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -90,9 +104,9 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'productlist',
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -105,10 +119,10 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'goallist',
             'subGoal': '2',
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -121,10 +135,10 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'missionlist',
             'profesionalType': 'Profile',
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -137,10 +151,10 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'questlist',
             'profesionalType': 'Profile',
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -154,7 +168,7 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
 
     if (resposne.statusCode == 200) {
       //
-      arrAllInOneArray.clear();
+      // arrAllInOneArray.clear();
       //
       if (getData['status'].toString().toLowerCase() == 'success') {
         funcManageAllDataForOne(getData);
@@ -305,162 +319,146 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
         ),
         backgroundColor: navigation_color,
       ),
-      body: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            children: [
-              //
+      body: NotificationListener(
+        onNotification: (ScrollNotification notification) {
+          if (notification is UserScrollNotification) {
+            final metrics = notification.metrics;
+            if (metrics.atEdge) {
+              bool isTop = metrics.pixels == 0;
+              if (isTop) {
+                if (kDebugMode) {
+                  print('At the top new');
+                  // print(metrics.pixels);
+                }
+                //
+                // strScrollOnlyOneTime = '0';
+              } else if (notification.direction == ScrollDirection.forward) {
+                //
+                if (kDebugMode) {
+                  print('scroll down');
+                }
+                //
+                // strBottomScroll = '0';
+                // strScrollOnlyOneTime = '0';
+              } else if (notification.direction == ScrollDirection.reverse) {
+                // Handle scroll up.
+                if (kDebugMode) {
+                  print('scroll up');
+                }
+              } else {
+                //
+                // if (strScrollOnlyOneTime == 'start_scrolling')
+                if (kDebugMode) {
+                  print('Bottom');
+                  // print(metrics.pixels);
+                }
+                //
+                pageNumber += 1;
+                if (kDebugMode) {
+                  print(pageNumber);
+                }
 
-              GridView.count(
-                primary: false,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(20),
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-                crossAxisCount: 2,
-                children: <Widget>[
-                  for (int i = 0; i < arrAllInOneArray.length; i++) ...[
-                    GestureDetector(
-                      onTap: () {
-                        //
-                        if (widget.getNumberToParse == '3') {
+                // if someone's data is greater than 9 then pagination call only
+                if (arrAllInOneArray.length > 9) {
+                  allInOneWB();
+                }
+
+                //
+                // strScrollOnlyOneTime = '1';
+              }
+            }
+          }
+
+          return true;
+        },
+        child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
+                //
+
+                GridView.count(
+                  primary: false,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(20),
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 2,
+                  children: <Widget>[
+                    for (int i = 0; i < arrAllInOneArray.length; i++) ...[
+                      GestureDetector(
+                        onTap: () {
                           //
-                          //
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopitemDetailsScreen(
-                                getFullDataOfproduct: arrAllInOneArray[i],
-                                strProfileNumber: 'actions',
-                                getAnotherFullDataToPush: arrGoalList[i],
-                              ),
-                            ),
-                          );
-                        } else if (widget.getNumberToParse == '4') {
-                          //
-                          //
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopitemDetailsScreen(
-                                getFullDataOfproduct: arrAllInOneArray[i],
-                                strProfileNumber: 'missions',
-                                getAnotherFullDataToPush: arrMissionList[i],
-                              ),
-                            ),
-                          );
-                        } else if (widget.getNumberToParse == '5') {
-                          //
-                          //
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopitemDetailsScreen(
-                                getFullDataOfproduct: arrAllInOneArray[i],
-                                strProfileNumber: 'quests',
-                                getAnotherFullDataToPush: arrQuestList[i],
-                              ),
-                            ),
-                          );
-                        } else if (widget.getNumberToParse == '2') {
-                          //
-                          //
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopitemDetailsScreen(
-                                getFullDataOfproduct: arrAllInOneArray[i],
-                                strProfileNumber: '2',
-                              ),
-                            ),
-                          );
-                        } else if (widget.getNumberToParse == '1') {
-                          //
-                          //
-                          if (kDebugMode) {
-                            print('YOU PRESSED SKILL');
-                            print(arrSkillFullData[i]);
-                          }
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ShopitemDetailsScreen(
-                                getFullDataOfproduct: arrAllInOneArray[i],
-                                strProfileNumber: '1',
-                                getSkillRealFullData: arrSkillFullData[i],
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                      child: Container(
-                        height: 200,
-                        // width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          border: Border.all(width: 0.4),
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(
-                            15.0,
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                    8.0,
-                                  ),
-                                  child: (arrAllInOneArray[i]['image']
-                                              .toString() ==
-                                          '')
-                                      ? Image.asset('assets/images/logo.png')
-                                      : Image.network(
-                                          //
-                                          arrAllInOneArray[i]['image']
-                                              .toString(),
-                                          fit: BoxFit.cover,
-                                          //
-                                        ),
+                          if (widget.getNumberToParse == '3') {
+                            //
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShopitemDetailsScreen(
+                                  getFullDataOfproduct: arrAllInOneArray[i],
+                                  strProfileNumber: 'actions',
+                                  getAnotherFullDataToPush: arrGoalList[i],
                                 ),
                               ),
-                            ),
+                            );
+                          } else if (widget.getNumberToParse == '4') {
                             //
-                            Align(
-                              alignment: Alignment.center,
-                              child: text_regular_style_custom(
-                                //
-                                arrAllInOneArray[i]['name'].toString(),
-                                //
-                                Colors.black,
-                                16.0,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: text_bold_style_custom(
-                                //
-                                '\$${arrAllInOneArray[i]['price'].toString()}',
-                                //
-                                Colors.black,
-                                14.0,
-                              ),
-                            ),
                             //
-                          ],
-                        ),
-                      ),
-                    ),
-                  ]
-                ],
-              ),
-              /*for (int i = 0; i < arrAllInOneArray.length; i++) ...[
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShopitemDetailsScreen(
+                                  getFullDataOfproduct: arrAllInOneArray[i],
+                                  strProfileNumber: 'missions',
+                                  getAnotherFullDataToPush: arrMissionList[i],
+                                ),
+                              ),
+                            );
+                          } else if (widget.getNumberToParse == '5') {
+                            //
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShopitemDetailsScreen(
+                                  getFullDataOfproduct: arrAllInOneArray[i],
+                                  strProfileNumber: 'quests',
+                                  getAnotherFullDataToPush: arrQuestList[i],
+                                ),
+                              ),
+                            );
+                          } else if (widget.getNumberToParse == '2') {
+                            //
+                            //
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShopitemDetailsScreen(
+                                  getFullDataOfproduct: arrAllInOneArray[i],
+                                  strProfileNumber: '2',
+                                ),
+                              ),
+                            );
+                          } else if (widget.getNumberToParse == '1') {
+                            //
+                            //
+                            if (kDebugMode) {
+                              print('YOU PRESSED SKILL');
+                              print(arrSkillFullData[i]);
+                            }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ShopitemDetailsScreen(
+                                  getFullDataOfproduct: arrAllInOneArray[i],
+                                  strProfileNumber: '1',
+                                  getSkillRealFullData: arrSkillFullData[i],
+                                ),
+                              ),
+                            );
+                          }
+                        },
                         child: Container(
                           height: 200,
                           // width: MediaQuery.of(context).size.width,
@@ -480,12 +478,17 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                                     borderRadius: BorderRadius.circular(
                                       8.0,
                                     ),
-                                    child: Image.network(
-                                      //
-                                      arrAllInOneArray[i]['image'].toString(),
-                                      fit: BoxFit.cover,
-                                      //
-                                    ),
+                                    child: (arrAllInOneArray[i]['image']
+                                                .toString() ==
+                                            '')
+                                        ? Image.asset('assets/images/logo.png')
+                                        : Image.network(
+                                            //
+                                            arrAllInOneArray[i]['image']
+                                                .toString(),
+                                            fit: BoxFit.cover,
+                                            //
+                                          ),
                                   ),
                                 ),
                               ),
@@ -515,89 +518,153 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                           ),
                         ),
                       ),
-                      //
-                      const SizedBox(
-                        width: 12.0,
-                      ),
-                      //
-                      /*Expanded(
-                        child: Container(
-                          height: 200,
-                          // width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            border: Border.all(width: 0.4),
-                            borderRadius: BorderRadius.circular(
-                              15.0,
+                    ]
+                  ],
+                ),
+                /*for (int i = 0; i < arrAllInOneArray.length; i++) ...[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            height: 200,
+                            // width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              border: Border.all(width: 0.4),
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                15.0,
+                              ),
                             ),
-                          ),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(
-                                      8.0,
-                                    ),
-                                    child: Image.network(
-                                      //
-                                      arrAllInOneArray[i]['image'].toString(),
-                                      fit: BoxFit.cover,
-                                      //
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        8.0,
+                                      ),
+                                      child: Image.network(
+                                        //
+                                        arrAllInOneArray[i]['image'].toString(),
+                                        fit: BoxFit.cover,
+                                        //
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              //
-                              Align(
-                                alignment: Alignment.center,
-                                child: text_regular_style_custom(
-                                  //
-                                  arrAllInOneArray[i]['name'],
-                                  //
-                                  Colors.black,
-                                  16.0,
+                                //
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: text_regular_style_custom(
+                                    //
+                                    arrAllInOneArray[i]['name'].toString(),
+                                    //
+                                    Colors.black,
+                                    16.0,
+                                  ),
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: text_bold_style_custom(
-                                  //
-                                  '\$${arrAllInOneArray[i]['price'].toString()}',
-                                  //
-                                  Colors.black,
-                                  14.0,
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: text_bold_style_custom(
+                                    //
+                                    '\$${arrAllInOneArray[i]['price'].toString()}',
+                                    //
+                                    Colors.black,
+                                    14.0,
+                                  ),
                                 ),
-                              ),
-                              //
-                            ],
+                                //
+                              ],
+                            ),
                           ),
                         ),
-                      ),*/
-                      //
-                    ],
-                  ),
-                )
-              ],*/
+                        //
+                        const SizedBox(
+                          width: 12.0,
+                        ),
+                        //
+                        /*Expanded(
+                          child: Container(
+                            height: 200,
+                            // width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              border: Border.all(width: 0.4),
+                              borderRadius: BorderRadius.circular(
+                                15.0,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        8.0,
+                                      ),
+                                      child: Image.network(
+                                        //
+                                        arrAllInOneArray[i]['image'].toString(),
+                                        fit: BoxFit.cover,
+                                        //
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                //
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: text_regular_style_custom(
+                                    //
+                                    arrAllInOneArray[i]['name'],
+                                    //
+                                    Colors.black,
+                                    16.0,
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.center,
+                                  child: text_bold_style_custom(
+                                    //
+                                    '\$${arrAllInOneArray[i]['price'].toString()}',
+                                    //
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ),
+                                //
+                              ],
+                            ),
+                          ),
+                        ),*/
+                        //
+                      ],
+                    ),
+                  )
+                ],*/
 
-              //
+                //
 
-              ///
-              ///
-              const SizedBox(
-                height: 20.0,
-              ),
-              Container(
-                height: 0.2,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.black,
-              ),
-              const SizedBox(
-                height: 10.0,
-              ),
-            ],
-          )),
+                ///
+                ///
+                const SizedBox(
+                  height: 20.0,
+                ),
+                Container(
+                  height: 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.black,
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+              ],
+            )),
+      ),
     );
   }
 }

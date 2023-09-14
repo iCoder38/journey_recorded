@@ -9,6 +9,8 @@ import 'package:google_fonts/google_fonts.dart';
 var application_base_url =
     'https://demo4.evirtualservices.net/journey/services/index/';
 
+// var application_base_url = 'https://app.journey-recorded.com/services/index';
+
 var navigation_color = Color.fromRGBO(2, 25, 75, 1);
 
 // app yellow color
@@ -127,6 +129,42 @@ Text text_with_semi_bold_style_black(str) {
 }
 
 /* ================================================================ */
+
+void startLoadingUI(BuildContext context, String message) async {
+  await showDialog(
+    barrierDismissible: false,
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 8),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: text_regular_style_custom(
+                      //,
+                      message,
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     Navigator.of(context).pop();
+                //   },
+                //   child: Text("OK"),
+                // )
+              ]),
+        ),
+      );
+    },
+  );
+}
 
 /*
 MaterialApp(
