@@ -68,6 +68,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   // picker
   // ImagePicker picker = ImagePicker();
 
+  //
+  var strFloatingActionButtonStatus = true;
   ImagePicker picker = ImagePicker();
   XFile? image;
 
@@ -78,6 +80,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   late final TextEditingController cont_reward_name;
   late final TextEditingController cont_reward_price;
 
+  //
+  var strGroupMainId = '';
   //
   var str_which_tab_bar_index_selected = 0;
   var str_show_ui = 'n.a';
@@ -125,16 +129,24 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var str_mission_count = '...';
   var arr_mission_list = [];
   var arr_mission_info = [];
-
+  var str_total_task_complete = '0';
   // reward
   var arr_reward = [];
   //
   // slider
-  double _currentSliderValue = 50;
+  double _currentSliderValue = 0;
   final GetDifferenceBetweenDate parse_days_left = GetDifferenceBetweenDate();
   var str_sub_goal_show = '0';
   //
   late TabController _tabController;
+  //
+  //
+  var strQuestsClick = '0';
+  var strMissionsClick = '0';
+  var strTasksClick = '0';
+  var strCompleteClick = '0';
+  //
+  //
   @override
   void initState() {
     super.initState();
@@ -153,6 +165,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     // print(widget.str_get_goal_id);
     _tabController = TabController(vsync: this, length: 6);
 
+    if (widget.strFromViewDetails == 'yes') {
+      strFloatingActionButtonStatus = false;
+    } else {
+      strFloatingActionButtonStatus = true;
+    }
     func_get_goal_details_WB();
   }
 
@@ -277,7 +294,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
                   str_main_loader = 'team_loader_start';
                   setState(() {});
-                  func_team_list_WB();
+                  //
+                  (widget.strFromViewDetails == 'yes')
+                      ? funcTeamWBfromShopDetails()
+                      : func_team_list_WB();
                 } else if (value == 4) {
                   // quotes
 
@@ -298,272 +318,125 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             ),
             actions: <Widget>[
               if (widget.str_tray_value == 'goal') ...[
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      if (kDebugMode) {
-                        print('action sheet');
-                      }
-                      //ActionSheetExample();
-                      _showActionSheet(context);
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      // delete
-                      // print(widget.str_tray_value.toString());
-
-                      gear_popup_22(
-                        'Delete goal',
-                        widget.str_get_goal_id.toString(),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.delete_forever,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditDetailsScreen(
-                            str_get_goal_for: 'n.a.',
-                            str_get_category_id:
-                                widget.str_category_id.toString(),
-                            str_get_category_name:
-                                widget.str_category_name.toString(),
-                            str_get_goal_name: widget.str_name.toString(),
-                            str_get_deadline: widget.str_due_date.toString(),
-                            str_about_your_goal:
-                                widget.str_get_about_goal.toString(),
-                            str_goal_id: widget.str_get_goal_id.toString(),
+                (widget.strFromViewDetails == 'yes')
+                    ? const SizedBox()
+                    : Column(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 20.0,
+                            ),
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                20.0,
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                if (kDebugMode) {
+                                  print('action sheet');
+                                }
+                                //ActionSheetExample();
+                                _showActionSheet(context);
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                              ),
+                            ),
                           ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                    ),
-                  ),
-                ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 20.0,
+                            ),
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                20.0,
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                // delete
+                                // print(widget.str_tray_value.toString());
+
+                                gear_popup_22(
+                                  'Delete goal',
+                                  widget.str_get_goal_id.toString(),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.delete_forever,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 20.0,
+                            ),
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(
+                                20.0,
+                              ),
+                            ),
+                            child: IconButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditDetailsScreen(
+                                      str_get_goal_for: 'n.a.',
+                                      str_get_category_id:
+                                          widget.str_category_id.toString(),
+                                      str_get_category_name:
+                                          widget.str_category_name.toString(),
+                                      str_get_goal_name:
+                                          widget.str_name.toString(),
+                                      str_get_deadline:
+                                          widget.str_due_date.toString(),
+                                      str_about_your_goal:
+                                          widget.str_get_about_goal.toString(),
+                                      str_goal_id:
+                                          widget.str_get_goal_id.toString(),
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.edit,
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
               ] else if (widget.str_tray_value == 'sub_goal') ...[
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddMissionScreen(
-                            str_category_id: widget.str_category_id.toString(),
-                            str_goal_id: widget.str_get_goal_id.toString(),
-                            str_edit_status: '0',
-                            str_deadline: '',
-                            str_mission_text: '',
-                            str_mission_id: '',
-                            str_navigation_title: 'Add Mission',
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      // delete
-                      if (kDebugMode) {
-                        print(widget.str_tray_value.toString());
-                      }
-
-                      gear_popup_22(
-                        'Delete goal',
-                        widget.str_get_goal_id.toString(),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.delete_forever,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditDetailsScreen(
-                            str_get_goal_for: 'n.a.',
-                            str_get_category_id:
-                                widget.str_category_id.toString(),
-                            str_get_category_name:
-                                widget.str_category_name.toString(),
-                            str_get_goal_name: widget.str_name.toString(),
-                            str_get_deadline: widget.str_due_date.toString(),
-                            str_about_your_goal:
-                                widget.str_get_about_goal.toString(),
-                            str_goal_id: widget.str_get_goal_id.toString(),
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                    ),
-                  ),
-                ),
+                (widget.strFromViewDetails == 'yes')
+                    ? const SizedBox()
+                    : appBarActionForSubGoalUI(context),
               ] else if (widget.str_tray_value == 'mission') ...[
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      // delete
-                      // print(widget.str_tray_value.toString());
-
-                      gear_popup_22(
-                        'Delete',
-                        widget.str_get_goal_id.toString(),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.delete_forever,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.only(
-                    right: 20.0,
-                  ),
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddMissionScreen(
-                            str_category_id: widget.str_category_id.toString(),
-                            str_goal_id: widget.str_get_goal_id.toString(),
-                            str_edit_status: '1',
-                            str_deadline: widget.str_due_date.toString(),
-                            str_mission_text: widget.str_get_about_goal,
-                            str_mission_id: widget.str_goal_cat_id.toString(),
-                            str_navigation_title: 'Add Mission',
-                          ),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
+                (widget.strFromViewDetails == 'yes')
+                    ? const SizedBox()
+                    : appBarActionForMissionUI(context)
               ]
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              func_push_from_floating_button();
-            },
-            backgroundColor: navigation_color,
-            child: const Icon(Icons.add),
+          floatingActionButton: Visibility(
+            visible: strFloatingActionButtonStatus,
+            child: FloatingActionButton(
+              onPressed: () {
+                func_push_from_floating_button();
+              },
+              backgroundColor: navigation_color,
+              child: const Icon(Icons.add),
+            ),
           ),
           body: TabBarView(
             physics: const NeverScrollableScrollPhysics(),
@@ -648,6 +521,188 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           ),
         ),
       ),
+    );
+  }
+
+// /***************************************************************************/
+// /**************** APP BAR ACTION FOR SUB GOAL UI ***************************/
+// /***************************************************************************/
+  Row appBarActionForSubGoalUI(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMissionScreen(
+                    str_category_id: widget.str_category_id.toString(),
+                    str_goal_id: widget.str_get_goal_id.toString(),
+                    str_edit_status: '0',
+                    str_deadline: '',
+                    str_mission_text: '',
+                    str_mission_id: '',
+                    str_navigation_title: 'Add Mission',
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              // delete
+              if (kDebugMode) {
+                print(widget.str_tray_value.toString());
+              }
+
+              gear_popup_22(
+                'Delete goal',
+                widget.str_get_goal_id.toString(),
+              );
+            },
+            icon: const Icon(
+              Icons.delete_forever,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditDetailsScreen(
+                    str_get_goal_for: 'n.a.',
+                    str_get_category_id: widget.str_category_id.toString(),
+                    str_get_category_name: widget.str_category_name.toString(),
+                    str_get_goal_name: widget.str_name.toString(),
+                    str_get_deadline: widget.str_due_date.toString(),
+                    str_about_your_goal: widget.str_get_about_goal.toString(),
+                    str_goal_id: widget.str_get_goal_id.toString(),
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.edit,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+// /***************************************************************************/
+// /**************** APP BAR ACTION FOR MISSION UI ****************************/
+// /***************************************************************************/
+  Row appBarActionForMissionUI(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              // delete
+              // print(widget.str_tray_value.toString());
+
+              gear_popup_22(
+                'Delete',
+                widget.str_get_goal_id.toString(),
+              );
+            },
+            icon: const Icon(
+              Icons.delete_forever,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMissionScreen(
+                    str_category_id: widget.str_category_id.toString(),
+                    str_goal_id: widget.str_get_goal_id.toString(),
+                    str_edit_status: '1',
+                    str_deadline: widget.str_due_date.toString(),
+                    str_mission_text: widget.str_get_about_goal,
+                    str_mission_id: widget.str_goal_cat_id.toString(),
+                    str_navigation_title: 'Add Mission',
+                  ),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -1380,13 +1435,28 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           height: 40,
                           color: Colors.transparent,
                           child: Center(
-                            child: text_regular_style_custom(
-                              //
-                              func_difference_between_date(
-                                arr_task_list[i]['due_date'].toString(),
+                            child: Container(
+                              height: 40,
+                              width: 100,
+                              decoration: const BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                    25.0,
+                                  ),
+                                ),
                               ),
-                              Colors.black,
-                              14.0,
+                              child: Center(
+                                child: text_regular_style_custom(
+                                  //
+                                  parse_days_left.func_difference_between_date(
+                                    //
+                                    arr_task_list[i]['due_date'].toString(),
+                                  ),
+                                  Colors.black,
+                                  12.0,
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -1617,7 +1687,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       print('push to mission portal');
                     }
                     if (kDebugMode) {
-                      print('LINE NUMBER ====> 1632');
+                      print('you clicked on mission');
                       print(arr_mission_list[index]);
                     }
 
@@ -1655,31 +1725,16 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         ),
                       ),
 
-                      title: Text(
-                        //
+                      title: text_bold_style_custom(
                         arr_mission_list[index]['name'].toString(),
-                        // 'test',
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        Colors.black,
+                        14.0,
                       ),
-                      subtitle: Text(
+                      subtitle: text_regular_style_custom(
                         //
                         arr_mission_list[index]['categoryName'].toString(),
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 14.0,
-                          color: const Color.fromRGBO(
-                            30,
-                            58,
-                            118,
-                            1,
-                          ),
-                        ),
+                        Colors.black,
+                        12.0,
                       ),
                       trailing: Container(
                         height: 40,
@@ -1693,16 +1748,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           ),
                         ),
                         child: Center(
-                          child: Text(
+                          child: text_regular_style_custom(
                             //
                             parse_days_left.func_difference_between_date(
                                 arr_mission_list[index]['deadline'].toString()),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            Colors.black,
+                            12.0,
                           ),
                         ),
                       ),
@@ -1864,16 +1915,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           ),
                         ),
                         child: Center(
-                          child: Text(
+                          child: text_regular_style_custom(
                             //
                             parse_days_left.func_difference_between_date(
                                 arr_sub_goals[index]['deadline'].toString()),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            Colors.black,
+                            12.0,
                           ),
                         ),
                       ),
@@ -2166,6 +2213,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     );
   }
 
+  funcFromShopViewDetails() {
+    print('=======================');
+    print('YOU CAME FROM SHOP PAGE');
+    print('=======================');
+  }
+
   ///
   ///
   ///
@@ -2213,9 +2266,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             children: <Widget>[
               InkWell(
                 onTap: () {
-                  print('object');
                   //
-                  camera_gallery_for_profile(context);
+                  (widget.strFromViewDetails == 'yes')
+                      ? funcFromShopViewDetails()
+                      : camera_gallery_for_profile(context);
                   //
                 },
                 child: imageFile_for_profile == null
@@ -2229,9 +2283,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                 top: 20.0,
                                 left: 20.0,
                               ),
-                              height: 160.0,
-                              width: 160,
-                              // color: Colors.amber,
+                              height: 120,
+                              width: 120,
                               decoration: BoxDecoration(
                                 border: Border.all(
                                   color: Colors.grey,
@@ -2241,20 +2294,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                   18.0,
                                 ),
                               ),
-
-                              child: (widget.str_image.toString() == '')
-                                  ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      child:
-                                          Image.asset('assets/images/logo.png'),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                      child: FadeInImage.assetNetwork(
-                                        placeholder: 'assets/images/loader.gif',
-                                        image: widget.str_image.toString(),
+                              child: Container(
+                                height: 120,
+                                width: 120,
+                                color: Colors.transparent,
+                                child: (widget.str_image.toString() == '')
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        child: Image.asset(
+                                            'assets/images/logo.png'),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                        child: FadeInImage.assetNetwork(
+                                          placeholder:
+                                              'assets/images/loader.gif',
+                                          image: widget.str_image.toString(),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
+                              ),
+                              /**/
                             ),
                           ],
                         ),
@@ -2284,31 +2346,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           ),
                         ),
                       ),
-                /*Container(
-                  margin: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 20.0,
-                  ),
-                  height: 160,
-                  width: 160,
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      20.0,
-                    ),
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),*/
               ),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.only(
-                    top: 20.0,
-                    left: 20.0,
-                    right: 20.0,
-                  ),
+                  // margin: const EdgeInsets.only(
+                  //   top: 20.0,
+                  //   left: 20.0,
+                  //   right: 20.0,
+                  // ),
                   height: 160,
                   //  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -2318,185 +2363,157 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     ),
                   ),
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            //
-                            widget.str_name.toString().toUpperCase(),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                      Center(
+                        child: text_bold_style_custom(
+                          //
+                          widget.str_name.toString().toUpperCase(),
+                          Colors.white,
+                          16.0,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Column(
+                        children: <Widget>[
+                          Container(
+                            height: 20,
+                            color: Colors.transparent,
+                            width: MediaQuery.of(context).size.width,
+                            child: Row(
+                              children: <Widget>[
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                                text_regular_style_custom(
+                                  'Complete',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                                const Spacer(),
+                                text_regular_style_custom(
+                                  '0%',
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              height: 20,
-                              color: Colors.transparent,
-                              width: MediaQuery.of(context).size.width,
-                              child: Row(
-                                children: <Widget>[
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    'Complete',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const Spacer(),
-                                  Text(
-                                    '50%',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 10,
-                                  )
-                                ],
-                              ),
-                            ),
-                            Container(
-                              height: 20,
-                              color: Colors.transparent,
-                              width: MediaQuery.of(context).size.width,
-                              child: Slider(
-                                value: _currentSliderValue,
-                                max: 100,
-                                divisions: 5,
-                                label: _currentSliderValue.round().toString(),
-                                onChanged: (double value) {
-                                  setState(
-                                    () {
-                                      _currentSliderValue = value;
-                                    },
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Expanded(
-                              // flex: 1,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                  bottom: 6.0,
-                                  left: 2.0,
-                                ),
-                                height: 60,
-                                width: 80,
-                                // width: MediaQuery.of(context).size.width,
-
-                                decoration: const BoxDecoration(
-                                  // color: Colors.orange,
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(
-                                      60.0,
-                                    ),
-                                    bottomLeft: Radius.circular(
-                                      10.0,
-                                    ),
-                                    bottomRight: Radius.circular(
-                                      60.0,
-                                    ),
-                                    topRight: Radius.circular(
-                                      10.0,
-                                    ),
-                                  ),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Color.fromRGBO(250, 220, 10, 1),
-                                      Color.fromRGBO(252, 215, 10, 1),
-                                      Color.fromRGBO(251, 195, 11, 1),
-                                      Color.fromRGBO(250, 180, 10, 1),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    //
-
-                                    parse_days_left
-                                        .func_difference_between_date(
-                                            widget.str_due_date),
-                                    //
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 10.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 6,
-                            ),
-                            Expanded(
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  // color: Colors.yellow,
-                                  borderRadius: BorderRadius.circular(
-                                    20,
-                                  ),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color.fromRGBO(250, 220, 10, 1),
-                                      Color.fromRGBO(252, 215, 10, 1),
-                                      Color.fromRGBO(251, 195, 11, 1),
-                                      Color.fromRGBO(250, 180, 10, 1),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.chat,
-                                  ),
-                                  onPressed: () {
-                                    if (kDebugMode) {
-                                      print('chat click');
-                                    }
+                          // const SizedBox(
+                          //   width: 10.0,
+                          // ),
+                          Container(
+                            height: 20,
+                            color: Colors.transparent,
+                            width: MediaQuery.of(context).size.width,
+                            child: Slider(
+                              value: _currentSliderValue,
+                              max: 100,
+                              divisions: 5,
+                              label: _currentSliderValue.round().toString(),
+                              onChanged: (double value) {
+                                setState(
+                                  () {
+                                    _currentSliderValue = value;
                                   },
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 6.0,
+                              left: 2.0,
+                            ),
+                            height: 40,
+                            width: 120,
+                            decoration: const BoxDecoration(
+                              // color: Colors.orange,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  60.0,
+                                ),
+                                bottomLeft: Radius.circular(
+                                  10.0,
+                                ),
+                                bottomRight: Radius.circular(
+                                  60.0,
+                                ),
+                                topRight: Radius.circular(
+                                  10.0,
                                 ),
                               ),
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(250, 220, 10, 1),
+                                  Color.fromRGBO(252, 215, 10, 1),
+                                  Color.fromRGBO(251, 195, 11, 1),
+                                  Color.fromRGBO(250, 180, 10, 1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
                             ),
-                            const SizedBox(
-                              width: 6,
+                            child: Center(
+                              child: text_bold_style_custom(
+                                parse_days_left.func_difference_between_date(
+                                    widget.str_due_date),
+                                Colors.black,
+                                12.0,
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(
+                            width: 6,
+                          ),
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              // color: Colors.yellow,
+                              borderRadius: BorderRadius.circular(
+                                20,
+                              ),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(250, 220, 10, 1),
+                                  Color.fromRGBO(252, 215, 10, 1),
+                                  Color.fromRGBO(251, 195, 11, 1),
+                                  Color.fromRGBO(250, 180, 10, 1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                              ),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(
+                                Icons.chat,
+                                size: 18.0,
+                              ),
+                              onPressed: () {
+                                if (kDebugMode) {
+                                  print('chat click');
+                                }
+                              },
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
             ],
-          ),
-          const SizedBox(
-            height: 20,
           ),
           type_UI(context),
         ],
@@ -2530,134 +2547,92 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             ),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Category'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      text_bold_style_custom(
+                        'Category',
+                        Colors.black,
+                        16.0,
                       ),
-                    ),
-                    const Spacer(),
-                    Text(
-                      //
-                      widget.str_category_name.toString(),
-                      //
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
+                      const Spacer(),
+                      text_regular_style_custom(
+                        //
+                        widget.str_category_name.toString(),
+                        Colors.black,
+                        14.0,
                       ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
+                      const SizedBox(
+                        width: 10,
+                      ),
+                    ],
+                  ),
                 ),
                 //
                 //
-                const SizedBox(
-                  height: 20,
-                ),
+
                 Container(
-                  height: 1,
+                  height: 0.4,
                   width: MediaQuery.of(context).size.width,
                   color: Colors.grey,
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      'Action'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Spacer(),
-                    (widget.str_tray_value == 'goal')
-                        ? Text(
-                            //
-                            'Goal'.toString(),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
-                            ),
-                          )
-                        : Text(
-                            //
-                            widget.str_name.toString(),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  height: 1,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                ),
-                const SizedBox(
-                  height: 20,
                 ),
 
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    '  Description'.toUpperCase(),
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      text_bold_style_custom(
+                        'Action',
+                        Colors.black,
+                        16.0,
+                      ),
+                      const Spacer(),
+                      (widget.str_tray_value == 'goal')
+                          ? text_bold_style_custom(
+                              'Goal',
+                              Colors.black,
+                              16.0,
+                            )
+                          : text_regular_style_custom(
+                              //
+                              widget.str_name.toString(),
+                              Colors.black,
+                              14.0,
+                            ),
+                    ],
+                  ),
+                ),
+
+                Container(
+                  height: 0.4,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.grey,
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_bold_style_custom(
+                      'Description',
+                      Colors.black,
+                      16.0,
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
+
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
                       //
                       widget.str_get_about_goal,
-                      //
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        // fontWeight: FontWeight.bold,
-                      ),
+                      Colors.black,
+                      14.0,
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
                 ),
               ],
             ),
@@ -2851,7 +2826,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 ),
                 InkWell(
                   onTap: () {
-                    get_quest_list_WB();
+                    //
+                    if (widget.strFromViewDetails == 'yes') {
+                      questListFromShopDetails();
+                    } else {
+                      get_quest_list_WB();
+                    }
                   },
                   child: Container(
                     // width: 40,
@@ -3079,142 +3059,43 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         ),
       );
     } else if (widget.str_tray_value == 'sub_goal') {
+      //
+      return SubGoalBottomTabsWithCounterUI(context);
+      //
+    } else if (widget.str_tray_value == 'mission' ||
+        widget.str_tray_value == 'quest') {
+      //
+      return questBottomTabsWithCounterUI(context);
+      //
+    } else {
       return Container(
-        width: MediaQuery.of(context).size.width,
-        color: const Color.fromRGBO(1, 27, 82, 1),
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            height: 60,
-            color: const Color.fromRGBO(1, 27, 82, 1),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: 0.25,
-                  color: Colors.white,
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    //
-                    if (kDebugMode) {
-                      print('LINE NUMBER ====> 3116');
-                    }
-                    get_quest_list_WB();
-                  },
-                  child: Container(
-                    // width: 40,
-                    color: Colors.transparent,
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Quest'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              color: Colors.pink,
-                              borderRadius: BorderRadius.circular(
-                                14.0,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '0',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: 0.25,
-                  color: Colors.white,
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
-                  ),
-                ),
-                Container(
-                  // width: 40,
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          if (kDebugMode) {
-                            print('LINE NUMBER ====> 3174');
-                          }
+        height: 20,
+        width: 20,
+        color: Colors.pink,
+      );
+    }
+  }
 
-                          (widget.strFromViewDetails == 'yes')
-                              ? get_mission_list_WB_without_user_id()
-                              : get_mission_list_WB();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Mission'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            borderRadius: BorderRadius.circular(
-                              14.0,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              //
-                              str_mission_count.toString(),
-                              //
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 16.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                InkWell(
+// /***************************************************************************/
+  // /********************* QUEST TYPES WITH COUNTER **************************/
+  // /*************************************************************************/
+  Container questBottomTabsWithCounterUI(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      color: const Color.fromRGBO(
+        1,
+        27,
+        82,
+        1,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              height: 46,
+              color: Colors.transparent,
+              child: Align(
+                child: InkWell(
                   onTap: () {
                     //
                     (widget.strFromViewDetails == 'yes')
@@ -3223,31 +3104,28 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     //
                   },
                   child: Container(
-                    // width: 40,
+                    // width: 44,
                     color: Colors.transparent,
                     child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Tasks'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
+                          child: text_regular_style_custom(
+                            'Task',
+                            Colors.white,
+                            14.0,
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Container(
-                            height: 36,
-                            width: 36,
+                            height: 26,
+                            width: 26,
                             decoration: BoxDecoration(
                               color: Colors.pink,
                               borderRadius: BorderRadius.circular(
-                                14.0,
+                                8.0,
                               ),
                             ),
                             child: Center(
@@ -3267,16 +3145,103 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     ),
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height,
-                  width: 0.25,
-                  color: Colors.white,
-                  margin: const EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10.0,
+              ),
+            ),
+          ),
+          Container(
+            height: 20,
+            width: 0.25,
+            color: Colors.white,
+            margin: const EdgeInsets.only(
+              top: 10.0,
+              bottom: 10.0,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              height: 40,
+              color: Colors.transparent,
+              child: Align(
+                child: Container(
+                  // width: 40,
+                  color: Colors.transparent,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: text_regular_style_custom(
+                          'Complete',
+                          Colors.white,
+                          14.0,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 26,
+                          width: 26,
+                          decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                          ),
+                          child: Center(
+                            child: text_regular_style_custom(
+                              str_total_task_complete,
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Container(
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  // /*************************************************************************/
+  // /****************** SUB GOAL TYPES WITH COUNTER **************************/
+  // /*************************************************************************/
+  Container SubGoalBottomTabsWithCounterUI(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      color: const Color.fromRGBO(1, 27, 82, 1),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          height: 46,
+          color: const Color.fromRGBO(1, 27, 82, 1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  //
+                  if (kDebugMode) {
+                    print('LINE NUMBER ====> 3350');
+                  }
+                  //
+                  setState(() {
+                    strQuestsClick = '1';
+                    strMissionsClick = '0';
+                    strTasksClick = '0';
+                    strCompleteClick = '0';
+                  });
+                  if (widget.strFromViewDetails == 'yes') {
+                    questListFromShopDetails();
+                  } else {
+                    get_quest_list_WB();
+                  }
+                },
+                child: Container(
                   // width: 40,
                   color: Colors.transparent,
                   child: Row(
@@ -3284,24 +3249,224 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Complete'.toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: font_style_name,
-                            fontSize: 14.0,
-                          ),
-                        ),
+                        child: (strQuestsClick == '0')
+                            ? text_regular_style_custom(
+                                'Quests',
+                                Colors.white,
+                                14.0,
+                              )
+                            : text_bold_style_custom(
+                                'Quests',
+                                Colors.white,
+                                16.0,
+                              ),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          height: 36,
-                          width: 36,
+                          height: 26,
+                          width: 26,
                           decoration: BoxDecoration(
                             color: Colors.pink,
                             borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                          ),
+                          child: Center(
+                            child: text_regular_style_custom(
+                              //
+                              str_quest_count.toString(),
+                              Colors.black,
                               14.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: 0.25,
+                color: Colors.white,
+                margin: const EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0,
+                ),
+              ),
+              Container(
+                // width: 40,
+                color: Colors.transparent,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    InkWell(
+                      onTap: () {
+                        if (kDebugMode) {
+                          print('LINE NUMBER ====> 3412');
+                        }
+                        setState(() {
+                          strQuestsClick = '0';
+                          strMissionsClick = '1';
+                          strTasksClick = '0';
+                          strCompleteClick = '0';
+                        });
+                        (widget.strFromViewDetails == 'yes')
+                            ? get_mission_list_WB_without_user_id()
+                            : get_mission_list_WB();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: (strMissionsClick == '0')
+                            ? text_regular_style_custom(
+                                'Missions',
+                                Colors.white,
+                                14.0,
+                              )
+                            : text_bold_style_custom(
+                                'Missions',
+                                Colors.white,
+                                16.0,
+                              ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 26,
+                        width: 26,
+                        decoration: BoxDecoration(
+                          color: Colors.pink,
+                          borderRadius: BorderRadius.circular(
+                            8.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            //
+                            str_mission_count.toString(),
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  //
+                  setState(() {
+                    strQuestsClick = '0';
+                    strMissionsClick = '0';
+                    strTasksClick = '1';
+                    strCompleteClick = '0';
+                  });
+                  (widget.strFromViewDetails == 'yes')
+                      ? func_get_task_list_WB_remove_user_id()
+                      : func_get_task_list_WB();
+                  //
+                },
+                child: Container(
+                  // width: 40,
+                  color: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: (strTasksClick == '0')
+                            ? text_regular_style_custom(
+                                'Tasks',
+                                Colors.white,
+                                14.0,
+                              )
+                            : text_bold_style_custom(
+                                'Tasks',
+                                Colors.white,
+                                16.0,
+                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 26,
+                          width: 26,
+                          decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              //
+                              str_task_count.toString(),
+                              //
+                              style: TextStyle(
+                                fontFamily: font_style_name,
+                                fontSize: 16.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height,
+                width: 0.25,
+                color: Colors.white,
+                margin: const EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10.0,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  //
+                  setState(() {
+                    strQuestsClick = '0';
+                    strMissionsClick = '0';
+                    strTasksClick = '0';
+                    strCompleteClick = '1';
+                  });
+                },
+                child: Container(
+                  // width: 40,
+                  color: Colors.transparent,
+                  child: Row(
+                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: (strCompleteClick == '0')
+                            ? text_regular_style_custom(
+                                'Complete',
+                                Colors.white,
+                                14.0,
+                              )
+                            : text_bold_style_custom(
+                                'Complete',
+                                Colors.white,
+                                16.0,
+                              ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          height: 26,
+                          width: 26,
+                          decoration: BoxDecoration(
+                            color: Colors.pink,
+                            borderRadius: BorderRadius.circular(
+                              8.0,
                             ),
                           ),
                           child: Center(
@@ -3318,285 +3483,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-      );
-    } else if (widget.str_tray_value == 'mission' ||
-        widget.str_tray_value == 'quest') {
-      return Container(
-          width: MediaQuery.of(context).size.width,
-          color: const Color.fromRGBO(
-            1,
-            27,
-            82,
-            1,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 44,
-                  color: Colors.transparent,
-                  child: Align(
-                    child: InkWell(
-                      onTap: () {
-                        //
-                        (widget.strFromViewDetails == 'yes')
-                            ? func_get_task_list_WB_remove_user_id()
-                            : func_get_task_list_WB();
-                        //
-                      },
-                      child: Container(
-                        // width: 40,
-                        color: Colors.transparent,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                'Task'.toUpperCase(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: font_style_name,
-                                  fontSize: 14.0,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 36,
-                                width: 36,
-                                decoration: BoxDecoration(
-                                  color: Colors.pink,
-                                  borderRadius: BorderRadius.circular(
-                                    14.0,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    //
-                                    str_task_count.toString(),
-                                    //
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                height: 20,
-                width: 0.25,
-                color: Colors.white,
-                margin: const EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10.0,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  height: 40,
-                  color: Colors.transparent,
-                  child: Align(
-                    child: Container(
-                      // width: 40,
-                      color: Colors.transparent,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Complete'.toUpperCase(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: font_style_name,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 36,
-                              width: 36,
-                              decoration: BoxDecoration(
-                                color: Colors.pink,
-                                borderRadius: BorderRadius.circular(
-                                  14.0,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '0',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )
-
-          /*SingleChildScrollView(
-          // scrollDirection: neve,
-          physics: const NeverScrollableScrollPhysics(),
-          child: Container(
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            color: const Color.fromRGBO(1, 27, 82, 1),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                // Container(
-                //   height: MediaQuery.of(context).size.height,
-                //   width: 0.25,
-                //   color: Colors.white,
-                //   margin: const EdgeInsets.only(
-                //     top: 10.0,
-                //     bottom: 10.0,
-                //   ),
-                // ),
-                InkWell(
-                  onTap: () {
-                    str_show_ui = 'tasks';
-
-                    str_tab_press = 'tasks';
-
-                    setState(() {});
-                  },
-                  child: Expanded(
-                    child: Container(
-                      // width: 40,
-                      color: Colors.transparent,
-                      child: Row(
-                        // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Tasks'.toUpperCase(),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontFamily: font_style_name,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              height: 36,
-                              width: 36,
-                              decoration: BoxDecoration(
-                                color: Colors.pink,
-                                borderRadius: BorderRadius.circular(
-                                  14.0,
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  //
-                                  str_task_count.toString(),
-                                  //
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 16.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                // Container(
-                //   height: MediaQuery.of(context).size.height,
-                //   width: 0.25,
-                //   color: Colors.white,
-                //   margin: const EdgeInsets.only(
-                //     top: 10.0,
-                //     bottom: 10.0,
-                //   ),
-                // ),
-                Expanded(
-                  child: Container(
-                    // width: 40,
-                    color: Colors.transparent,
-                    child: Row(
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Complete'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              color: Colors.pink,
-                              borderRadius: BorderRadius.circular(
-                                14.0,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                '0',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 16.0,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),*/
-          );
-    } else {
-      return Container(
-        height: 20,
-        width: 20,
-        color: Colors.pink,
-      );
-    }
+      ),
+    );
   }
 
   /// ******************************* WEBSERVICES *************************/
@@ -3873,6 +3765,69 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           'action': 'teamlist',
           'mainProfesionalId': widget.str_get_goal_id.toString(),
           'mainProfesionalType': widget.str_professional_type.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print('task list ');
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+
+        arr_send_teammate_request.clear();
+        arr_approve_teammate.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          arr_send_teammate_request.add(get_data['data'][i]);
+        }
+
+        for (var i = 0; i < get_data['acceptData'].length; i++) {
+          arr_approve_teammate.add(get_data['data'][i]);
+        }
+
+        print('count start');
+        str_send_teammate_count = arr_send_teammate_request.length.toString();
+        str_approved_teammate_count = arr_approve_teammate.length.toString();
+
+        str_main_loader = 'team_loader_stop';
+
+        setState(() {});
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  funcTeamWBfromShopDetails() async {
+    print('=====> POST : TEAM LIST');
+
+    str_main_loader = 'team_loader_start';
+    setState(() {});
+
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'teamlist',
+          'mainProfesionalId': widget.str_get_goal_id.toString(),
+          'mainProfesionalType': widget.str_professional_type.toString(),
+          'groupId_Main': strGroupMainId.toString(),
         },
       ),
     );
@@ -4932,9 +4887,75 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'questlist',
           'userId': prefs.getInt('userId').toString(),
-          // 'goalId': widget.str_goal_cat_id.toString(),
           'profesionalId': widget.str_get_goal_id,
           'profesionalType': 'Goal',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    // print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        arr_quest_list.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          arr_quest_list.add(get_data['data'][i]);
+        }
+
+        str_quest_count = arr_quest_list.length.toString();
+        print('total number of quest =====> $str_quest_count');
+
+        if (arr_quest_list.isEmpty) {
+          str_main_loader = 'quest_data_empty';
+          setState(() {});
+        } else {
+          str_main_loader = 'quest_loader_stop';
+          setState(() {});
+        }
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  // get mission details
+  questListFromShopDetails() async {
+    if (kDebugMode) {
+      print('=====> POST : QUEST LIST');
+    }
+
+    str_show_ui = 'quest';
+
+    str_tab_press = 'quest';
+
+    str_main_loader = 'quest_loader_start';
+
+    setState(() {});
+
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'questlist',
+          'profesionalId': widget.str_get_goal_id,
+          'profesionalType': 'Goal',
+          'pageNo': '1'
         },
       ),
     );
@@ -4986,7 +5007,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     str_main_loader = 'mission_loader_start';
     setState(() {});
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
       Uri.parse(
@@ -4995,15 +5016,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      //   [action] => missionlist
-      // [userId] => 2
-      // [profesionalId] => 6
-      // [profesionalType] => Goal
-      // [pageNo] => 1
-
-      // 'profesionalId': widget.str_get_goal_id.toString(),
-      //       'profesionalType': widget.str_professional_type.toString(),
-
       body: jsonEncode(
         <String, String>{
           'action': 'missionlist',
@@ -5038,8 +5050,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         }
 
         setState(() {});
-
-        // get_quest_list_WB();
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -5073,15 +5083,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      //   [action] => missionlist
-      // [userId] => 2
-      // [profesionalId] => 6
-      // [profesionalType] => Goal
-      // [pageNo] => 1
-
-      // 'profesionalId': widget.str_get_goal_id.toString(),
-      //       'profesionalType': widget.str_professional_type.toString(),
-
       body: jsonEncode(
         <String, String>{
           'action': 'missionlist',
@@ -5116,8 +5117,6 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         }
 
         setState(() {});
-
-        // get_quest_list_WB();
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -5912,6 +5911,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         str_task_count = get_data['data']['totalTask'].toString();
         str_quest_count = get_data['data']['totalQuest'].toString();
         str_mission_count = get_data['data']['totalMission'].toString();
+        strGroupMainId = get_data['data']['groupId_Main'].toString();
+        str_total_task_complete =
+            get_data['data']['totalTaskCompleted'].toString();
         //
         setState(() {});
       } else {

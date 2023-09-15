@@ -59,104 +59,6 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
             onPressed: () => Navigator.of(context).pop(),
           ),
           backgroundColor: navigation_color,
-          /*bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: Colors.lime,
-            isScrollable: true,
-            tabs: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'INFO',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'SUB GOAL',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'QUOTES',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'MISSIONS',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'TASKS',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'REWARDS',
-                  Colors.white,
-                  14.0,
-                ),
-              ),
-            ],
-            /*onTap: (value) {
-            if (kDebugMode) {
-              print('tab id ====> $value');
-            }
-            //
-            if (value == 0) {
-              //
-            } else if (value == 1) {
-              //
-              setState(() {
-                strScreenLoader = '0';
-              });
-
-              funcGetSubGoal();
-            } else if (value == 2) {
-              //
-              setState(() {
-                strScreenLoader = '0';
-              });
-
-              funcQuestWB();
-            } else if (value == 3) {
-              // mission
-              //
-              setState(() {
-                strScreenLoader = '0';
-              });
-
-              funcMissionWB();
-            } else if (value == 4) {
-              //
-              setState(() {
-                strScreenLoader = '0';
-              });
-
-              // funcTasksWB();
-            } else if (value == 5) {
-              setState(() {
-                strScreenLoader = '0';
-              });
-              funcRewardsWB();
-            }
-          },*/
-          ),*/
         ),
         body: Column(
           children: [
@@ -276,7 +178,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                               color: Colors.transparent,
                               child: Center(
                                 child: text_bold_style_custom(
-                                  'QUOTES',
+                                  'QUESTS',
                                   Colors.white,
                                   18.0,
                                 ),
@@ -298,7 +200,7 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                               color: Colors.transparent,
                               child: Center(
                                 child: text_regular_style_custom(
-                                  'QUOTES',
+                                  'QUESTS',
                                   Colors.white,
                                   14.0,
                                 ),
@@ -459,6 +361,9 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                   scrollDirection: Axis.vertical,
                   child: Column(
                     children: [
+                      //
+                      headerUI(context),
+                      //
                       if (strUserClickWhichPanel == '1') ...[
                         //
                         tabOneInfoUI(context),
@@ -623,56 +528,51 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
     return Column(
       children: [
         for (int i = 0; i < arrAllDetails.length; i++) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: text_regular_style_custom(
-                //
-                arrAllDetails[i]['name'].toString(),
-                Colors.black,
-                14.0,
-              ),
-              leading: Container(
-                height: 60,
-                width: 60,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    40.0,
-                  ),
-                  child: (widget.getFullDataInViewDetails['profile_picture']
-                              .toString() ==
-                          '')
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.network(
-                          //
-                          arrAllDetails[i]['profile_picture'].toString(),
-                          fit: BoxFit.cover,
-                        ),
-                ),
-              ),
-              trailing: (parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['due_date'].toString()) ==
-                      'overdue')
-                  ? text_regular_style_custom(
-                      'overdue',
-                      Colors.black,
-                      14.0,
-                    )
-                  : text_regular_style_custom(
-                      parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['due_date'].toString()),
-                      Colors.black,
-                      14.0,
-                    ),
+          ListTile(
+            title: text_regular_style_custom(
+              //
+              arrAllDetails[i]['name'].toString(),
+              Colors.black,
+              14.0,
             ),
+            trailing: (parseDayLeft.func_difference_between_date(
+                        arrAllDetails[i]['due_date'].toString()) ==
+                    'overdue')
+                ? Container(
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.redAccent,
+                      borderRadius: BorderRadius.circular(
+                        12.0,
+                      ),
+                    ),
+                    child: Center(
+                      child: text_bold_style_custom(
+                        'overdue',
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 40,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.orangeAccent,
+                      borderRadius: BorderRadius.circular(
+                        12.0,
+                      ),
+                    ),
+                    child: Center(
+                      child: text_bold_style_custom(
+                        parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['due_date'].toString()),
+                        Colors.black,
+                        12.0,
+                      ),
+                    ),
+                  ),
           ),
           //
           Container(
@@ -682,6 +582,155 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
           ),
         ],
       ],
+    );
+  }
+
+  ///
+  ///
+  Container headerUI(BuildContext context) {
+    return Container(
+      // height: 180,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        // color: Colors.pink,
+        gradient: LinearGradient(
+          colors: [
+            Color.fromRGBO(
+              54,
+              30,
+              107,
+              1,
+            ),
+            Color.fromRGBO(
+              92,
+              21,
+              93,
+              1,
+            ),
+            Color.fromRGBO(
+              138,
+              0,
+              70,
+              1,
+            ),
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(14.0),
+        child: Column(
+          children: [
+            Row(
+              children: <Widget>[
+                Container(
+                  height: 120,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    border: Border.all(
+                      width: 4.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  child: Image.network(
+                    widget.getFullDataInViewDetails['image'].toString(),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(
+                  width: 20.0,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Center(
+                      child: Text(
+                        //
+                        widget.getFullDataInViewDetails['name']
+                            .toString()
+                            .toUpperCase(),
+                        //
+                        style: TextStyle(
+                          fontFamily: font_style_name,
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          margin: const EdgeInsets.only(
+                            bottom: 6.0,
+                            left: 2.0,
+                          ),
+                          height: 40,
+                          width: 120,
+                          // width: MediaQuery.of(context).size.width,
+
+                          decoration: const BoxDecoration(
+                            // color: Colors.orange,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(
+                                60.0,
+                              ),
+                              bottomLeft: Radius.circular(
+                                10.0,
+                              ),
+                              bottomRight: Radius.circular(
+                                60.0,
+                              ),
+                              topRight: Radius.circular(
+                                10.0,
+                              ),
+                            ),
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromRGBO(250, 220, 10, 1),
+                                Color.fromRGBO(252, 215, 10, 1),
+                                Color.fromRGBO(251, 195, 11, 1),
+                                Color.fromRGBO(250, 180, 10, 1),
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                          child: (parseDayLeft.func_difference_between_date(
+                                      widget
+                                          .getFullDataInViewDetails['deadline']
+                                          .toString()) ==
+                                  'overdue')
+                              ? Center(
+                                  child: text_regular_style_custom(
+                                    'overdue',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                )
+                              : Center(
+                                  child: text_regular_style_custom(
+                                    parseDayLeft.func_difference_between_date(
+                                        widget.getFullDataInViewDetails[
+                                                'deadline']
+                                            .toString()),
+                                    Colors.black,
+                                    12.0,
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -825,16 +874,40 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                 trailing: (parseDayLeft.func_difference_between_date(
                             arrAllDetails[i]['deadline'].toString()) ==
                         'overdue')
-                    ? text_regular_style_custom(
-                        'overdue',
-                        Colors.black,
-                        14.0,
+                    ? Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            'overdue',
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
                       )
-                    : text_regular_style_custom(
-                        parseDayLeft.func_difference_between_date(
-                            arrAllDetails[i]['deadline'].toString()),
-                        Colors.black,
-                        14.0,
+                    : Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.orangeAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            parseDayLeft.func_difference_between_date(
+                                arrAllDetails[i]['deadline'].toString()),
+                            Colors.black,
+                            12.0,
+                          ),
+                        ),
                       ),
               ),
             ),
@@ -891,16 +964,40 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
               trailing: (parseDayLeft.func_difference_between_date(
                           arrAllDetails[i]['deadline'].toString()) ==
                       'overdue')
-                  ? text_regular_style_custom(
-                      'overdue',
-                      Colors.black,
-                      14.0,
+                  ? Container(
+                      height: 40,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent,
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: text_bold_style_custom(
+                          'overdue',
+                          Colors.black,
+                          14.0,
+                        ),
+                      ),
                     )
-                  : text_regular_style_custom(
-                      parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['deadline'].toString()),
-                      Colors.black,
-                      14.0,
+                  : Container(
+                      height: 40,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.orangeAccent,
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                      ),
+                      child: Center(
+                        child: text_bold_style_custom(
+                          parseDayLeft.func_difference_between_date(
+                              arrAllDetails[i]['deadline'].toString()),
+                          Colors.black,
+                          12.0,
+                        ),
+                      ),
                     ),
             ),
           ),
@@ -983,16 +1080,40 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                 trailing: (parseDayLeft.func_difference_between_date(
                             arrAllDetails[i]['deadline'].toString()) ==
                         'overdue')
-                    ? text_regular_style_custom(
-                        'overdue',
-                        Colors.black,
-                        14.0,
+                    ? Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            'overdue',
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
                       )
-                    : text_regular_style_custom(
-                        parseDayLeft.func_difference_between_date(
-                            arrAllDetails[i]['deadline'].toString()),
-                        Colors.black,
-                        14.0,
+                    : Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.orangeAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            parseDayLeft.func_difference_between_date(
+                                arrAllDetails[i]['deadline'].toString()),
+                            Colors.black,
+                            12.0,
+                          ),
+                        ),
                       ),
               ),
             ),

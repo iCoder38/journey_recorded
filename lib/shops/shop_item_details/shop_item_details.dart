@@ -392,6 +392,11 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                       ),
                     ),
                   );*/
+                  if (kDebugMode) {
+                    print('============================');
+                    print('you clicked line number 395');
+                    print('============================');
+                  }
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -585,6 +590,13 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                         arr_mission_list[index]['parentName'].toString(),
                         arr_mission_list[index]['missionId'].toString(),
                         arr_mission_list[index]['image'].toString(), */
+                  //
+                  if (kDebugMode) {
+                    print('============================');
+                    print('you clicked line number 592');
+                    print('============================');
+                  }
+                  //
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -1084,6 +1096,9 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                               ['trainingId']);
                         }*/
                         //
+                        if (kDebugMode) {
+                          print('you clicked line number 1092');
+                        }
                         Navigator.push(
                           context,
                           MaterialPageRoute(
