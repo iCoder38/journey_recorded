@@ -227,7 +227,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                       margin: const EdgeInsets.only(
                         top: 0.0,
                       ),
-                      height: 80,
+                      // height: 80,
                       color: Colors.transparent,
                       child: ListTile(
                         // iconColor: Colors.pink,
@@ -294,15 +294,10 @@ class _GoalsScreenState extends State<GoalsScreen> {
                         //     'assets/images/3.png',
                         //   ),
                         // ),
-                        title: Text(
-                          //
+                        title: text_bold_style_custom(
                           arr_goal_list[index]['name'].toString(),
-                          //
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          Colors.black,
+                          16.0,
                         ),
                         subtitle: Text(
                           //

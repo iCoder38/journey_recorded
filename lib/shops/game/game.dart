@@ -753,7 +753,7 @@ class _GameScreenState extends State<GameScreen> {
             //
             // text_with_regular_style(arr_skill_list.length),
             //
-            if (arr_skill_list.isEmpty) ...[
+            /*if (arr_skill_list.isEmpty) ...[
               //
               text_with_regular_style('please wait...'),
               //
@@ -763,11 +763,11 @@ class _GameScreenState extends State<GameScreen> {
                 skillHaveOneDataUI(i),
               ]
               //
-            ] else ...[
-              //
-              skillHaveMultipleDataUI(),
-              //
-            ],
+            ] else ...[*/
+            //
+            skillHaveMultipleDataUI(),
+            //
+            // ],
 
             ///
             ///
@@ -989,6 +989,11 @@ class _GameScreenState extends State<GameScreen> {
       'description': productClickedData['description'].toString(),
       'Quantity': productClickedData['Quantity'].toString(),
       'productId': productClickedData['productId'].toString(),
+      'image_1': productClickedData['image_1'].toString(),
+      'image_2': productClickedData['image_2'].toString(),
+      'image_3': productClickedData['image_3'].toString(),
+      'image_4': productClickedData['image_4'].toString(),
+      'image_5': productClickedData['image_5'].toString(),
     };
 
     //
@@ -1276,138 +1281,205 @@ class _GameScreenState extends State<GameScreen> {
   Padding skillHaveMultipleDataUI() {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                //
-                funcSkillManageToDetails(arr_skill_list[0]);
-              },
-              child: Container(
-                height: 200,
-                // width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.4),
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(
-                    15.0,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            for (int i = 0; i < arr_skill_list.length; i++) ...[
+              GestureDetector(
+                onTap: () {
+                  //
+                  funcSkillManageToDetails(arr_skill_list[i]);
+                },
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.4),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(
+                      15.0,
+                    ),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            8.0,
-                          ),
-                          child: Image.network(
-                            //
-                            arr_skill_list[0]['image'].toString(),
-                            fit: BoxFit.cover,
-                            //
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                            child: Image.network(
+                              //
+                              arr_skill_list[i]['image'].toString(),
+                              fit: BoxFit.cover,
+                              //
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    //
-                    Align(
-                      alignment: Alignment.center,
-                      child: text_regular_style_custom(
-                        //
-                        arr_skill_list[0]['SkillName'].toString(),
-                        //
-                        Colors.black,
-                        16.0,
+                      //
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_regular_style_custom(
+                          //
+                          arr_skill_list[i]['SkillName'].toString(),
+                          //
+                          Colors.black,
+                          16.0,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: text_bold_style_custom(
-                        //
-                        '\$${arr_skill_list[0]['price'].toString()}',
-                        //
-                        Colors.black,
-                        14.0,
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_bold_style_custom(
+                          //
+                          '\$${arr_skill_list[i]['price'].toString()}',
+                          //
+                          Colors.black,
+                          14.0,
+                        ),
                       ),
-                    ),
-                    //
-                  ],
+                      //
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-          //
-          const SizedBox(
-            width: 12.0,
-          ),
+              const SizedBox(
+                width: 12.0,
+              ),
+            ]
+            /*Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  //
+                  funcSkillManageToDetails(arr_skill_list[0]);
+                },
+                child: Container(
+                  height: 200,
+                  // width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.4),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(
+                      15.0,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                            child: Image.network(
+                              //
+                              arr_skill_list[0]['image'].toString(),
+                              fit: BoxFit.cover,
+                              //
+                            ),
+                          ),
+                        ),
+                      ),
+                      //
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_regular_style_custom(
+                          //
+                          arr_skill_list[0]['SkillName'].toString(),
+                          //
+                          Colors.black,
+                          16.0,
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_bold_style_custom(
+                          //
+                          '\$${arr_skill_list[0]['price'].toString()}',
+                          //
+                          Colors.black,
+                          14.0,
+                        ),
+                      ),
+                      //
+                    ],
+                  ),
+                ),
+              ),
+            ),*/
+            //
+            /*const SizedBox(
+              width: 12.0,
+            ),*/
 
-          //
-          Expanded(
-            child: GestureDetector(
-              onTap: () {
-                //
-                //
-                funcSkillManageToDetails(arr_skill_list[1]);
-              },
-              child: Container(
-                height: 200,
-                // width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.all(width: 0.4),
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(
-                    15.0,
+            //
+            /*Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  //
+                  //
+                  funcSkillManageToDetails(arr_skill_list[1]);
+                },
+                child: Container(
+                  height: 200,
+                  // width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(width: 0.4),
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(
+                      15.0,
+                    ),
                   ),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                            8.0,
-                          ),
-                          child: Image.network(
-                            //
-                            arr_skill_list[1]['image'].toString(),
-                            fit: BoxFit.cover,
-                            //
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              8.0,
+                            ),
+                            child: Image.network(
+                              //
+                              arr_skill_list[1]['image'].toString(),
+                              fit: BoxFit.cover,
+                              //
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    //
-                    Align(
-                      alignment: Alignment.center,
-                      child: text_regular_style_custom(
-                        //
-                        arr_skill_list[1]['SkillName'].toString(),
-                        //
-                        Colors.black,
-                        16.0,
+                      //
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_regular_style_custom(
+                          //
+                          arr_skill_list[1]['SkillName'].toString(),
+                          //
+                          Colors.black,
+                          16.0,
+                        ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: text_bold_style_custom(
-                        //
-                        '\$${arr_skill_list[1]['price'].toString()}',
-                        //
-                        Colors.black,
-                        14.0,
+                      Align(
+                        alignment: Alignment.center,
+                        child: text_bold_style_custom(
+                          //
+                          '\$${arr_skill_list[1]['price'].toString()}',
+                          //
+                          Colors.black,
+                          14.0,
+                        ),
                       ),
-                    ),
-                    //
-                  ],
+                      //
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ),
-        ],
+            ),*/
+          ],
+        ),
       ),
     );
   }

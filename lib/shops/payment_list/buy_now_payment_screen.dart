@@ -19,12 +19,21 @@ class BuyNowPaymentScreen extends StatefulWidget {
       required this.strProductId,
       required this.strTotalPrice,
       required this.strProductName,
-      required this.strProductQuantity});
+      required this.strProductQuantity,
+      required this.strAddressUserName,
+      required this.strAddressUserPhone,
+      required this.strAddressUserAddress,
+      required this.strAddressUserPincode});
 
   final String strProductId;
   final String strTotalPrice;
   final String strProductName;
   final String strProductQuantity;
+  //
+  final String strAddressUserName;
+  final String strAddressUserPhone;
+  final String strAddressUserAddress;
+  final String strAddressUserPincode;
 
   @override
   State<BuyNowPaymentScreen> createState() => _BuyNowPaymentScreenState();
@@ -335,6 +344,12 @@ class _BuyNowPaymentScreenState extends State<BuyNowPaymentScreen> {
           'userId': prefs.getInt('userId').toString(),
           'productId': widget.strProductId.toString(),
           'totalAmount': widget.strTotalPrice.toString(),
+          //
+          'ShippingName': widget.strAddressUserName.toString(),
+          'ShippingPhone': widget.strAddressUserPhone.toString(),
+          'ShippingAddress': widget.strAddressUserAddress.toString(),
+          'ShippingZipcode': widget.strAddressUserPincode.toString(),
+          //
           'transactioID': 'tok_1NhSZfJCQ0WRSbXvoZyHBFfu'
         },
       ),

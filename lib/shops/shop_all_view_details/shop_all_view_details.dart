@@ -642,89 +642,85 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
                 const SizedBox(
                   width: 20.0,
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        //
-                        widget.getFullDataInViewDetails['name']
-                            .toString()
-                            .toUpperCase(),
-                        //
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: text_bold_style_custom(
+                          //
+                          widget.getFullDataInViewDetails['name'].toString(),
+                          Colors.white,
+                          18.0,
                         ),
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.only(
-                            bottom: 6.0,
-                            left: 2.0,
-                          ),
-                          height: 40,
-                          width: 120,
-                          // width: MediaQuery.of(context).size.width,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: const EdgeInsets.only(
+                              bottom: 6.0,
+                              left: 2.0,
+                            ),
+                            height: 40,
+                            width: 120,
+                            // width: MediaQuery.of(context).size.width,
 
-                          decoration: const BoxDecoration(
-                            // color: Colors.orange,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(
-                                60.0,
+                            decoration: const BoxDecoration(
+                              // color: Colors.orange,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  60.0,
+                                ),
+                                bottomLeft: Radius.circular(
+                                  10.0,
+                                ),
+                                bottomRight: Radius.circular(
+                                  60.0,
+                                ),
+                                topRight: Radius.circular(
+                                  10.0,
+                                ),
                               ),
-                              bottomLeft: Radius.circular(
-                                10.0,
-                              ),
-                              bottomRight: Radius.circular(
-                                60.0,
-                              ),
-                              topRight: Radius.circular(
-                                10.0,
+                              gradient: LinearGradient(
+                                colors: [
+                                  Color.fromRGBO(250, 220, 10, 1),
+                                  Color.fromRGBO(252, 215, 10, 1),
+                                  Color.fromRGBO(251, 195, 11, 1),
+                                  Color.fromRGBO(250, 180, 10, 1),
+                                ],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
                               ),
                             ),
-                            gradient: LinearGradient(
-                              colors: [
-                                Color.fromRGBO(250, 220, 10, 1),
-                                Color.fromRGBO(252, 215, 10, 1),
-                                Color.fromRGBO(251, 195, 11, 1),
-                                Color.fromRGBO(250, 180, 10, 1),
-                              ],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                          child: (parseDayLeft.func_difference_between_date(
-                                      widget
-                                          .getFullDataInViewDetails['deadline']
-                                          .toString()) ==
-                                  'overdue')
-                              ? Center(
-                                  child: text_regular_style_custom(
-                                    'overdue',
-                                    Colors.black,
-                                    14.0,
-                                  ),
-                                )
-                              : Center(
-                                  child: text_regular_style_custom(
-                                    parseDayLeft.func_difference_between_date(
+                            child: (parseDayLeft.func_difference_between_date(
                                         widget.getFullDataInViewDetails[
                                                 'deadline']
-                                            .toString()),
-                                    Colors.black,
-                                    12.0,
+                                            .toString()) ==
+                                    'overdue')
+                                ? Center(
+                                    child: text_regular_style_custom(
+                                      'overdue',
+                                      Colors.black,
+                                      14.0,
+                                    ),
+                                  )
+                                : Center(
+                                    child: text_regular_style_custom(
+                                      parseDayLeft.func_difference_between_date(
+                                          widget.getFullDataInViewDetails[
+                                                  'deadline']
+                                              .toString()),
+                                      Colors.black,
+                                      12.0,
+                                    ),
                                   ),
-                                ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -926,79 +922,118 @@ class _ShopAllViewDetailsScreenState extends State<ShopAllViewDetailsScreen>
   Column tabThreeQuotesUI(BuildContext context) {
     return Column(
       children: [
+        /*
+        arr_quest_list[index]['categoryName'].toString(),
+                        arr_quest_list[index]['name'].toString(),
+                        arr_quest_list[index]['deadline'].toString(),
+                        arr_quest_list[index]['description'].toString(),
+                        arr_quest_list[index]['goalId'].toString(),
+                        arr_quest_list[index]['categoryId'].toString(),
+                        arr_quest_list[index]['parentName'].toString(),
+                        arr_quest_list[index]['questId'].toString(),
+                        arr_quest_list[index]['image'].toString(),
+        */
         for (int i = 0; i < arrAllDetails.length; i++) ...[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: text_regular_style_custom(
-                //
-                arrAllDetails[i]['name'].toString(),
-                Colors.black,
-                14.0,
-              ),
-              leading: Container(
-                height: 60,
-                width: 60,
-                color: Colors.transparent,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                    40.0,
+          GestureDetector(
+            onTap: () {
+              //
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RealMainDetailsScreen(
+                    str_navigation_title: 'Quest',
+                    str_category_name:
+                        arrAllDetails[i]['categoryName'].toString(),
+                    str_name: arrAllDetails[i]['name'].toString(),
+                    str_due_date: arrAllDetails[i]['deadline'].toString(),
+                    str_get_about_goal:
+                        arrAllDetails[i]['description'].toString(),
+                    str_get_goal_id: arrAllDetails[i]['goalId'].toString(),
+                    str_category_id: arrAllDetails[i]['categoryId'].toString(),
+                    str_professional_type: 'Quest',
+                    str_tray_value: 'quest',
+                    str_parent_name: arrAllDetails[i]['parentName'].toString(),
+                    str_goal_cat_id: arrAllDetails[i]['questId'].toString(),
+                    str_image: arrAllDetails[i]['image'].toString(),
+                    strFromViewDetails: 'yes',
                   ),
-                  child: (widget.getFullDataInViewDetails['image'].toString() ==
-                          '')
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : Image.network(
-                          //
-                          arrAllDetails[i]['image'].toString(),
-                          fit: BoxFit.cover,
-                        ),
                 ),
-              ),
-              trailing: (parseDayLeft.func_difference_between_date(
-                          arrAllDetails[i]['deadline'].toString()) ==
-                      'overdue')
-                  ? Container(
-                      height: 40,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.redAccent,
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                      ),
-                      child: Center(
-                        child: text_bold_style_custom(
-                          'overdue',
-                          Colors.black,
-                          14.0,
-                        ),
-                      ),
-                    )
-                  : Container(
-                      height: 40,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        color: Colors.orangeAccent,
-                        borderRadius: BorderRadius.circular(
-                          12.0,
-                        ),
-                      ),
-                      child: Center(
-                        child: text_bold_style_custom(
-                          parseDayLeft.func_difference_between_date(
-                              arrAllDetails[i]['deadline'].toString()),
-                          Colors.black,
-                          12.0,
-                        ),
-                      ),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                title: text_regular_style_custom(
+                  //
+                  arrAllDetails[i]['name'].toString(),
+                  Colors.black,
+                  14.0,
+                ),
+                leading: Container(
+                  height: 60,
+                  width: 60,
+                  color: Colors.transparent,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                      40.0,
                     ),
+                    child:
+                        (widget.getFullDataInViewDetails['image'].toString() ==
+                                '')
+                            ? SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: Image.asset(
+                                  'assets/images/logo.png',
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : Image.network(
+                                //
+                                arrAllDetails[i]['image'].toString(),
+                                fit: BoxFit.cover,
+                              ),
+                  ),
+                ),
+                trailing: (parseDayLeft.func_difference_between_date(
+                            arrAllDetails[i]['deadline'].toString()) ==
+                        'overdue')
+                    ? Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.redAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            'overdue',
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
+                      )
+                    : Container(
+                        height: 40,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.orangeAccent,
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                        ),
+                        child: Center(
+                          child: text_bold_style_custom(
+                            parseDayLeft.func_difference_between_date(
+                                arrAllDetails[i]['deadline'].toString()),
+                            Colors.black,
+                            12.0,
+                          ),
+                        ),
+                      ),
+              ),
             ),
           ),
           //

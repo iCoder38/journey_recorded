@@ -300,7 +300,7 @@ class _MissionScreenState extends State<MissionScreen> {
                       margin: const EdgeInsets.only(
                         top: 0.0,
                       ),
-                      height: 80,
+                      // height: 80,
                       color: Colors.transparent,
                       child: ListTile(
                         // iconColor: Colors.pink,
@@ -340,15 +340,10 @@ class _MissionScreenState extends State<MissionScreen> {
                                   // height: 220,
                                 ),
                               ),
-                        title: Text(
-                          //
+                        title: text_bold_style_custom(
                           arr_mission_list[index]['name'].toString(),
-                          //
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          Colors.black,
+                          16.0,
                         ),
                         subtitle: Text(
                           //

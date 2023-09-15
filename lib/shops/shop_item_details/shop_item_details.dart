@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:badges/badges.dart' as badges;
@@ -8,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/address/address.dart';
 import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/shops/cart_list/cart_list.dart';
 import 'package:journey_recorded/shops/payment_list/buy_now_goals_payment_Screen.dart';
@@ -44,6 +46,9 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
   var strCartLoader = '0';
   var strAddToCartLoader = '1';
   //
+  var arrOfImages = [];
+  //
+  var strNavigationTitle = '';
   @override
   void initState() {
     if (kDebugMode) {
@@ -51,18 +56,58 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
       print(widget.strProfileNumber);
       print(widget.getFullDataOfproduct);
       print('==================================');
-      print('==================================');
-      print(widget.getAnotherFullDataToPush);
-      print('==================================');
-      print('========== SKILL DATA =============');
-      print(widget.getSkillRealFullData);
+      // print('==================================');
+      // print(widget.getAnotherFullDataToPush);
+      // print('==================================');
+      // print('========== SKILL DATA =============');
+      // print(widget.getSkillRealFullData);
       // print(widget.getFullDataOfproduct['image'].toString());
     }
     //
-    strTotalPriceIs = '${widget.getFullDataOfproduct['price']}';
+    if (widget.strProfileNumber == 'actions') {
+      strNavigationTitle = 'Goal';
+    } else if (widget.strProfileNumber == 'missions') {
+      strNavigationTitle = 'Mission';
+    } else if (widget.strProfileNumber == 'quests') {
+      strNavigationTitle = 'Quest';
+    } else if (widget.strProfileNumber == '1') {
+      strNavigationTitle = 'Skill';
+    } else if (widget.strProfileNumber == '2') {
+      strNavigationTitle = 'Product';
+    }
 
     //
-    funcGetCartListWB();
+    strTotalPriceIs = '${widget.getFullDataOfproduct['price']}';
+
+    if (widget.strProfileNumber == '2') {
+      if (kDebugMode) {
+        print('USER CLICKED PRODUCTS');
+      }
+
+      if (widget.getFullDataOfproduct['image_1'] != '') {
+        arrOfImages.add(widget.getFullDataOfproduct['image_1']);
+      }
+      if (widget.getFullDataOfproduct['image_2'] != '') {
+        arrOfImages.add(widget.getFullDataOfproduct['image_2']);
+      }
+      if (widget.getFullDataOfproduct['image_3'] != '') {
+        arrOfImages.add(widget.getFullDataOfproduct['image_3']);
+      }
+      if (widget.getFullDataOfproduct['image_4'] != '') {
+        arrOfImages.add(widget.getFullDataOfproduct['image_4']);
+      }
+      if (widget.getFullDataOfproduct['image_5'] != '') {
+        arrOfImages.add(widget.getFullDataOfproduct['image_5']);
+      }
+      if (kDebugMode) {
+        print(arrOfImages.length);
+        print(arrOfImages);
+      }
+      //
+      funcGetCartListWB();
+    }
+    //
+
     super.initState();
   }
 
@@ -218,8 +263,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
       appBar: AppBar(
         title: text_bold_style_custom(
           //
-          'Product Details',
-          //
+          strNavigationTitle,
           Colors.white,
           16.0,
         ),
@@ -232,51 +276,53 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
         ),
         backgroundColor: navigation_color,
         actions: [
-          (strCartLoader == '0')
-              ? const Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(),
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: badges.Badge(
-                    badgeStyle: badges.BadgeStyle(
-                      shape: badges.BadgeShape.circle,
-                      badgeColor: Colors.blue,
-                      padding: const EdgeInsets.all(8),
-                      borderRadius: BorderRadius.circular(1),
-                      borderSide: const BorderSide(
-                        color: Colors.pinkAccent,
-                        width: 2,
-                      ),
-                      elevation: 0,
+          if (widget.strProfileNumber == '2') ...[
+            (strCartLoader == '0')
+                ? const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
                     ),
-                    badgeContent: text_regular_style_custom(
-                      //,
-                      strCartCount.toString(),
-                      Colors.white,
-                      10.0,
-                    ),
-                    onTap: () {
-                      //
-                      //
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ShopCartListScreen(),
+                  )
+                : Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: badges.Badge(
+                      badgeStyle: badges.BadgeStyle(
+                        shape: badges.BadgeShape.circle,
+                        badgeColor: Colors.blue,
+                        padding: const EdgeInsets.all(8),
+                        borderRadius: BorderRadius.circular(1),
+                        borderSide: const BorderSide(
+                          color: Colors.pinkAccent,
+                          width: 2,
                         ),
-                      );
-                    },
-                    child: const Icon(
-                      Icons.shopping_cart,
-                      color: Colors.white,
+                        elevation: 0,
+                      ),
+                      badgeContent: text_regular_style_custom(
+                        //,
+                        strCartCount.toString(),
+                        Colors.white,
+                        10.0,
+                      ),
+                      onTap: () {
+                        //
+                        //
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ShopCartListScreen(),
+                          ),
+                        );
+                      },
+                      child: const Icon(
+                        Icons.shopping_cart,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                )
+                  )
+          ],
         ],
       ),
       body: SingleChildScrollView(
@@ -1046,6 +1092,10 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                                   .getFullDataOfproduct['name']
                                   .toString(),
                               strProductQuantity: strQuantityCounter.toString(),
+                              strAddressUserName: '',
+                              strAddressUserPhone: '',
+                              strAddressUserAddress: '',
+                              strAddressUserPincode: '',
                             ),
                           ),
                         );
@@ -1087,72 +1137,101 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        //
-                        /*if (kDebugMode) {
-                          print(widget.getSkillRealFullData);
-                          print(widget.getSkillRealFullData['TrainingList'][0]
-                              ['trainingId']);
-                        }*/
-                        //
-                        if (kDebugMode) {
-                          print('you clicked line number 1092');
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TrainingListScreen(
-                                str_skill_id: widget
-                                    .getSkillRealFullData['skillId']
-                                    .toString(),
-                                str_training_id: widget
-                                    .getSkillRealFullData['TrainingList'][0]
-                                        ['trainingId']
-                                    .toString(),
-                                strGetUserId: widget
-                                    .getSkillRealFullData['userId']
-                                    .toString(),
-                                strUserIdEnabled: 'no'),
-                          ),
-                        );
-                        //
-                      },
-                      child: Container(
-                        height: 60,
-                        // width: 100,
+                    child: (widget
+                                .getSkillRealFullData['TrainingList'].length ==
+                            0)
+                        ? Container(
+                            height: 60,
+                            // width: 100,
 
-                        decoration: BoxDecoration(
-                          color: Colors.greenAccent,
-                          border: Border.all(width: 0.2),
-                          borderRadius: BorderRadius.circular(
-                            12.0,
-                          ),
-                          boxShadow: const [
-                            BoxShadow(
-                              blurRadius: 6.0,
-                            )
-                          ],
-                        ),
-                        child: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              // const Icon(Icons.credit_card),
-                              const SizedBox(
-                                width: 10,
+                            decoration: BoxDecoration(
+                              color: Colors.grey,
+                              border: Border.all(width: 0.2),
+                              borderRadius: BorderRadius.circular(
+                                12.0,
                               ),
-                              text_bold_style_custom(
-                                //
-                                'View Details',
-                                Colors.black,
-                                14.0,
+                              boxShadow: const [
+                                BoxShadow(
+                                  blurRadius: 6.0,
+                                )
+                              ],
+                            ),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  // const Icon(Icons.credit_card),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+
+                                  text_bold_style_custom(
+                                    //
+                                    'Training not availaible',
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              //
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => TrainingListScreen(
+                                      str_skill_id: widget
+                                          .getSkillRealFullData['skillId']
+                                          .toString(),
+                                      str_training_id: widget
+                                          .getSkillRealFullData['TrainingList']
+                                              [0]['trainingId']
+                                          .toString(),
+                                      strGetUserId: widget
+                                          .getSkillRealFullData['userId']
+                                          .toString(),
+                                      strUserIdEnabled: 'no'),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 60,
+                              // width: 100,
+
+                              decoration: BoxDecoration(
+                                color: Colors.greenAccent,
+                                border: Border.all(width: 0.2),
+                                borderRadius: BorderRadius.circular(
+                                  12.0,
+                                ),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    blurRadius: 6.0,
+                                  )
+                                ],
+                              ),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    // const Icon(Icons.credit_card),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+
+                                    text_bold_style_custom(
+                                      //
+                                      'View Details',
+                                      Colors.black,
+                                      14.0,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    ),
                   ),
                 ],
               ),
@@ -1187,32 +1266,35 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
               ),
             ] else if (widget.strProfileNumber == '2') ...[
               // product
-              Container(
-                height: 240,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.transparent,
-                child: (widget.getFullDataOfproduct['image'].toString() == '')
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          0,
-                        ),
-                        child: Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    : ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          0,
-                        ),
-                        child: Image.network(
-                          //
-                          widget.getFullDataOfproduct['image'].toString(),
-                          fit: BoxFit.contain,
-                          //
+              //
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    for (int i = 0; i < arrOfImages.length; i++) ...[
+                      Container(
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.transparent,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(
+                            0,
+                          ),
+                          child: Image.network(
+                            //
+                            arrOfImages[i].toString(),
+                            fit: BoxFit.cover,
+                            //
+                          ),
                         ),
                       ),
+                    ],
+                  ],
+                ),
               ),
+
+              //
+
               //
               text_bold_style_custom(
                 //
@@ -1288,19 +1370,36 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BuyNowPaymentScreen(
-                                strProductId: widget
+                              builder: (context) => AddressScreen(
+                                strAddressProductId: widget
                                     .getFullDataOfproduct['productId']
                                     .toString(),
-                                strTotalPrice: strTotalPriceIs,
-                                strProductName: widget
+                                strAddressTotalPrice: strTotalPriceIs,
+                                strAddressProductName: widget
                                     .getFullDataOfproduct['name']
                                     .toString(),
-                                strProductQuantity:
+                                strAddressProductQuantity:
                                     strQuantityCounter.toString(),
+                                strWhichProfile: 'product',
                               ),
                             ),
                           );
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (context) => BuyNowPaymentScreen(
+                          //       strProductId: widget
+                          //           .getFullDataOfproduct['productId']
+                          //           .toString(),
+                          //       strTotalPrice: strTotalPriceIs,
+                          //       strProductName: widget
+                          //           .getFullDataOfproduct['name']
+                          //           .toString(),
+                          //       strProductQuantity:
+                          //           strQuantityCounter.toString(),
+                          //     ),
+                          //   ),
+                          // );
                         },
                         child: Container(
                           height: 60,

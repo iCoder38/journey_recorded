@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, avoid_print
 
 import 'dart:convert';
 
@@ -570,7 +570,7 @@ class _EditDetailsScreenState extends State<EditDetailsScreen> {
           'userId': prefs.getInt('userId').toString(),
           'goalId': widget.str_goal_id.toString(),
           'goalType': '1',
-          'name': widget.str_get_goal_name.toString(),
+          'name': cont_name_of_goal.text.toString(),
           'categoryId': str_category_id.toString(),
           'note': '',
           'deadline': cont_deadline.text.toString(),

@@ -4,6 +4,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +25,6 @@ import 'package:journey_recorded/sub_goals/sub_goals.dart';
 import 'package:journey_recorded/sub_goals/sub_goals_details/sub_goals_details.dart';
 import 'package:journey_recorded/task/create_task/create_task.dart';
 import 'package:journey_recorded/task_details/task_details.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 import 'package:image_picker/image_picker.dart';
 
@@ -130,6 +131,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var arr_mission_list = [];
   var arr_mission_info = [];
   var str_total_task_complete = '0';
+  var str_professtional_id = '0';
   // reward
   var arr_reward = [];
   //
@@ -158,6 +160,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       print('========================');
       print('======= VIEW PROFILE =======');
       print(widget.strFromViewDetails);
+      print('======= TRAY =======');
+      print(widget.str_tray_value);
     }
     cont_reward_name = TextEditingController();
     cont_reward_price = TextEditingController();
@@ -170,7 +174,16 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     } else {
       strFloatingActionButtonStatus = true;
     }
-    func_get_goal_details_WB();
+
+    if (widget.str_tray_value == 'mission') {
+      mission_info_list_WB();
+    } else if (widget.str_tray_value == 'quest') {
+      funcGetQuestFullDetailsWB();
+    } else {
+      func_get_goal_details_WB();
+    }
+//
+    //
   }
 
   @override
@@ -212,49 +225,49 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'Info'.toUpperCase(),
+                    'Info',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'notes'.toUpperCase(),
+                    'Notes',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'quotes'.toUpperCase(),
+                    'Quotes',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'team'.toUpperCase(),
+                    'Team',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'reward'.toUpperCase(),
+                    'Reward',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: text_regular_style_custom(
-                    'link'.toUpperCase(),
+                    'Link',
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                 ),
               ],
@@ -278,7 +291,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
                   str_main_loader = 'notes_loader_start';
                   setState(() {});
-                  func_notes_WB();
+                  widget.strFromViewDetails == 'yes'
+                      ? funcNotesListFromShopWB()
+                      : func_notes_WB();
                 } else if (value == 2) {
                   // quotes
                   str_show_ui = 'n.a.';
@@ -286,7 +301,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   str_main_loader = 'quotes_loader_start';
                   setState(() {});
                   (widget.strFromViewDetails == 'yes')
-                      ? func_quotes_WB_without_userId()
+                      ? funcQuotesListFromShopWB()
                       : func_quotes_WB();
                 } else if (value == 3) {
                   // quotes
@@ -320,110 +335,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               if (widget.str_tray_value == 'goal') ...[
                 (widget.strFromViewDetails == 'yes')
                     ? const SizedBox()
-                    : Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(
-                              right: 20.0,
-                            ),
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                20.0,
-                              ),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                if (kDebugMode) {
-                                  print('action sheet');
-                                }
-                                //ActionSheetExample();
-                                _showActionSheet(context);
-                              },
-                              icon: const Icon(
-                                Icons.add,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              right: 20.0,
-                            ),
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                20.0,
-                              ),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                // delete
-                                // print(widget.str_tray_value.toString());
-
-                                gear_popup_22(
-                                  'Delete goal',
-                                  widget.str_get_goal_id.toString(),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.delete_forever,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(
-                              right: 20.0,
-                            ),
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                20.0,
-                              ),
-                            ),
-                            child: IconButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditDetailsScreen(
-                                      str_get_goal_for: 'n.a.',
-                                      str_get_category_id:
-                                          widget.str_category_id.toString(),
-                                      str_get_category_name:
-                                          widget.str_category_name.toString(),
-                                      str_get_goal_name:
-                                          widget.str_name.toString(),
-                                      str_get_deadline:
-                                          widget.str_due_date.toString(),
-                                      str_about_your_goal:
-                                          widget.str_get_about_goal.toString(),
-                                      str_goal_id:
-                                          widget.str_get_goal_id.toString(),
-                                    ),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(
-                                Icons.edit,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )
+                    //
+                    : appBarActionForGoalUI(context)
               ] else if (widget.str_tray_value == 'sub_goal') ...[
                 (widget.strFromViewDetails == 'yes')
                     ? const SizedBox()
+                    //
                     : appBarActionForSubGoalUI(context),
               ] else if (widget.str_tray_value == 'mission') ...[
                 (widget.strFromViewDetails == 'yes')
                     ? const SizedBox()
+                    //
                     : appBarActionForMissionUI(context)
               ]
             ],
@@ -435,7 +357,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 func_push_from_floating_button();
               },
               backgroundColor: navigation_color,
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
             ),
           ),
           body: TabBarView(
@@ -521,6 +446,63 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           ),
         ),
       ),
+    );
+  }
+
+  Row appBarActionForGoalUI(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () {
+            if (kDebugMode) {
+              print('action sheet');
+            }
+            //ActionSheetExample();
+            _showActionSheet(context);
+          },
+          icon: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            // delete
+            // print(widget.str_tray_value.toString());
+
+            gear_popup_22(
+              'Delete goal',
+              widget.str_get_goal_id.toString(),
+            );
+          },
+          icon: const Icon(
+            Icons.delete_forever,
+            color: Colors.white,
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditDetailsScreen(
+                  str_get_goal_for: 'n.a.',
+                  str_get_category_id: widget.str_category_id.toString(),
+                  str_get_category_name: widget.str_category_name.toString(),
+                  str_get_goal_name: widget.str_name.toString(),
+                  str_get_deadline: widget.str_due_date.toString(),
+                  str_about_your_goal: widget.str_get_about_goal.toString(),
+                  str_goal_id: widget.str_get_goal_id.toString(),
+                ),
+              ),
+            );
+          },
+          icon: const Icon(
+            Icons.edit,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 
@@ -3502,7 +3484,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       str_main_loader = 'reward_loader_start';
     });
     //
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
       Uri.parse(
@@ -3519,9 +3501,10 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
       body: jsonEncode(
         <String, String>{
-          'action': 'rewardlist',
-          'pageNo': '',
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'action': 'tasklistnew',
+          'pageNo': '1',
+          'userId': prefs.getInt('userId').toString(),
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
         },
       ),
@@ -3561,8 +3544,68 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     }
   }
 
-  // NOTES
+// NOTES
   Future func_notes_WB() async {
+    print('=====> POST : NOTES 1');
+
+    setState(() {
+      str_main_loader = 'notes_loader_start';
+    });
+    //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'notelist',
+          'userId': prefs.getInt('userId').toString(),
+          'pageNo': '1',
+          'profesionalId': str_professtional_id.toString(),
+          'profesionalType': widget.str_professional_type.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+    // print(get_data['data'][0]['id']);
+    if (resposne.statusCode == 200) {
+      //
+      arr_notes_list.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          arr_notes_list.add(i);
+        }
+
+        if (arr_notes_list.isEmpty) {
+          setState(() {
+            str_main_loader = 'notes_data_empty';
+          });
+        } else {
+          setState(() {
+            str_main_loader = 'notes_loader_stop';
+          });
+        }
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  // NOTES func_notes_WB
+  Future funcNotesListFromShopWB() async {
     print('=====> POST : NOTES 1');
 
     setState(() {
@@ -3583,7 +3626,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           'action': 'notelist',
           // 'userId': prefs.getInt('userId').toString(),
           'pageNo': '',
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
         },
       ),
@@ -3622,7 +3665,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
 // QUOTES
-  Future func_quotes_WB_without_userId() async {
+  Future funcQuotesListFromShopWB() async {
     print('=====> POST : QUOTES 3.0');
 
     setState(() {
@@ -3643,7 +3686,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           'action': 'quotlist',
           // 'userId': prefs.getInt('userId').toString(),
           'pageNo': '',
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
         },
       ),
@@ -3704,8 +3747,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'quotlist',
           'userId': prefs.getInt('userId').toString(),
-          'pageNo': '',
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'pageNo': '1',
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
         },
       ),
@@ -3763,7 +3806,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       body: jsonEncode(
         <String, String>{
           'action': 'teamlist',
-          'mainProfesionalId': widget.str_get_goal_id.toString(),
+          'mainProfesionalId': str_professtional_id.toString(),
           'mainProfesionalType': widget.str_professional_type.toString(),
         },
       ),
@@ -3825,7 +3868,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       body: jsonEncode(
         <String, String>{
           'action': 'teamlist',
-          'mainProfesionalId': widget.str_get_goal_id.toString(),
+          'mainProfesionalId': str_professtional_id.toString(),
           'mainProfesionalType': widget.str_professional_type.toString(),
           'groupId_Main': strGroupMainId.toString(),
         },
@@ -3939,7 +3982,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
   func_get_task_list_WB_remove_user_id() async {
     if (kDebugMode) {
-      print('=====> POST : TASKS LIST 2.0');
+      print('=====> POST : TASKS LIST 1.0');
     }
 
     str_show_ui = 'tasks';
@@ -3962,7 +4005,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'tasklist',
           // 'userId': prefs.getInt('userId').toString(),
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
           'completed': '0,1,3',
           'pageNo': ''
@@ -4036,7 +4079,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'tasklist',
           'userId': prefs.getInt('userId').toString(),
-          'profesionalId': widget.str_get_goal_id.toString(),
+          'profesionalId': str_professtional_id.toString(),
           'profesionalType': widget.str_professional_type.toString(),
           'completed': '0,1,3',
           'pageNo': ''
@@ -4205,7 +4248,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (!mounted) return;
 
     // if (result)
-    func_notes_WB();
+    widget.strFromViewDetails == 'yes'
+        ? funcNotesListFromShopWB()
+        : func_notes_WB();
     // setState(() {});
   }
 
@@ -4231,7 +4276,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if ('$result' == 'get_back_from_edit_notes') {
       arr_notes_list.clear();
       setState(() {
-        func_notes_WB();
+        widget.strFromViewDetails == 'yes'
+            ? funcNotesListFromShopWB()
+            : func_notes_WB();
       });
     }
   }
@@ -4594,7 +4641,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
         arr_notes_list = [];
         //
-        func_notes_WB();
+        widget.strFromViewDetails == 'yes'
+            ? funcNotesListFromShopWB()
+            : func_notes_WB();
         //
       } else {
         print(
@@ -4644,7 +4693,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         arr_quotes_list = [];
         //
         (widget.strFromViewDetails == 'yes')
-            ? func_quotes_WB_without_userId()
+            ? funcQuotesListFromShopWB()
             : func_quotes_WB();
         //
       } else {
@@ -4707,7 +4756,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
       setState(() {
         (widget.strFromViewDetails == 'yes')
-            ? func_quotes_WB_without_userId()
+            ? funcQuotesListFromShopWB()
             : func_quotes_WB();
       });
     }
@@ -4736,7 +4785,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         print('YES I CAME FROM ADD QUOTE');
       }
       (widget.strFromViewDetails == 'yes')
-          ? func_quotes_WB_without_userId()
+          ? funcQuotesListFromShopWB()
           : func_quotes_WB();
     }
   }
@@ -5307,7 +5356,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         <String, String>{
           'action': 'missiondelete',
           'userId': prefs.getInt('userId').toString(),
-          'missionId': str_goal_id.toString(),
+          'missionId': str_professtional_id.toString(),
         },
       ),
     );
@@ -5807,11 +5856,72 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
-        // arr_mission_info.clear();
         //
-        /*for (Map i in get_data['data']) {
-          arr_mission_info.add(i);
-        }*/
+        str_sub_goal_count = 'n.a.';
+        str_task_count = get_data['data']['totalTask'].toString();
+        str_quest_count = get_data['data']['totalQuest'].toString();
+        str_mission_count = get_data['data']['totalMission'].toString();
+        strGroupMainId = get_data['data']['groupId_Main'].toString();
+        str_total_task_complete =
+            get_data['data']['totalTaskCompleted'].toString();
+        str_professtional_id = get_data['data']['missionId'].toString();
+        //
+
+        str_mission_info_loader = '1';
+        setState(() {});
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  funcGetQuestFullDetailsWB() async {
+    print('=====> POST : QUEST LIST');
+
+    str_mission_info_loader = '0';
+    setState(() {});
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      // str_mission_info_loader
+      body: jsonEncode(
+        <String, String>{
+          'action': 'questdetails',
+          'userId': prefs.getInt('userId').toString(),
+          'questId': widget.str_goal_cat_id.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        //
+        str_sub_goal_count = 'n.a.';
+        str_task_count = get_data['data']['totalTask'].toString();
+        str_quest_count = get_data['data']['totalQuest'].toString();
+        str_mission_count = get_data['data']['totalMission'].toString();
+        strGroupMainId = get_data['data']['groupId_Main'].toString();
+        str_total_task_complete =
+            get_data['data']['totalTaskCompleted'].toString();
+        str_professtional_id = get_data['data']['questId'].toString();
+        //
 
         str_mission_info_loader = '1';
         setState(() {});

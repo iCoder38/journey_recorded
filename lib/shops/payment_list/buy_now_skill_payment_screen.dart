@@ -17,13 +17,21 @@ class BuyNowSkillPaymentScreen extends StatefulWidget {
       required this.strProductId,
       required this.strTotalPrice,
       required this.strProductName,
-      required this.strProductQuantity});
+      required this.strProductQuantity,
+      required this.strAddressUserName,
+      required this.strAddressUserPhone,
+      required this.strAddressUserAddress,
+      required this.strAddressUserPincode});
 
   final String strProductId;
   final String strTotalPrice;
   final String strProductName;
   final String strProductQuantity;
-
+  //
+  final String strAddressUserName;
+  final String strAddressUserPhone;
+  final String strAddressUserAddress;
+  final String strAddressUserPincode;
   @override
   State<BuyNowSkillPaymentScreen> createState() =>
       _BuyNowSkillPaymentScreenState();

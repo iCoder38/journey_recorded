@@ -239,7 +239,7 @@ class _QuestScreenState extends State<QuestScreen> {
                       margin: const EdgeInsets.only(
                         top: 0.0,
                       ),
-                      height: 80,
+                      // height: 80,
                       color: Colors.transparent,
                       child: ListTile(
                         // iconColor: Colors.pink,
@@ -270,12 +270,16 @@ class _QuestScreenState extends State<QuestScreen> {
                                   ),
                                 ),
                               )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(40.0),
-                                child: Image.network(
-                                  arr_quest_list[index]['image'].toString(),
-                                  fit: BoxFit.cover,
-                                  // height: 220,
+                            : SizedBox(
+                                height: 60,
+                                width: 60,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(40.0),
+                                  child: Image.network(
+                                    arr_quest_list[index]['image'].toString(),
+                                    fit: BoxFit.cover,
+                                    // height: 220,
+                                  ),
                                 ),
                               ),
 

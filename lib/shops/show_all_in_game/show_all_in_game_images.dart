@@ -225,6 +225,11 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
           'Quantity': i['Quantity'].toString(),
           'productId': i['productId'].toString(),
           'category': i['categoryName'].toString(),
+          'image_1': i['image_1'].toString(),
+          'image_2': i['image_2'].toString(),
+          'image_3': i['image_3'].toString(),
+          'image_4': i['image_4'].toString(),
+          'image_5': i['image_5'].toString(),
         };
 
         //
@@ -431,6 +436,10 @@ class _ShowAllInGameImagesScreenState extends State<ShowAllInGameImagesScreen> {
                           } else if (widget.getNumberToParse == '2') {
                             //
                             //
+                            if (kDebugMode) {
+                              print('YOU PRESSED PRODUCTS');
+                              print(arrAllInOneArray[i]);
+                            }
                             Navigator.push(
                               context,
                               MaterialPageRoute(
