@@ -676,6 +676,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                         str_image:
                             widget.getAnotherFullDataToPush['image'].toString(),
                         strFromViewDetails: 'yes',
+                        fullData: widget.getAnotherFullDataToPush,
                       ),
                     ),
                   );
@@ -895,6 +896,7 @@ class _ShopitemDetailsScreenState extends State<ShopitemDetailsScreen> {
                         str_image:
                             widget.getAnotherFullDataToPush['image'].toString(),
                         strFromViewDetails: 'yes',
+                        fullData: widget.getAnotherFullDataToPush,
                       ),
                     ),
                   );

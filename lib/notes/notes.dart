@@ -756,7 +756,6 @@ class _NotesScreenState extends State<NotesScreen> {
         //
         func_notes_WB();
         //
-
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -836,12 +835,10 @@ class _NotesScreenState extends State<NotesScreen> {
               func_notes_WB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'All',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              16.0,
             ),
           ),
           //

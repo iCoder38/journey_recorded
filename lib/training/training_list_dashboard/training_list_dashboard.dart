@@ -107,9 +107,24 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarScreen(
-        str_app_bar_title: "Training",
-        str_back_button_status: '1',
+      appBar: AppBar(
+        title: text_bold_style_custom(
+          'Trainings',
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            //
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
+        ),
+        // automaticallyImplyLeading: false,
+        backgroundColor: navigation_color,
       ),
       body: (str_main_loader == '0')
           ? (loaderAlertMessage == '2')
@@ -147,7 +162,7 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                         //
                       },
                       child: Container(
-                        height: 46,
+                        // height: 46,
                         width: MediaQuery.of(context).size.width,
                         color: Colors.transparent,
                         child: Row(
@@ -158,15 +173,34 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                             ),
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12.0),
-                              child: (arr_training_list[i]['image']
+                              child: Container(
+                                height: 60,
+                                width: 60,
+                                color: Colors.amber,
+                                child:
+                                    (arr_training_list[i]['image'].toString() !=
+                                            '')
+                                        ? Image.network(
+                                            arr_training_list[i]['image']
+                                                .toString(),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.asset(
+                                            'assets/images/logo.png',
+                                            fit: BoxFit.cover,
+                                          ),
+                              ),
+                              /*(arr_training_list[i]['image']
                                           .toString() ==
                                       '')
-                                  ? Image.asset('assets/images/logo.png')
+                                  ? Image.asset(
+                                      'assets/images/logo.png',
+                                    )
                                   : FadeInImage.assetNetwork(
                                       placeholder: 'assets/images/loader.gif',
                                       image: arr_training_list[i]['image']
                                           .toString(),
-                                    ),
+                                    ),*/
                             ),
                             const SizedBox(
                               width: 20,
@@ -174,17 +208,12 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                             Expanded(
                               child: Container(
                                 color: Colors.transparent,
-                                child: Text(
+                                child: text_regular_style_custom(
                                   //
                                   arr_training_list[i]['TrainingName']
                                       .toString(),
-                                  //
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 18.0,
-                                    // fontWeight: FontWeight.bold,
-                                    color: Colors.black,
-                                  ),
+                                  Colors.black,
+                                  16.0,
                                 ),
                               ),
                             ),
@@ -202,20 +231,14 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                                   1,
                                 ),
                                 borderRadius: BorderRadius.circular(
-                                  20.0,
+                                  12.0,
                                 ),
                               ),
                               child: Center(
-                                child: Text(
-                                  //
+                                child: text_bold_style_custom(
                                   'Level : ${int.parse(arr_training_list[i]['currentLavel'].toString()) + 1}',
-                                  //
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
+                                  Colors.white,
+                                  14.0,
                                 ),
                               ),
                             )

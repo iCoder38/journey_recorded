@@ -379,6 +379,7 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
                                 arr_sub_goals[index]['goalId'].toString(),
                             str_image: arr_sub_goals[index]['image'].toString(),
                             strFromViewDetails: 'no',
+                            fullData: arr_sub_goals[index],
                           ),
                         ),
                       );

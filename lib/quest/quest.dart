@@ -233,6 +233,8 @@ class _QuestScreenState extends State<QuestScreen> {
                         arr_quest_list[index]['parentName'].toString(),
                         arr_quest_list[index]['questId'].toString(),
                         arr_quest_list[index]['image'].toString(),
+                        //
+                        arr_quest_list[index],
                       );
                     },
                     child: Container(
@@ -788,7 +790,9 @@ class _QuestScreenState extends State<QuestScreen> {
       String str_mission_category_id,
       String str_mission_parent_name,
       String str_goal_cat_id,
-      String str_image) async {
+      String str_image,
+      //
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -806,6 +810,7 @@ class _QuestScreenState extends State<QuestScreen> {
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
           strFromViewDetails: 'no',
+          fullData: data,
         ),
       ),
     );

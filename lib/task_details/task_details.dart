@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/create_check_list/create_check_list.dart';
@@ -64,14 +65,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       length: 6,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: text_bold_style_custom(
             //
-            widget.str_task_name.toString(),
-            //
-            style: TextStyle(
-              fontFamily: font_style_name,
-              fontSize: 18.0,
-            ),
+            widget.str_task_name,
+            Colors.white,
+            16.0,
           ),
           backgroundColor: navigation_color,
           leading: IconButton(
@@ -93,16 +91,20 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   widget.str_professional_id.toString(),
                 );
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete_forever,
+                color: Colors.white,
               ),
             ),
-            /*IconButton(
-              onPressed: () {},
-              icon: Icon(
+            IconButton(
+              onPressed: () {
+                //
+              },
+              icon: const Icon(
                 Icons.edit,
+                color: Colors.white,
               ),
-            ),*/
+            ),
           ],
           bottom: TabBar(
             // controller: _tabController,
@@ -111,64 +113,50 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             tabs: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Info'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                    backgroundColor: Colors.transparent,
-                  ),
+                child: text_regular_style_custom(
+                  'Info',
+                  Colors.white,
+                  16.0,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Rewards'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                    backgroundColor: Colors.transparent,
-                  ),
+                child: text_regular_style_custom(
+                  'Rewards',
+                  Colors.white,
+                  16.0,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Reminders'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                  ),
+                child: text_regular_style_custom(
+                  'Reminders',
+                  Colors.white,
+                  16.0,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Agents'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                  ),
+                child: text_regular_style_custom(
+                  'Agents',
+                  Colors.white,
+                  16.0,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Notes'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                  ),
+                child: text_regular_style_custom(
+                  'Notes',
+                  Colors.white,
+                  16.0,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Checklist'.toUpperCase(),
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18,
-                  ),
+                child: text_regular_style_custom(
+                  'Checklist',
+                  Colors.white,
+                  16.0,
                 ),
               ),
             ],
@@ -339,7 +327,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
           Container(
             margin: const EdgeInsets.all(20),
-            height: 80,
+            height: 60,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
               color: navigation_color,
@@ -348,16 +336,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               ),
             ),
             child: Align(
-              child: Text(
-                //
+              child: text_bold_style_custom(
                 widget.str_add_reminder.toString(),
-                //
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 20.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
+                Colors.white,
+                18.0,
               ),
             ),
           ),
@@ -468,7 +450,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       Expanded(
                                         child: IconButton(
                                           onPressed: () {
-                                            print('check list edit');
+                                            if (kDebugMode) {
+                                              print('check list edit');
+                                            }
 
                                             push_to_edit_checklist(
                                               context,
@@ -478,20 +462,23 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   .toString(),
                                             );
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.edit,
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ),
                                       Expanded(
                                         child: IconButton(
                                           onPressed: () {
-                                            print('ok');
+                                            if (kDebugMode) {
+                                              print('ok');
+                                            }
                                             delete_checklist_WB(
                                                 arr_check_list[i]['checklistId']
                                                     .toString());
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.cancel,
                                           ),
                                         ),

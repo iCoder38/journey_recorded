@@ -1,7 +1,8 @@
-// ignore_for_file: camel_case_types, non_constant_identifier_names
+// ignore_for_file: camel_case_types, non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:journey_recorded/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,6 +36,10 @@ class CreateTaskModal {
     String reminderWarning,
     String profesionalId,
     String profesionalType,
+    //new
+    String reward_type,
+    String group_id_main,
+    String group_id_sub,
   ) async {
     //
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -57,23 +62,31 @@ class CreateTaskModal {
           'experiencePointDeduct': experiencePointDeduct,
           'Assigment': Assigment,
           'skill': skill,
-          'addreminder': addreminder,
+          'addreminder': 'saddreminder',
           'reminderWarning': reminderWarning,
           'profesionalId': profesionalId.toString(),
           'profesionalType': profesionalType,
+          // new
+          'categoryId': '5',
+          'groupId_Main': group_id_main.toString(),
+          'groupId_Sub': group_id_sub.toString(),
+          'rewardType': reward_type.toString(),
         },
       ),
     );
-    // print();
 
     if (response.statusCode == 201) {
-      print('=========> 201');
-      print(response.body);
+      if (kDebugMode) {
+        print('=========> 201');
+        print(response.body);
+      }
 
       return Create_Task_Status.fromJson(jsonDecode(response.body));
     } else if (response.statusCode == 200) {
-      print('==========> 200');
-      print(response.body);
+      if (kDebugMode) {
+        print('==========> 200');
+        print(response.body);
+      }
 
       Map<String, dynamic> success_status = jsonDecode(response.body);
 

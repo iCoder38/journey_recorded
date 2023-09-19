@@ -230,17 +230,18 @@ class _MissionScreenState extends State<MissionScreen> {
                       }
 
                       push_to_mission_details(
-                        context,
-                        arr_mission_list[index]['categoryName'].toString(),
-                        arr_mission_list[index]['name'].toString(),
-                        arr_mission_list[index]['deadline'].toString(),
-                        arr_mission_list[index]['description'].toString(),
-                        arr_mission_list[index]['goalId'].toString(),
-                        arr_mission_list[index]['categoryId'].toString(),
-                        arr_mission_list[index]['parentName'].toString(),
-                        arr_mission_list[index]['missionId'].toString(),
-                        arr_mission_list[index]['image'].toString(),
-                      );
+                          context,
+                          arr_mission_list[index]['categoryName'].toString(),
+                          arr_mission_list[index]['name'].toString(),
+                          arr_mission_list[index]['deadline'].toString(),
+                          arr_mission_list[index]['description'].toString(),
+                          arr_mission_list[index]['goalId'].toString(),
+                          arr_mission_list[index]['categoryId'].toString(),
+                          arr_mission_list[index]['parentName'].toString(),
+                          arr_mission_list[index]['missionId'].toString(),
+                          arr_mission_list[index]['image'].toString(),
+                          // new
+                          arr_mission_list[index]);
 
                       /*Navigator.push(
                         context,
@@ -479,7 +480,8 @@ class _MissionScreenState extends State<MissionScreen> {
       String str_mission_category_id,
       String str_mission_parent_name,
       String str_goal_cat_id,
-      String str_image) async {
+      String str_image,
+      data) async {
     // print('push to mission');
     final result = await Navigator.push(
       context,
@@ -498,6 +500,7 @@ class _MissionScreenState extends State<MissionScreen> {
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
           strFromViewDetails: 'no',
+          fullData: data,
         ),
       ),
     );

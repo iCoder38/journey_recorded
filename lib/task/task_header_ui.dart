@@ -67,7 +67,7 @@ class TaskHeaderUI extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        'All'.toUpperCase(),
+                        'Alls'.toUpperCase(),
                         style: TextStyle(
                           fontFamily: font_style_name,
                           fontSize: 20.0,

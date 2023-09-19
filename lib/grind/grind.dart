@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_interpolation_to_compose_strings
+// ignore_for_file: prefer_interpolation_to_compose_strings, avoid_print
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -19,6 +19,9 @@ class GrindScreen extends StatefulWidget {
 }
 
 class _GrindScreenState extends State<GrindScreen> {
+  //
+  var strCategory = '';
+  var strSkills = '';
   //
   var strGrindLoader = '0';
   var arrGrindList = [];
@@ -97,14 +100,10 @@ class _GrindScreenState extends State<GrindScreen> {
     //
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
-          navigation_title_grind,
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+        title: text_bold_style_custom(
+          'Grinds',
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -114,28 +113,6 @@ class _GrindScreenState extends State<GrindScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: navigation_color,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: app_yellow_color,
-              child: InkWell(
-                onTap: () {
-                  if (kDebugMode) {
-                    print('object');
-                  }
-                },
-                child: const Icon(
-                  Icons.question_mark_sharp,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -144,7 +121,10 @@ class _GrindScreenState extends State<GrindScreen> {
           //
         },
         backgroundColor: navigation_color,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -210,7 +190,7 @@ class _GrindScreenState extends State<GrindScreen> {
                         left: 20.0,
                         right: 20.0,
                       ),
-                      height: 140,
+                      height: 100,
                       width: 120,
                       color: const Color.fromRGBO(
                         240,
@@ -252,13 +232,10 @@ class _GrindScreenState extends State<GrindScreen> {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        'skill',
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 16.0,
-                                          color: Colors.white,
-                                        ),
+                                      child: text_regular_style_custom(
+                                        'Priority',
+                                        Colors.white,
+                                        14.0,
                                       ),
                                     ),
                                   ),
@@ -278,13 +255,10 @@ class _GrindScreenState extends State<GrindScreen> {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        'Stat',
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 16.0,
-                                          color: Colors.white,
-                                        ),
+                                      child: text_regular_style_custom(
+                                        'Skills',
+                                        Colors.white,
+                                        14.0,
                                       ),
                                     ),
                                   ),
@@ -298,13 +272,10 @@ class _GrindScreenState extends State<GrindScreen> {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        'Priority',
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 16.0,
-                                          color: Colors.white,
-                                        ),
+                                      child: text_regular_style_custom(
+                                        'None',
+                                        Colors.white,
+                                        14.0,
                                       ),
                                     ),
                                   ),
@@ -312,7 +283,7 @@ class _GrindScreenState extends State<GrindScreen> {
                               ],
                             ),
                           ),
-                          Expanded(
+                          /*Expanded(
                             child: Row(
                               children: <Widget>[
                                 Expanded(
@@ -357,7 +328,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 ),
                               ],
                             ),
-                          ),
+                          ),*/
                         ],
                       ),
                     ),
@@ -420,7 +391,7 @@ class _GrindScreenState extends State<GrindScreen> {
                       // height: 60.0,
                       child: text_with_bold_style_black(
                         //
-                        'Grind',
+                        'Grinds',
                         //
                       ),
                     ),
@@ -502,7 +473,25 @@ class _GrindScreenState extends State<GrindScreen> {
                               ),
                             ),
                             //
-                            IconButton(
+                            Container(
+                              height: 40,
+                              width: 40,
+                              decoration: BoxDecoration(
+                                color: navigation_color,
+                                borderRadius: BorderRadius.circular(
+                                  8.0,
+                                ),
+                              ),
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  arrGrindList[i]['time_to_complete']
+                                      .toString(),
+                                  Colors.white,
+                                  14.0,
+                                ),
+                              ),
+                            ),
+                            /*IconButton(
                               onPressed: () {
                                 if (kDebugMode) {
                                   print('object1');
@@ -518,7 +507,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 color: Colors.red,
                                 size: 30,
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -661,7 +650,7 @@ class _GrindScreenState extends State<GrindScreen> {
   // delete grind
   deleteGrindWB(getGrindId) async {
     if (kDebugMode) {
-      print('=====> POST : MISSION LIST');
+      print('=====> POST : GRINDS LIST');
     }
 
     setState(() {

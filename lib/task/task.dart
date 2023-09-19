@@ -1,10 +1,11 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:journey_recorded/task/create_task/create_task.dart';
@@ -27,11 +28,12 @@ class _TaskScreenState extends State<TaskScreen> {
   var arr_task_list = [];
 
   var str_selected_category_id = '';
-  var str_selected_category_name = 'All';
+  var str_selected_category_name = '';
+  var str_selected_action_name = '';
   var arr_get_category_list = [];
   var str_category_loader = '0';
-
-  //
+  // pagenumber
+  var pageNumber = 1;
 
   @override
   void initState() {
@@ -41,7 +43,9 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   get_category_list_WB() async {
-    print('=====> POST : GET CATEGORY 2');
+    if (kDebugMode) {
+      print('=====> POST : GET CATEGORY 2');
+    }
 
     final resposne = await http.post(
       Uri.parse(
@@ -69,7 +73,7 @@ class _TaskScreenState extends State<TaskScreen> {
         }
         // setState(() {});
         str_category_loader = '1';
-        func_get_task_list_WB();
+        funcAllTasksListWB();
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -80,11 +84,16 @@ class _TaskScreenState extends State<TaskScreen> {
     }
   }
 
-  func_get_task_list_WB() async {
-    print('=====> POST : TASKS LIST');
+  funcAllTasksListWB() async {
+    if (kDebugMode) {
+      print('=====> POST : TASKS LIST => ALL');
+    }
 
-    str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    if (pageNumber == 1) {
+      setState(() {
+        str_main_loader = 'tasks_loader_start';
+      });
+    }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -96,10 +105,12 @@ class _TaskScreenState extends State<TaskScreen> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-        <String, String>{
+        <String, dynamic>{
           'action': 'tasklist',
           'userId': prefs.getInt('userId').toString(),
-          'pageNo': '1'
+          'complete': '0,1,2',
+          'pageNo': pageNumber,
+          // 'profesionalType': str_selected_action_name,
         },
       ),
     );
@@ -112,17 +123,12 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
-        // get and parse data
-        //
-        arr_task_list.clear();
         //
         for (var i = 0; i < get_data['data'].length; i++) {
-          // print(get_data['data'][i]);
+          //
           arr_task_list.add(get_data['data'][i]);
         }
-
-        // str_task_count = arr_task_list.length.toString();
-
+        //
         if (arr_task_list.isEmpty) {
           str_main_loader = 'tasks_data_empty';
         } else {
@@ -130,10 +136,9 @@ class _TaskScreenState extends State<TaskScreen> {
         }
 
         setState(() {});
-
-        // mission_info_list_WB();
-
-        // get_mission_list_WB();
+        // pageNumber = 2;
+        // func_get_task_list_page_two_WB();
+        //
       } else {
         if (kDebugMode) {
           print(
@@ -149,16 +154,80 @@ class _TaskScreenState extends State<TaskScreen> {
     }
   }
 
+  /*func_get_task_list_page_two_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : TASKS LIST 2.0');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'action': 'tasklist',
+          'userId': prefs.getInt('userId').toString(),
+          'complete': '0,1,2',
+          'pageNo': pageNumber
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        // arr_task_list.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          // print(get_data['data'][i]);
+          arr_task_list.add(get_data['data'][i]);
+        }
+
+        // str_task_count = arr_task_list.length.toString();
+
+        if (arr_task_list.isEmpty) {
+          str_main_loader = 'tasks_data_empty';
+        } else {
+          str_main_loader = 'tasks_loader_stop';
+        }
+
+        setState(() {});
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: text_bold_style_custom(
+          //
           'All Tasks',
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 20.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -171,158 +240,339 @@ class _TaskScreenState extends State<TaskScreen> {
         ),
         backgroundColor: navigation_color,
       ),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child:
-            // task_in_team_UI(context),
-            Column(
-          children: [
-            //
-            task_header_UI(context),
-            //
-            if (str_main_loader == 'tasks_loader_start')
-              const CustomeLoaderPopUp(
-                str_custom_loader: 'please wait...',
-                str_status: '3',
-              )
-            else if (str_main_loader == 'tasks_data_empty')
-              const CustomeLoaderPopUp(
-                str_custom_loader: 'Task not Added yet.',
-                str_status: '4',
-              )
-            else
-              for (int i = 0; i < arr_task_list.length; i++) ...[
-                InkWell(
-                  onTap: () {
-                    if (kDebugMode) {
-                      print('fd 2');
-                    }
+      body: NotificationListener(
+        onNotification: (ScrollNotification notification) {
+          if (notification is UserScrollNotification) {
+            final metrics = notification.metrics;
+            if (metrics.atEdge) {
+              bool isTop = metrics.pixels == 0;
+              if (isTop) {
+                if (kDebugMode) {
+                  print('At the top new');
+                  // print(metrics.pixels);
+                }
+                //
+                // strScrollOnlyOneTime = '0';
+              } else if (notification.direction == ScrollDirection.forward) {
+                //
+                if (kDebugMode) {
+                  print('scroll down');
+                }
+                //
+              } else if (notification.direction == ScrollDirection.reverse) {
+                // Handle scroll up.
+                if (kDebugMode) {
+                  print('scroll up');
+                }
+              } else {
+                //
 
-                    func_push_to_task(
-                      context,
-                      arr_task_list[i]['name'].toString(),
-                      arr_task_list[i]['experiencePoint'].toString(),
-                      arr_task_list[i]['experiencePointDeduct'].toString(),
-                      '\$',
-                      arr_task_list[i]['taskId'].toString(),
-                      arr_task_list[i]['reminderWarning'].toString(),
-                      arr_task_list[i]['addreminder'].toString(),
-                      arr_task_list[i]['description'].toString(),
-                      arr_task_list[i]['due_date'].toString(),
-                    );
-                  },
-                  child: Container(
-                    height: 80,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.white,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: () {
-                            if (kDebugMode) {
-                              print('object');
-                            }
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              left: 10.0,
-                            ),
-                            child: Expanded(
-                              child: Text(
-                                //
-                                arr_task_list[i]['name'].toString(),
-                                //
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                if (kDebugMode) {
+                  print('Bottom');
+                  print(str_selected_category_name);
+                  print(str_selected_action_name);
+                  // print(metrics.pixels);
+                }
+                //
+                pageNumber += 1;
+                if (kDebugMode) {
+                  print(pageNumber);
+                }
+                //
+                //
+                if (str_selected_category_name == 'SPIRITUAL') {
+                  func_get_category_list_WB();
+                } else if (str_selected_category_name == 'PHYSICAL') {
+                  func_get_category_list_WB();
+                } else if (str_selected_category_name == 'MIND') {
+                  func_get_category_list_WB();
+                } else if (str_selected_category_name == 'SOCIAL') {
+                  func_get_category_list_WB();
+                } else if (str_selected_category_name == 'FINANCIAL') {
+                  func_get_category_list_WB();
+                } else if (str_selected_action_name == 'Goal') {
+                  func_call_main_api_WB(
+                    'Goal',
+                  );
+                } else if (str_selected_action_name == 'Quest') {
+                  func_call_main_api_WB(
+                    'Quest',
+                  );
+                } else if (str_selected_action_name == 'Mission') {
+                  func_call_main_api_WB(
+                    'Mission',
+                  );
+                } else if (str_selected_category_name == 'All') {
+                  funcAllTasksListWB();
+                }
+
+                // if someone's data is greater than 9 then pagination call only
+                /*if (arrAllInOneArray.length > 9) {
+                  allInOneWB();
+                }*/
+
+                //
+                // strScrollOnlyOneTime = '1';
+              }
+            }
+          }
+
+          return true;
+        },
+        child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child:
+              // task_in_team_UI(context),
+              Column(
+            children: [
+              //
+              task_header_UI(context),
+              //
+              if (str_main_loader == 'tasks_loader_start')
+                const CustomeLoaderPopUp(
+                  str_custom_loader: 'please wait...',
+                  str_status: '3',
+                )
+              else if (str_main_loader == 'tasks_data_empty')
+                const CustomeLoaderPopUp(
+                  str_custom_loader: 'Task not Added yet.',
+                  str_status: '4',
+                )
+              else
+                for (int i = 0; i < arr_task_list.length; i++) ...[
+                  GestureDetector(
+                    onTap: () {
+                      //
+                      func_push_to_task(
+                        context,
+                        arr_task_list[i]['name'].toString(),
+                        arr_task_list[i]['experiencePoint'].toString(),
+                        arr_task_list[i]['experiencePointDeduct'].toString(),
+                        '\$',
+                        arr_task_list[i]['taskId'].toString(),
+                        arr_task_list[i]['reminderWarning'].toString(),
+                        arr_task_list[i]['addreminder'].toString(),
+                        arr_task_list[i]['description'].toString(),
+                        arr_task_list[i]['due_date'].toString(),
+                      );
+                    },
+                    child: ListTile(
+                      title: text_bold_style_custom(
+                        //
+                        // 'qwerty qwert qwer qwe qw q qrweq qrw qeq qw q',
+                        arr_task_list[i]['name'].toString(),
+                        Colors.black,
+                        14.0,
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (func_difference_between_date(
+                                arr_task_list[i]['due_date'].toString(),
+                              ) ==
+                              'overdue') ...[
+                            Container(
+                              height: 40,
+                              width: 100,
+                              decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                borderRadius: BorderRadius.circular(
+                                  12.0,
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                            right: 10.0,
-                          ),
-                          height: 50,
-                          // width: 200,
-                          color: Colors.transparent,
-                          child: Row(
-                            children: <Widget>[
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  'overdue',
+                                  Colors.black,
+                                  14.0,
+                                ),
+                              ),
+                            )
+                          ] else ...[
+                            if (func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '2 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '3 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '4 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '5 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '6 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '7 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '8 days left' ||
+                                func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
+                                    ) ==
+                                    '9 days left') ...[
                               Container(
                                 height: 40,
-                                width: 120,
+                                width: 100,
                                 decoration: BoxDecoration(
-                                  color: Colors.greenAccent,
+                                  color: Colors.green[400],
                                   borderRadius: BorderRadius.circular(
-                                    14.0,
+                                    12.0,
                                   ),
                                 ),
-                                child: Align(
-                                  child: Text(
+                                child: Center(
+                                  child: text_bold_style_custom(
                                     func_difference_between_date(
                                       arr_task_list[i]['due_date'].toString(),
                                     ),
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
+                                    Colors.white,
+                                    12.0,
+                                  ),
+                                ),
+                              )
+                            ] else ...[
+                              Container(
+                                height: 40,
+                                width: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.orangeAccent,
+                                  borderRadius: BorderRadius.circular(
+                                    12.0,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: text_bold_style_custom(
+                                    func_difference_between_date(
+                                      arr_task_list[i]['due_date'].toString(),
                                     ),
+                                    Colors.black,
+                                    12.0,
                                   ),
                                 ),
                               ),
-                              /*ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromRGBO(
-                                  235,
-                                  0,
-                                  65,
-                                  1,
-                                ),
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(0)),
-                            child: const Icon(
-                              Icons.edit,
-                              size: 18,
-                            ),
-                            onPressed: () {
-                              //
-                              // print('object 2');
-                              //
-                            },
+                            ]
+                          ]
+                        ],
+                      ),
+                      /*Container(
+                        child: text_regular_style_custom(
+                          func_difference_between_date(
+                            arr_task_list[i]['due_date'].toString(),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(0)),
-                            child: const Icon(
-                              Icons.close,
-                              size: 18,
-                            ),
-                            onPressed: () {
-                              _showMyDialog(
-                                'Are you sure your want to delete ${arr_task_list[i]['name']} ?',
-                                arr_task_list[i]['taskId'].toString(),
-                              );
-                            },
-                          ),*/
-                            ],
-                          ),
+                          Colors.black,
+                          14.0,
                         ),
-                      ],
+                      ),*/
                     ),
                   ),
-                ),
-                Container(
-                  height: 1,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                )
-              ],
-          ],
+                  /*
+                  ListTile(title: text_regular_style_custom(arr_task_list[i]['name'].toString(), Colors.black, 14.0,),)
+                  InkWell(
+                    onTap: () {
+                      if (kDebugMode) {
+                        print('fd 2');
+                      }
+      
+                      func_push_to_task(
+                        context,
+                        arr_task_list[i]['name'].toString(),
+                        arr_task_list[i]['experiencePoint'].toString(),
+                        arr_task_list[i]['experiencePointDeduct'].toString(),
+                        '\$',
+                        arr_task_list[i]['taskId'].toString(),
+                        arr_task_list[i]['reminderWarning'].toString(),
+                        arr_task_list[i]['addreminder'].toString(),
+                        arr_task_list[i]['description'].toString(),
+                        arr_task_list[i]['due_date'].toString(),
+                      );
+                    },
+                    child: Container(
+                      height: 80,
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.white,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          InkWell(
+                            onTap: () {
+                              if (kDebugMode) {
+                                print('object');
+                              }
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 10.0,
+                              ),
+                              child: Expanded(
+                                child: Text(
+                                  //
+                                  arr_task_list[i]['name'].toString(),
+                                  //
+                                  style: TextStyle(
+                                    fontFamily: font_style_name,
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: const EdgeInsets.only(
+                              right: 10.0,
+                            ),
+                            height: 50,
+                            // width: 200,
+                            color: Colors.transparent,
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  height: 40,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                    color: Colors.greenAccent,
+                                    borderRadius: BorderRadius.circular(
+                                      14.0,
+                                    ),
+                                  ),
+                                  child: Align(
+                                    child: Text(
+                                      func_difference_between_date(
+                                        arr_task_list[i]['due_date'].toString(),
+                                      ),
+                                      style: TextStyle(
+                                        fontFamily: font_style_name,
+                                        fontSize: 16.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),*/
+                  Container(
+                    height: 1,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.grey,
+                  )
+                ],
+            ],
+          ),
         ),
       ),
     );
@@ -483,7 +733,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
   Container task_header_UI(BuildContext context) {
     return Container(
-      height: 200,
+      height: 260,
       width: MediaQuery.of(context).size.width,
       decoration: const BoxDecoration(
         color: Colors.grey,
@@ -541,7 +791,12 @@ class _TaskScreenState extends State<TaskScreen> {
                 children: <Widget>[
                   InkWell(
                     onTap: () {
-                      func_get_task_list_WB();
+                      pageNumber = 1;
+                      arr_task_list.clear();
+                      //
+                      str_selected_category_name = 'All';
+                      str_selected_action_name = '';
+                      funcAllTasksListWB();
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
@@ -561,12 +816,10 @@ class _TaskScreenState extends State<TaskScreen> {
                         // shape: BoxShape.circle,
                       ),
                       child: Align(
-                        child: Text(
+                        child: text_regular_style_custom(
                           'All',
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 16.0,
-                          ),
+                          Colors.black,
+                          14.0,
                         ),
                       ),
                     ),
@@ -593,11 +846,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       child: Align(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Category',
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
+                          child: Align(
+                            child: text_regular_style_custom(
+                              'Category',
+                              Colors.black,
+                              14.0,
                             ),
                           ),
                         ),
@@ -626,11 +879,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       child: Align(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Actions',
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
+                          child: Align(
+                            child: text_regular_style_custom(
+                              'Actions',
+                              Colors.black,
+                              14.0,
                             ),
                           ),
                         ),
@@ -655,12 +908,10 @@ class _TaskScreenState extends State<TaskScreen> {
                     child: Align(
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(
+                        child: text_regular_style_custom(
                           'Filter',
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 16.0,
-                          ),
+                          Colors.black,
+                          14.0,
                         ),
                       ),
                     ),
@@ -669,15 +920,26 @@ class _TaskScreenState extends State<TaskScreen> {
               ),
             ),
           ),
-          Text(
-            //
-            // widget.str_task_name.toString(),
-            '',
-            //
-            style: TextStyle(
-              fontFamily: font_style_name,
-              fontSize: 20.0,
-              color: Colors.white,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: text_bold_style_custom(
+                str_selected_category_name,
+                Colors.orange,
+                16.0,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: text_bold_style_custom(
+                str_selected_action_name,
+                Colors.orange,
+                16.0,
+              ),
             ),
           ),
           Container(
@@ -780,7 +1042,7 @@ class _TaskScreenState extends State<TaskScreen> {
 
     if (!mounted) return;
 
-    func_get_task_list_WB();
+    funcAllTasksListWB();
   }
 
   // open action sheet
@@ -798,8 +1060,9 @@ class _TaskScreenState extends State<TaskScreen> {
         actions: <CupertinoActionSheetAction>[
           CupertinoActionSheetAction(
             onPressed: () async {
+              pageNumber = 1;
               Navigator.pop(context);
-
+              str_selected_action_name = 'Goal';
               func_call_main_api_WB(
                 'Goal',
               );
@@ -817,8 +1080,9 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
+              pageNumber = 1;
               Navigator.pop(context);
-
+              str_selected_action_name = 'Quest';
               func_call_main_api_WB(
                 'Quest',
               );
@@ -836,7 +1100,9 @@ class _TaskScreenState extends State<TaskScreen> {
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
+              pageNumber = 1;
               Navigator.pop(context);
+              str_selected_action_name = 'Mission';
               func_call_main_api_WB(
                 'Mission',
               );
@@ -889,6 +1155,7 @@ class _TaskScreenState extends State<TaskScreen> {
           for (int i = 0; i < arr_get_category_list.length; i++) ...[
             CupertinoActionSheetAction(
               onPressed: () async {
+                pageNumber = 1;
                 Navigator.pop(context);
 
                 str_selected_category_name =
@@ -933,8 +1200,11 @@ class _TaskScreenState extends State<TaskScreen> {
   func_get_category_list_WB() async {
     print('=====> POST : TASKS LIST');
 
-    str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    if (pageNumber == 1) {
+      setState(() {
+        str_main_loader = 'tasks_loader_start';
+      });
+    }
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -952,11 +1222,13 @@ class _TaskScreenState extends State<TaskScreen> {
     [pageNo] => 1
     */
       body: jsonEncode(
-        <String, String>{
+        <String, dynamic>{
           'action': 'tasklist',
           'userId': prefs.getInt('userId').toString(),
-          'pageNo': '1',
+          'pageNo': pageNumber,
           'categoryId': str_selected_category_id.toString(),
+          'completed': '0,1,2',
+          'profesionalType': str_selected_action_name,
         },
       ),
     );
@@ -969,7 +1241,10 @@ class _TaskScreenState extends State<TaskScreen> {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         // get and parse data
         //
-        arr_task_list.clear();
+        if (pageNumber == 1) {
+          arr_task_list.clear();
+        }
+
         //
         for (var i = 0; i < get_data['data'].length; i++) {
           // print(get_data['data'][i]);
@@ -1003,79 +1278,18 @@ class _TaskScreenState extends State<TaskScreen> {
   func_call_main_api_WB(
     String str_get_action_name,
   ) async {
-    print('=====> POST : TASKS LIST');
+    print('=====> POST : TASK => ACTION => $str_get_action_name');
 
-    print('category id===========>');
-    print(str_selected_category_id);
-    if (str_selected_category_id == '') {
-      func_get_action_with_cat_id_list_WB(str_get_action_name);
-    } else {
+    print('category id ==> $str_selected_category_id');
+
+    // if (str_selected_category_id == '') {
+    //
+    //   funcActionWithNoCategoryIdWB(str_get_action_name);
+    // } else {
+    if (pageNumber == 1) {
       str_main_loader = 'tasks_loader_start';
       setState(() {});
-
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      final resposne = await http.post(
-        Uri.parse(
-          application_base_url,
-        ),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: jsonEncode(
-          <String, String>{
-            'action': 'tasklist',
-            'userId': prefs.getInt('userId').toString(),
-            'pageNo': '1',
-            'profesionalType': str_get_action_name.toString(),
-            'categoryId': str_selected_category_id.toString()
-          },
-        ),
-      );
-
-      // convert data to dict
-      var get_data = jsonDecode(resposne.body);
-      print(get_data);
-
-      if (resposne.statusCode == 200) {
-        if (get_data['status'].toString().toLowerCase() == 'success') {
-          // get and parse data
-          //
-          arr_task_list.clear();
-          //
-          for (var i = 0; i < get_data['data'].length; i++) {
-            // print(get_data['data'][i]);
-            arr_task_list.add(get_data['data'][i]);
-          }
-
-          // str_task_count = arr_task_list.length.toString();
-
-          if (arr_task_list.isEmpty) {
-            str_main_loader = 'tasks_data_empty';
-          } else {
-            str_main_loader = 'tasks_loader_stop';
-          }
-
-          setState(() {});
-        } else {
-          print(
-            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
-          );
-        }
-      } else {
-        // return postList;
-        print('something went wrong');
-      }
     }
-  }
-
-  func_get_action_with_cat_id_list_WB(
-    String professinal_type,
-  ) async {
-    print('=====> POST : TASKS LIST');
-
-    str_main_loader = 'tasks_loader_start';
-    setState(() {});
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1087,11 +1301,13 @@ class _TaskScreenState extends State<TaskScreen> {
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(
-        <String, String>{
+        <String, dynamic>{
           'action': 'tasklist',
           'userId': prefs.getInt('userId').toString(),
-          'pageNo': '1',
-          'profesionalType': professinal_type.toString(),
+          'pageNo': pageNumber,
+          'profesionalType': str_get_action_name.toString(),
+          'categoryId': str_selected_category_id.toString(),
+          'completed': '0,1,2'
         },
       ),
     );
@@ -1104,7 +1320,82 @@ class _TaskScreenState extends State<TaskScreen> {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         // get and parse data
         //
-        arr_task_list.clear();
+
+        if (pageNumber == 1) {
+          arr_task_list.clear();
+        }
+
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          // print(get_data['data'][i]);
+          arr_task_list.add(get_data['data'][i]);
+        }
+
+        // str_task_count = arr_task_list.length.toString();
+
+        if (arr_task_list.isEmpty) {
+          str_main_loader = 'tasks_data_empty';
+        } else {
+          str_main_loader = 'tasks_loader_stop';
+        }
+
+        setState(() {});
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+    // }
+  }
+
+  funcActionWithNoCategoryIdWB(
+    String professinal_type,
+  ) async {
+    print('=====> POST : TASKS LIST');
+
+    if (pageNumber == 1) {
+      str_main_loader = 'tasks_loader_start';
+      setState(() {});
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'action': 'tasklist',
+          'userId': prefs.getInt('userId').toString(),
+          'pageNo': pageNumber,
+          'profesionalType': professinal_type.toString(),
+          'completed': '0,1,2'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        if (pageNumber == 1) {
+          arr_task_list.clear();
+        }
+
         //
         for (var i = 0; i < get_data['data'].length; i++) {
           // print(get_data['data'][i]);

@@ -212,16 +212,17 @@ class _GoalsScreenState extends State<GoalsScreen> {
                       //   ),
                       // );
                       push_to_add_goal(
-                        context,
-                        arr_goal_list[index]['categoryName'].toString(),
-                        arr_goal_list[index]['name'].toString(),
-                        arr_goal_list[index]['deadline'].toString(),
-                        arr_goal_list[index]['aboutGoal'].toString(),
-                        arr_goal_list[index]['goalId'].toString(),
-                        arr_goal_list[index]['categoryId'].toString(),
-                        arr_goal_list[index]['parentName'].toString(),
-                        arr_goal_list[index]['image'].toString(),
-                      );
+                          context,
+                          arr_goal_list[index]['categoryName'].toString(),
+                          arr_goal_list[index]['name'].toString(),
+                          arr_goal_list[index]['deadline'].toString(),
+                          arr_goal_list[index]['aboutGoal'].toString(),
+                          arr_goal_list[index]['goalId'].toString(),
+                          arr_goal_list[index]['categoryId'].toString(),
+                          arr_goal_list[index]['parentName'].toString(),
+                          arr_goal_list[index]['image'].toString(),
+                          // new
+                          arr_goal_list[index]);
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
@@ -1457,16 +1458,16 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
   // push to details
   Future<void> push_to_add_goal(
-    BuildContext context,
-    String str_get_category_name,
-    String str_get_name,
-    String str_get_due_date,
-    String str_get_about_goal,
-    String str_get_goal_id,
-    String str_get_category_id,
-    String str_get_parent_name,
-    String str_get_profile,
-  ) async {
+      BuildContext context,
+      String str_get_category_name,
+      String str_get_name,
+      String str_get_due_date,
+      String str_get_about_goal,
+      String str_get_goal_id,
+      String str_get_category_id,
+      String str_get_parent_name,
+      String str_get_profile,
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -1484,6 +1485,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
           str_goal_cat_id: str_get_goal_id.toString(),
           str_image: str_get_profile,
           strFromViewDetails: 'no',
+          fullData: data,
         ),
       ),
     );

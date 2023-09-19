@@ -455,6 +455,7 @@ class _ShopHistoryScreenState extends State<ShopHistoryScreen> {
               str_goal_cat_id: arrAllDetails[i]['questId'].toString(),
               str_image: arrAllDetails[i]['image'].toString(),
               strFromViewDetails: 'yes',
+              fullData: arrAllDetails[i],
             ),
           ),
         );
@@ -560,6 +561,7 @@ class _ShopHistoryScreenState extends State<ShopHistoryScreen> {
               str_goal_cat_id: arrAllDetails[i]['missionId'].toString(),
               str_image: arrAllDetails[i]['image'].toString(),
               strFromViewDetails: 'yes',
+              fullData: arrAllDetails[i],
             ),
           ),
         );

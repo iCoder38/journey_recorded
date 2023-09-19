@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
@@ -18,6 +18,10 @@ class CreateTaskValidation {
     String str_task_details,
     String profesionalId,
     String profesionalType,
+    // new
+    String rewardType,
+    String groupidMain,
+    String groupidSub,
     BuildContext context,
   ) {
     if (str_task_name == '') {
@@ -62,6 +66,9 @@ class CreateTaskValidation {
       //
     } else {
       print('create task ');
+      print(rewardType.toString());
+      print(groupidMain.toString());
+      print(groupidSub.toString());
 
       CreateTaskModal()
           .create_task_WB(
@@ -76,6 +83,10 @@ class CreateTaskValidation {
             str_add_reminder_warning.toString(),
             profesionalId.toString(),
             profesionalType.toString(),
+            //
+            rewardType.toString(),
+            groupidMain.toString(),
+            groupidSub.toString(),
           )
           .then(
             (value) => {

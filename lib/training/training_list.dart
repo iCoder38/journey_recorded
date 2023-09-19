@@ -78,6 +78,9 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
   var boolFloatingButton = false;
   var strNewSkillClass = '';
   //
+  var strTotalExp;
+  var strNextLevelXP;
+  //
   @override
   void initState() {
     super.initState();
@@ -101,9 +104,11 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
   funcValidationBeforeFetchTrainingList() {
     if (widget.strUserIdEnabled == 'yes') {
       //
+      print('====> one <====');
       getTrainingListOld();
     } else {
       //
+      print('====> two <====');
       getTrainingListNew();
     }
   }
@@ -155,6 +160,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         strNewSkillClass = dict_save_training_full_data['SkillClass'];
         //
         // get and parse data
+        //
+        // totalMinute+totalMinute_Grind+totalMinute_Habit
+        funcAddTotalExp(get_data);
+        //
 
         if (kDebugMode) {
           print('one');
@@ -222,11 +231,16 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         get_str_date = splitted[0].toString();
         get_str_time = splitted[1].toString();
         //
+        strNewSkillClass = dict_save_training_full_data['SkillClass'];
+        //
         // get and parse data
+
+        //
 
         if (kDebugMode) {
           print(dict_save_training_full_data);
         }
+        funcAddTotalExp(get_data);
         setState(() {
           str_main_loader = '1';
         });
@@ -244,6 +258,86 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       }
     }
   }
+
+  // /*************************************************************************/
+  // /************************** CALCULATIONS *********************************/
+  funcAddTotalExp(
+    fullData,
+  ) {
+    print('======================');
+    // print(fullData['data']);
+    // print(fullData['data'][0]['totalMinute_Habit'].toString());
+    // print(fullData['data'][0]['totalMinute'].toString());
+    // print(fullData['data'][0]['totalMinute_Grind'].toString());
+    // totalMinute+totalMinute_Grind+totalMinute_Habit
+    //
+    var validateHabit = '0';
+    var validateMinute = '0';
+    var validateGrind = '0';
+    // habit
+    if (fullData['data'][0]['totalMinute_Habit'] == '') {
+      validateHabit = '0';
+    } else {
+      validateHabit = fullData['data'][0]['totalMinute_Habit'].toString();
+    }
+    // minute
+    if (fullData['data'][0]['totalMinute'] == '') {
+      validateMinute = '0';
+    } else {
+      validateMinute = fullData['data'][0]['totalMinute'].toString();
+    }
+    // grind
+    if (fullData['data'][0]['totalMinute_Grind'] == '') {
+      validateGrind = '0';
+    } else {
+      validateGrind = fullData['data'][0]['totalMinute_Grind'].toString();
+    }
+    var strTotalMinuteHabit = validateHabit;
+    var strTotalMinute = validateMinute;
+    var strTotalMinuteGrind = validateGrind;
+    //
+    strTotalExp = int.parse(strTotalMinuteHabit) +
+        int.parse(strTotalMinute) +
+        int.parse(strTotalMinuteGrind);
+    print('TOTAL EXPERINCE ====> $strTotalExp');
+    //
+    funcCalculateNextLevelXP(
+      fullData,
+      strTotalExp,
+    );
+  }
+
+  funcCalculateNextLevelXP(
+    nextLevelXPdata,
+    getSumOfHabitMinuteAndGrind,
+  ) {
+    print('======= LVL XP =========');
+    print(nextLevelXPdata['data']);
+    // print(getSumOfHabitMinuteAndGrind);
+    // print(nextLevelXPdata['data'][0]['currentLavel']);
+    // strNextLevelXP
+    print('======================');
+    // # 1 : vaue=totalMinute_Grind+totalMinute+totalMinute_Habit+currentLabel_value
+    // # 2 : vaue=vaue-lavel_value
+    // # 3 : nextlvlValue=currentLabel_value-vaue
+    var getValue = int.parse(getSumOfHabitMinuteAndGrind.toString()) +
+        int.parse(nextLevelXPdata['data'][0]['currentLavel'].toString());
+    // print(getValue.toString());
+    //
+    // print('FORMULA IS ====> ');
+    var setValue = int.parse(getValue.toString()) -
+        int.parse(nextLevelXPdata['data'][0]['lavel_value'].toString());
+    print(setValue.toString());
+    //
+    var setNextLevelValue =
+        int.parse(nextLevelXPdata['data'][0]['currentLavel'].toString()) -
+            int.parse(setValue.toString());
+    // print(setNextLevelValue.toString());
+    strNextLevelXP = setNextLevelValue.toString();
+  }
+
+  // /*************************************************************************/
+  // /*************************************************************************/
 
   @override
   Widget build(BuildContext context) {
@@ -285,14 +379,6 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                     Colors.white,
                     16.0,
                   ),
-                  // Text(
-                  //   'Notes'.toUpperCase(),
-                  //   style: TextStyle(
-                  //     fontFamily: font_style_name,
-                  //     fontSize: 16.0,
-                  //     backgroundColor: Colors.transparent,
-                  //   ),
-                  // ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -366,7 +452,10 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                 func_push_from_floating_button();
               },
               backgroundColor: navigation_color,
-              child: const Icon(Icons.add),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
             ),
           ),
           body: (str_main_loader == '0')
@@ -557,7 +646,9 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               itemCount: arr_quotes_list.length,
               itemBuilder: (BuildContext context, int index) {
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    //
+                  },
                   child: Container(
                     margin: const EdgeInsets.only(
                       top: 10.0,
@@ -1925,23 +2016,50 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
           ),
           child: Row(
             children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 20.0,
-                ),
-                height: 120,
-                width: 120,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 3,
-                  ),
-                ),
-                child: Image.network(
-                  dict_save_training_full_data['image'].toString(),
-                  fit: BoxFit.cover,
-                ),
-              ),
+              (dict_save_training_full_data['image'].toString() == '')
+                  ? Container(
+                      margin: const EdgeInsets.only(
+                        left: 20.0,
+                      ),
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          6.0,
+                        ),
+                        color: Colors.grey,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 3,
+                        ),
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : Container(
+                      margin: const EdgeInsets.only(
+                        left: 20.0,
+                      ),
+                      height: 120,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          6.0,
+                        ),
+                        color: Colors.amber,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 3,
+                        ),
+                      ),
+                      child: Image.network(
+                        //
+                        dict_save_training_full_data['image'].toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
               const SizedBox(
                 width: 10,
               ),
@@ -1972,7 +2090,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                         height: 8.0,
                       ),
                       text_regular_style_custom(
-                        'Total Exp : 0',
+                        'Total Exp : $strTotalExp',
                         Colors.white,
                         14.0,
                       ),
@@ -2011,85 +2129,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                     ],
                   ),
                 ),
-              )
-              /*Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(
-                    right: 10.0,
-                  ),
-                  height: 200 - 30,
-                  color: Colors.transparent,
-                  child: Column(
-                    children: <Widget>[
-                      Expanded(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.transparent,
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              //
-                              dict_save_training_full_data['skillName']
-                                  .toString()
-                                  .toUpperCase(),
-                              // '12',
-                              //
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          width: MediaQuery.of(context).size.width,
-                          color: Colors.transparent,
-                          child: Stack(
-                            children: [
-                              Container(
-                                child: Image.asset(
-                                  'assets/images/btn_round.png',
-                                  height: 140,
-                                  width: MediaQuery.of(context).size.width,
-                                  fit: BoxFit.cover,
-                                ),
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(
-                                    Radius.circular(
-                                      8,
-                                    ),
-                                  ),
-                                  // border: Border.all(),
-                                ),
-                              ),
-                              Positioned(
-                                child: Center(
-                                  child: Text(
-                                    //
-                                    'Level : ${dict_save_training_full_data['currentLavel']}',
-                                    //
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontFamily: font_style_name,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                // top: 45,
-                                // left: 20,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),*/
+              ),
             ],
           ),
         ),
@@ -2114,11 +2154,11 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
                         Colors.white,
                         14.0,
                       ),
-                      text_regular_style_custom(
+                      text_bold_style_custom(
                         //
                         strNewSkillClass,
-                        Colors.white,
-                        14.0,
+                        Colors.orange,
+                        16.0,
                       ),
                     ],
                   ),
@@ -2131,15 +2171,23 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
               ),
               Expanded(
                 child: Align(
-                  child: Text(
-                    'Next LV XP : ${dict_save_training_full_data['TrainingLV']}',
-                    // '15',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      text_bold_style_custom(
+                        //
+                        'Next LV XP :',
+                        Colors.white,
+                        14.0,
+                      ),
+                      //
+                      text_bold_style_custom(
+                        //
+                        ' $strNextLevelXP',
+                        Colors.orange,
+                        16.0,
+                      ),
+                    ],
                   ),
                 ),
               ),

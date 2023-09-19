@@ -1138,6 +1138,8 @@ class _TeamScreenState extends State<TeamScreen> {
         builder: (context) => CreateTaskScreen(
           str_professional_id: widget.str_get_goal_id.toString(),
           str_professional_type: widget.str_professional_type.toString(),
+          strGroupIdMain: '',
+          strGroupIdSub: '',
         ),
       ),
     );

@@ -43,7 +43,8 @@ class RealMainDetailsScreen extends StatefulWidget {
       required this.str_parent_name,
       required this.str_goal_cat_id,
       required this.str_image,
-      required this.strFromViewDetails});
+      required this.strFromViewDetails,
+      required this.fullData});
 
   final String str_image;
   final String str_tray_value;
@@ -58,6 +59,8 @@ class RealMainDetailsScreen extends StatefulWidget {
   final String str_professional_type;
   final String str_goal_cat_id;
   final String strFromViewDetails;
+  //
+  final fullData;
 
   @override
   State<RealMainDetailsScreen> createState() => _RealMainDetailsScreenState();
@@ -162,6 +165,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       print(widget.strFromViewDetails);
       print('======= TRAY =======');
       print(widget.str_tray_value);
+      print('======= FULL DATA =======');
+      print('========================');
+      print(widget.fullData);
+      print('=========================');
+      print('========================');
     }
     cont_reward_name = TextEditingController();
     cont_reward_price = TextEditingController();
@@ -1563,6 +1571,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       arr_quest_list[index]['parentName'].toString(),
                       arr_quest_list[index]['questId'].toString(),
                       arr_quest_list[index]['image'].toString(),
+                      // new
+                      arr_quest_list[index],
                     );
                   },
                   child: Container(
@@ -1683,7 +1693,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         arr_mission_list[index]['categoryId'].toString(),
                         arr_mission_list[index]['parentName'].toString(),
                         arr_mission_list[index]['missionId'].toString(),
-                        arr_mission_list[index]['image'].toString());
+                        arr_mission_list[index]['image'].toString(), //
+                        arr_mission_list[index]);
                   },
                   child: Container(
                     margin: const EdgeInsets.only(
@@ -1805,6 +1816,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                               arr_sub_goals[index]['goalId'].toString(),
                           str_image: arr_sub_goals[index]['image'].toString(),
                           strFromViewDetails: 'no',
+                          fullData: arr_sub_goals[index],
                         ),
                       ),
                     );
@@ -4714,6 +4726,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         builder: (context) => CreateTaskScreen(
           str_professional_id: widget.str_get_goal_id.toString(),
           str_professional_type: widget.str_professional_type.toString(),
+          strGroupIdMain: widget.fullData['groupId_Main'].toString(),
+          strGroupIdSub: widget.fullData['groupId_Sub'].toString(),
         ),
       ),
     );
@@ -5626,17 +5640,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
   Future<void> push_to_mission_details(
-    BuildContext context,
-    String str_mission_get_category_name,
-    String str_mission_name,
-    String str_mission_get_due_date,
-    String str_mission_about_goal,
-    String str_goal_id,
-    String str_mission_category_id,
-    String str_mission_parent_name,
-    String str_goal_cat_id,
-    String str_image,
-  ) async {
+      BuildContext context,
+      String str_mission_get_category_name,
+      String str_mission_name,
+      String str_mission_get_due_date,
+      String str_mission_about_goal,
+      String str_goal_id,
+      String str_mission_category_id,
+      String str_mission_parent_name,
+      String str_goal_cat_id,
+      String str_image,
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -5653,7 +5667,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_parent_name: str_mission_parent_name.toString(),
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
-          strFromViewDetails: widget.strFromViewDetails,
+          strFromViewDetails: widget.strFromViewDetails, fullData: data,
           // s
         ),
       ),
@@ -5678,17 +5692,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   //
 
   Future<void> push_to_quest_details(
-    BuildContext context,
-    String str_mission_get_category_name,
-    String str_mission_name,
-    String str_mission_get_due_date,
-    String str_mission_about_goal,
-    String str_goal_id,
-    String str_mission_category_id,
-    String str_mission_parent_name,
-    String str_goal_cat_id,
-    String str_image,
-  ) async {
+      BuildContext context,
+      String str_mission_get_category_name,
+      String str_mission_name,
+      String str_mission_get_due_date,
+      String str_mission_about_goal,
+      String str_goal_id,
+      String str_mission_category_id,
+      String str_mission_parent_name,
+      String str_goal_cat_id,
+      String str_image,
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -5706,6 +5720,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_goal_cat_id: str_goal_cat_id.toString(),
           str_image: str_image.toString(),
           strFromViewDetails: widget.strFromViewDetails,
+          fullData: data,
         ),
       ),
     );
@@ -6024,6 +6039,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         strGroupMainId = get_data['data']['groupId_Main'].toString();
         str_total_task_complete =
             get_data['data']['totalTaskCompleted'].toString();
+        str_professtional_id = get_data['data']['goalId'].toString();
         //
         setState(() {});
       } else {
