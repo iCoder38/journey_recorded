@@ -38,6 +38,7 @@ class CreateHabitsModals {
     String specific,
     String time_to_complete,
     String trainingId,
+    String skillClass,
   ) async {
     //
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -56,7 +57,7 @@ class CreateHabitsModals {
           <String, String>{
             'action': 'addhabit',
             'userId': prefs.getInt('userId').toString(),
-            'priority': priority,
+            'priority': '1', //priority,
             'name': name,
             'categoryId': category_id,
             'reminderAlarm': reminder_alarm.toString(),
@@ -68,6 +69,7 @@ class CreateHabitsModals {
             'specificDetails': specific.toString(),
             'time_to_complete': time_to_complete.toString(),
             'trainingId': trainingId.toString(),
+            'SkillClass': skillClass.toString(),
           },
         ),
       );
@@ -125,7 +127,7 @@ class CreateHabitsModals {
             'action': 'addhabit',
             'userId': prefs.getInt('userId').toString(),
             'habitId': habit_id.toString(),
-            'priority': priority.toString(),
+            'priority': '1', //priority.toString(),
             'name': name.toString(),
             'categoryId': category_id.toString(),
             'reminderAlarm': reminder_alarm.toString(),

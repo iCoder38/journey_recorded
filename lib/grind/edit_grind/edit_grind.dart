@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -30,6 +31,7 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
   late final TextEditingController contGrindCategory;
   late final TextEditingController contGrindTime;
   late final TextEditingController contGrindPriority;
+  late final TextEditingController contSelectClass;
   late final TextEditingController contGrindDescription;
   //
   @override
@@ -41,13 +43,16 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
       text: widget.getSelectedGrindData['categoryName'].toString(),
     );
     contGrindTime = TextEditingController(
-      text: widget.getSelectedGrindData['time_to_complete'].toString(),
+      text: widget.getSelectedGrindData['no_of_time_to_complete'].toString(),
     );
     contGrindPriority = TextEditingController(
       text: widget.getSelectedGrindData['Priority'].toString(),
     );
     contGrindDescription = TextEditingController(
       text: widget.getSelectedGrindData['Descrption'].toString(),
+    );
+    contSelectClass = TextEditingController(
+      text: widget.getSelectedGrindData['SkillClass'].toString(),
     );
 
     super.initState();
@@ -68,6 +73,7 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
     contGrindTime.dispose();
     contGrindPriority.dispose();
     contGrindDescription.dispose();
+    contSelectClass.dispose();
 
     super.dispose();
   }
@@ -117,9 +123,20 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarScreen(
-        str_app_bar_title: 'Edit',
-        str_back_button_status: '1',
+      appBar: AppBar(
+        title: text_bold_style_custom(
+          widget.getSelectedGrindData['grindName'],
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        //automaticallyImplyLeading: true,
+        backgroundColor: navigation_color,
       ),
 
       body: Form(
@@ -299,6 +316,49 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(6.0),
                       child: TextFormField(
+                        readOnly: true,
+                        controller: contSelectClass,
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Select class',
+                          suffixIcon: Icon(
+                            Icons.arrow_drop_down,
+                          ),
+                        ),
+                        // validation
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter select class';
+                          }
+                          return null;
+                        },
+                        onTap: () {
+                          //
+                          openSelectClassSheet(context);
+                        },
+                      ),
+                    ),
+                  ),
+                  //
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        14,
+                      ),
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0xffDDDDDD),
+                          blurRadius: 6.0,
+                          spreadRadius: 2.0,
+                          offset: Offset(0.0, 0.0),
+                        )
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: TextFormField(
                         controller: contGrindDescription,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
@@ -371,6 +431,99 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
               ),
       ),
       //
+    );
+  }
+
+//
+  void openSelectClassSheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select class'),
+        // message: const Text(''),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              contSelectClass.text = 'SS';
+              //
+            },
+            child: Text(
+              'SS : THESE ARE HARDEST SKILLS AND MAY TAKE THE LOGEST TIME TO LEARN. THESE SKILL MIGHT NEED TO GAIN SOME SKILLS BEFORE LEARNING THIS SKILL.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'S';
+            },
+            child: Text(
+              'S : THESE ARE RARE AND HARDER TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'A';
+            },
+            child: Text(
+              'A : THESE ARE HARD SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'B';
+            },
+            child: Text(
+              'B : THERE ARE NOT TO HARD TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'C';
+            },
+            child: Text(
+              'C : THESE ARE EASY SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -476,6 +629,7 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
           'categoryId': str_category_id.toString(),
           'Descrption': contGrindDescription.text.toString(),
           'time_to_complete': contGrindTime.text.toString(),
+          'SkillClass': contSelectClass.text.toString(),
           // 'skillId': strSaveRelatedSkillId.toString(),
           // 'habitId': strSaveRelatedHabitId.toString(),
         },

@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
 
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
@@ -18,6 +19,9 @@ class CreateGrindScreen extends StatefulWidget {
 
 class _CreateGrindScreenState extends State<CreateGrindScreen> {
   //
+  var strSkillId = '0';
+  var strHabitId = '0';
+  //
   var str_category_id = '0';
   var strScreenLoader = '0';
   var strCreateGrindLoader = '0';
@@ -33,9 +37,11 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
   late final TextEditingController contGrindName;
   late final TextEditingController contGrindCategory;
   late final TextEditingController contGrindTime;
+  late final TextEditingController contNoTimeComplete;
   late final TextEditingController contGrindPriority;
   late final TextEditingController contGrindRelatedSkill;
   late final TextEditingController contGrindRelatedHabit;
+  late final TextEditingController contSelectClass;
   late final TextEditingController contGrindDescription;
   //
   @override
@@ -43,9 +49,11 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
     contGrindName = TextEditingController();
     contGrindCategory = TextEditingController();
     contGrindTime = TextEditingController();
+    contNoTimeComplete = TextEditingController();
     contGrindPriority = TextEditingController();
     contGrindRelatedSkill = TextEditingController();
     contGrindRelatedHabit = TextEditingController();
+    contSelectClass = TextEditingController();
     contGrindDescription = TextEditingController();
 
     super.initState();
@@ -59,9 +67,11 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
     contGrindName.dispose();
     contGrindCategory.dispose();
     contGrindTime.dispose();
+    contNoTimeComplete.dispose();
     contGrindPriority.dispose();
     contGrindRelatedSkill.dispose();
     contGrindRelatedHabit.dispose();
+    contSelectClass.dispose();
     contGrindDescription.dispose();
 
     super.dispose();
@@ -223,10 +233,11 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: contGrindTime,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Time to complete the activity',
+                            hintText: 'Time to complete the activity (in min)',
                           ),
                           // validation
                           validator: (value) {
@@ -258,10 +269,48 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
+                          controller: contNoTimeComplete,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'No. of time to complete',
+                          ),
+                          // validation
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter data';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    //
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          14,
+                        ),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xffDDDDDD),
+                            blurRadius: 6.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: TextFormField(
                           controller: contGrindPriority,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Priority',
+                            hintText: 'Select Priority',
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down,
+                            ),
                           ),
                           // validation
                           validator: (value) {
@@ -269,6 +318,10 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                               return 'Please enter priority';
                             }
                             return null;
+                          },
+                          onTap: () {
+                            //
+                            openSelectPrioritySheet(context);
                           },
                         ),
                       ),
@@ -396,6 +449,53 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
+                          readOnly: true,
+                          controller: contSelectClass,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Select class',
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down,
+                            ),
+                          ),
+                          // validation
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter select classs';
+                            }
+                            return null;
+                          },
+                          onTap: () {
+                            //
+                            if (kDebugMode) {
+                              print('select class click');
+                            }
+                            //
+                            openSelectClassSheet(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    //
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          14,
+                        ),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xffDDDDDD),
+                            blurRadius: 6.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: TextFormField(
                           controller: contGrindDescription,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
@@ -410,7 +510,7 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                           },
                         ),
                       ),
-                    ),
+                    ), //
 
                     //
                     (strCreateGrindLoader == '1')
@@ -475,44 +575,253 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
   }
 
   //
+  void openSelectClassSheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select class'),
+        // message: const Text(''),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              contSelectClass.text = 'SS';
+              //
+            },
+            child: Text(
+              'SS : THESE ARE HARDEST SKILLS AND MAY TAKE THE LOGEST TIME TO LEARN. THESE SKILL MIGHT NEED TO GAIN SOME SKILLS BEFORE LEARNING THIS SKILL.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'S';
+            },
+            child: Text(
+              'S : THESE ARE RARE AND HARDER TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'A';
+            },
+            child: Text(
+              'A : THESE ARE HARD SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'B';
+            },
+            child: Text(
+              'B : THERE ARE NOT TO HARD TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'C';
+            },
+            child: Text(
+              'C : THESE ARE EASY SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //
+  void openSelectPrioritySheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select class'),
+        // message: const Text(''),
+        actions: <CupertinoActionSheetAction>[
+          //
+          for (int i = 1; i < 11; i++) ...[
+            CupertinoActionSheetAction(
+              onPressed: () async {
+                Navigator.pop(context);
+
+                contGrindPriority.text = i.toString();
+                //
+              },
+              child: text_regular_style_custom(
+                //
+                i.toString(),
+                Colors.black,
+                14.0,
+              ),
+            ),
+          ],
+          //
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  //
   // create grind
   funcCreateGrind() async {
     setState(() {
       strCreateGrindLoader = '1';
     });
 
+    // var strSkillId = '0';
+    // var strHabitId = '0';
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // print(prefs.getInt('userId').toString());
-    final resposne = await http.post(
-      Uri.parse(
-        application_base_url,
-      ),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      /*
-      [action] => grandadd
-    [userId] => 2
-    [Priority] => sbd
-    [grindName] => dhd
-    [categoryId] => 1
-    [Descrption] => ebd
-    [time_to_complete] => 20
-    */
-      body: jsonEncode(
-        <String, String>{
-          'action': 'grandadd',
-          'userId': prefs.getInt('userId').toString(),
-          'Priority': contGrindPriority.text.toString(),
-          'grindName': contGrindName.text.toString(),
-          'categoryId': str_category_id.toString(),
-          'Descrption': contGrindDescription.text.toString(),
-          'time_to_complete': contGrindTime.text.toString(),
-          'skillId': strSaveRelatedSkillId.toString(),
-          'habitId': strSaveRelatedHabitId.toString(),
+
+    var resposne;
+
+    if (strSaveRelatedSkillId == '' && strSaveRelatedHabitId == '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-      ),
-    );
+        body: jsonEncode(
+          <String, String>{
+            'action': 'grandadd',
+            'userId': prefs.getInt('userId').toString(),
+            'Priority': contGrindPriority.text.toString(),
+            'grindName': contGrindName.text.toString(),
+            'categoryId': str_category_id.toString(),
+            'Descrption': contGrindDescription.text.toString(),
+            'time_to_complete': contGrindTime.text.toString(),
+            // 'skillId': strSaveRelatedSkillId.toString(),
+            // 'habitId': strSaveRelatedHabitId.toString(),
+            'SkillClass': contSelectClass.text.toString(),
+            'no_of_time_to_complete': contNoTimeComplete.text.toString(),
+          },
+        ),
+      );
+    } else if (strSaveRelatedSkillId != '' && strSaveRelatedHabitId == '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'grandadd',
+            'userId': prefs.getInt('userId').toString(),
+            'Priority': contGrindPriority.text.toString(),
+            'grindName': contGrindName.text.toString(),
+            'categoryId': str_category_id.toString(),
+            'Descrption': contGrindDescription.text.toString(),
+            'time_to_complete': contGrindTime.text.toString(),
+            'skillId': strSaveRelatedSkillId.toString(),
+            // 'habitId': strSaveRelatedHabitId.toString(),
+            'SkillClass': contGrindRelatedSkill.text.toString(),
+            'no_of_time_to_complete': contNoTimeComplete.text.toString(),
+          },
+        ),
+      );
+    } else if (strSaveRelatedSkillId == '' && strSaveRelatedHabitId != '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'grandadd',
+            'userId': prefs.getInt('userId').toString(),
+            'Priority': contGrindPriority.text.toString(),
+            'grindName': contGrindName.text.toString(),
+            'categoryId': str_category_id.toString(),
+            'Descrption': contGrindDescription.text.toString(),
+            'time_to_complete': contGrindTime.text.toString(),
+            // 'skillId': strSaveRelatedSkillId.toString(),
+            'habitId': strSaveRelatedHabitId.toString(),
+            'SkillClass': contGrindRelatedSkill.text.toString(),
+            'no_of_time_to_complete': contNoTimeComplete.text.toString(),
+          },
+        ),
+      );
+    } else if (strSaveRelatedSkillId != '' && strSaveRelatedHabitId != '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'grandadd',
+            'userId': prefs.getInt('userId').toString(),
+            'Priority': contGrindPriority.text.toString(),
+            'grindName': contGrindName.text.toString(),
+            'categoryId': str_category_id.toString(),
+            'Descrption': contGrindDescription.text.toString(),
+            'time_to_complete': contGrindTime.text.toString(),
+            'skillId': strSaveRelatedSkillId.toString(),
+            'habitId': strSaveRelatedHabitId.toString(),
+            'SkillClass': contGrindRelatedSkill.text.toString(),
+            'no_of_time_to_complete': contNoTimeComplete.text.toString(),
+          },
+        ),
+      );
+    }
 
     // convert data to dict
     var getData = jsonDecode(resposne.body);

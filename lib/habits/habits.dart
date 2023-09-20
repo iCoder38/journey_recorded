@@ -6,9 +6,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/habits/create_new_habit/create_new_habit.dart';
 import 'package:journey_recorded/habits/habits_info.dart/habits_info.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -93,14 +95,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
+        title: text_bold_style_custom(
           navigation_title_habits,
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -138,6 +136,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
         backgroundColor: navigation_color,
         child: const Icon(
           Icons.add,
+          color: Colors.white,
         ),
       ),
       body: Column(
@@ -202,13 +201,19 @@ class _HabitsScreenState extends State<HabitsScreen> {
                       left: 20.0,
                       right: 20.0,
                     ),
-                    height: 160,
+                    height: 100,
                     width: 120,
-                    color: const Color.fromRGBO(
-                      240,
-                      20,
-                      74,
-                      1,
+                    decoration: BoxDecoration(
+                      color: const Color.fromRGBO(
+                        240,
+                        20,
+                        74,
+                        1,
+                      ),
+                      border: Border.all(
+                        width: 2.0,
+                        color: Colors.white,
+                      ),
                     ),
                     child: Column(
                       children: <Widget>[
@@ -224,13 +229,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
+                                    child: text_regular_style_custom(
                                       'Category',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
+                                      Colors.white,
+                                      14.0,
                                     ),
                                   ),
                                 ),
@@ -244,59 +246,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      'skill',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Stat',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
+                                    child: text_regular_style_custom(
                                       'Priority',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
+                                      Colors.white,
+                                      14.0,
                                     ),
                                   ),
                                 ),
@@ -316,13 +269,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
-                                      'Mostrecent',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
+                                    child: text_regular_style_custom(
+                                      'Skills',
+                                      Colors.white,
+                                      14.0,
                                     ),
                                   ),
                                 ),
@@ -336,59 +286,10 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                     ),
                                   ),
                                   child: Center(
-                                    child: Text(
+                                    child: text_regular_style_custom(
                                       'None',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'Mostrecent',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      'None',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
+                                      Colors.white,
+                                      14.0,
                                     ),
                                   ),
                                 ),
@@ -440,13 +341,122 @@ class _HabitsScreenState extends State<HabitsScreen> {
                             arr_habits_list[i]['pro'].toString(),
                             arr_habits_list[i]['specificDetails'].toString(),
                             arr_habits_list[i]['time_to_complete'].toString(),
+                            arr_habits_list[i]['SkillClass'].toString(),
                           );
                         },
-                        child: Container(
+                        child: ListTile(
+                          title: text_bold_style_custom(
+                            //
+                            arr_habits_list[i]['name'].toString(),
+                            Colors.black, 18.0,
+                          ),
+                          subtitle: text_regular_style_custom(
+                            //
+                            arr_habits_list[i]['categoryName'].toString(),
+                            Colors.black, 10.0,
+                          ),
+                          trailing: Container(
+                            height: 50,
+                            width: 140,
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(
+                                8.0,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: Image.asset(
+                                    'assets/images/clock.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                //
+                                text_bold_style_custom(
+                                  //
+                                  '${arr_habits_list[i]['startPercentage']}%',
+                                  Colors.white,
+                                  16.0,
+                                ),
+                                //
+                                Padding(
+                                  padding: const EdgeInsets.all(
+                                    4.0,
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      //
+                                      //
+                                      var sumOnePercentage = 1;
+                                      var oldPercentage = int.parse(
+                                          arr_habits_list[i]['startPercentage']
+                                              .toString());
+                                      var sumBoth =
+                                          oldPercentage + sumOnePercentage;
+                                      if (kDebugMode) {
+                                        print(sumBoth);
+                                      }
+                                      //
+                                      DateTime now = DateTime.now();
+                                      String formattedDate =
+                                          DateFormat('yyyy-MM-dd').format(now);
+                                      if (kDebugMode) {
+                                        print(formattedDate);
+                                      }
+                                      if (arr_habits_list[i]['updateDate']
+                                              .toString() ==
+                                          formattedDate.toString()) {
+                                        if (kDebugMode) {
+                                          print('The dates are same');
+                                        }
+                                        //
+                                        var snackdemo = SnackBar(
+                                          content: text_regular_style_custom(
+                                            //
+                                            habit_you_already_update_status_EN,
+                                            Colors.white,
+                                            14.0,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(snackdemo);
+                                        //
+                                      } else {
+                                        updateOnePercentage(
+                                          arr_habits_list[i]['habitId']
+                                              .toString(),
+                                          sumBoth.toString(),
+                                        );
+                                      }
+                                      /**/
+                                    },
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.amber,
+                                        borderRadius: BorderRadius.circular(
+                                          20.0,
+                                        ),
+                                      ),
+                                      child: const Icon(
+                                        Icons.add,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        /*child: Container(
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width,
-                          height: 60.0,
-                          child: Row(
+                          // height: 60.0,
+                          child:  /*Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Container(
@@ -521,7 +531,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                               ),
                               //
                             ],
-                          ),
+                          ),*/
                           /*Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
@@ -563,7 +573,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
                               )
                             ],
                           ),*/
-                        ),
+                        ),*/
                       ),
                       Container(
                         color: Colors.grey,
@@ -600,6 +610,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           str_fetch_get_category_name: '',
           str_fetch_get_skill: '',
           str_fetch_get_time: '',
+          str_fetched_select_class: '',
         ),
       ),
     );
@@ -632,6 +643,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
     String str_pro,
     String str_specify,
     String str_time_to_complete,
+    String str_get_class_deets,
   ) async {
     final result = await Navigator.push(
       context,
@@ -654,6 +666,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
           str_get_skill_id: '',
           str_get_skill_name: '',
           str_get_time_name: str_time_to_complete,
+          str_get_class: str_get_class_deets.toString(),
         ),
       ),
     );

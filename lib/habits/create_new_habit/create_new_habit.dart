@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +10,7 @@ import 'package:journey_recorded/Utils.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:journey_recorded/habits/create_new_habit/create_new_habit_modal.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +33,7 @@ class CreateNewHabitScreen extends StatefulWidget {
     required this.str_fetch_get_habit_id,
     required this.str_fetch_get_time,
     required this.str_fetch_get_skill,
+    required this.str_fetched_select_class,
   });
 
   final String str_fetch_get_habit_id;
@@ -52,6 +55,8 @@ class CreateNewHabitScreen extends StatefulWidget {
   final String str_fetch_get_danger;
   final String str_fetch_get_pro;
   final String str_fetch_get_specify;
+
+  final String str_fetched_select_class;
 
   @override
   State<CreateNewHabitScreen> createState() => _CreateNewHabitScreenState();
@@ -93,6 +98,8 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
   late final TextEditingController cont_pro;
   late final TextEditingController cont_specify;
   //
+  late final TextEditingController contSelectClass;
+  //
   @override
   void initState() {
     super.initState();
@@ -128,11 +135,15 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
         TextEditingController(text: widget.str_fetch_get_time.toString());
     contGrindSkillName =
         TextEditingController(text: widget.str_fetch_get_skill.toString());
+    //
+    contSelectClass =
+        TextEditingController(text: widget.str_fetched_select_class.toString());
 
     if (widget.str_fetch_get_name_your_habit != '') {
       str_start_count = int.parse(widget.str_fetch_get_start);
       str_category_id = widget.str_fetch_get_category_id.toString();
     }
+    // print(str_start_count);
 
     get_category_list_WB();
     //
@@ -158,6 +169,7 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
     cont_danger.dispose();
     cont_pro.dispose();
     cont_specify.dispose();
+    contSelectClass.dispose();
     super.dispose();
   }
 
@@ -165,14 +177,11 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: text_bold_style_custom(
           //
-          navigation_title_create_new_habit,
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          habits_create_new_habits_EN,
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -183,20 +192,25 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
         ),
         backgroundColor: navigation_color,
         actions: [
-          IconButton(
-            onPressed: () {
-              if (kDebugMode) {
-                print('object');
-              }
-              delete_habit(
-                'Delete',
-                widget.str_fetch_get_habit_id.toString(),
-              );
-            },
-            icon: const Icon(
-              Icons.delete_forever,
-            ),
-          )
+          (str_start_count == 0)
+              ? const SizedBox(
+                  height: 0,
+                )
+              : IconButton(
+                  onPressed: () {
+                    if (kDebugMode) {
+                      print('object');
+                    }
+                    delete_habit(
+                      'Delete',
+                      widget.str_fetch_get_habit_id.toString(),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.white,
+                  ),
+                )
         ],
       ),
       /*
@@ -350,6 +364,27 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                     ),
                     child: TextFormField(
                       readOnly: true,
+                      controller: contSelectClass,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Select class',
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                        ),
+                      ),
+                      onTap: () async {
+                        //
+                        openSelectClassSheet(context);
+                      },
+                    ),
+                  ),
+                  //
+                  Container(
+                    margin: const EdgeInsets.all(
+                      10.0,
+                    ),
+                    child: TextFormField(
+                      readOnly: true,
                       controller: cont_reminder_date,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
@@ -402,34 +437,22 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                         ),
                       ),
                       onTap: () async {
-                        if (kDebugMode) {
-                          print('time');
-                        }
-                        TimeOfDay? pickedTime = await showTimePicker(
-                          initialTime: TimeOfDay.now(),
+                        print('time');
+                        final TimeOfDay? newTime = await showTimePicker(
                           context: context,
+                          initialTime: TimeOfDay.now(),
                         );
+                        if (newTime != null) {
+                          setState(() {
+                            print(newTime.format(context));
 
-                        if (pickedTime != null) {
-                          // print(pickedTime.format(context)); //output 10:51 PM
-                          DateTime parsedTime = DateFormat.jm()
-                              .parse(pickedTime.format(context).toString());
-                          //converting to DateTime so that we can further format on different pattern.
-                          print(parsedTime); //output 1970-01-01 22:53:00.000
-                          String formattedTime =
-                              DateFormat('HH:mm').format(parsedTime);
-                          print(formattedTime); //output 14:59:00
-
-                          //
-                          cont_reminder_time.text = formattedTime.toString();
-                          //
-                        } else {
-                          print("Time is not selected");
+                            cont_reminder_time.text = newTime.format(context);
+                          });
                         }
                       },
                     ),
                   ),
-                  Container(
+                  /*Container(
                     margin: const EdgeInsets.all(
                       10.0,
                     ),
@@ -440,7 +463,7 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                         labelText: 'Priority',
                       ),
                     ),
-                  ),
+                  ),*/
                   /*Container(
                     margin: const EdgeInsets.all(
                       10.0,
@@ -691,6 +714,8 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                             cont_specify.text.toString(),
                             contGrindTime.text.toString(),
                             strSaveRelatedSkillId.toString(),
+                            // new
+                            contSelectClass.text.toString(),
                           )
                           .then((value) => {
                                 // Navigator.pop(context,
@@ -747,6 +772,99 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  //
+  void openSelectClassSheet(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Select class'),
+        // message: const Text(''),
+        actions: <CupertinoActionSheetAction>[
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+
+              contSelectClass.text = 'SS';
+              //
+            },
+            child: Text(
+              'SS : THESE ARE HARDEST SKILLS AND MAY TAKE THE LOGEST TIME TO LEARN. THESE SKILL MIGHT NEED TO GAIN SOME SKILLS BEFORE LEARNING THIS SKILL.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'S';
+            },
+            child: Text(
+              'S : THESE ARE RARE AND HARDER TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'A';
+            },
+            child: Text(
+              'A : THESE ARE HARD SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'B';
+            },
+            child: Text(
+              'B : THERE ARE NOT TO HARD TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () async {
+              Navigator.pop(context);
+              contSelectClass.text = 'C';
+            },
+            child: Text(
+              'C : THESE ARE EASY SKILLS TO LEARN.',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

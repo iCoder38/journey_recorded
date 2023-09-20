@@ -44,6 +44,10 @@ class _GrindDetailsScreenState extends State<GrindDetailsScreen> {
         'name': widget.dictShowFullData['Descrption'].toString(),
       },
       {
+        'title': 'Skill Class',
+        'name': widget.dictShowFullData['SkillClass'].toString(),
+      },
+      {
         'title': 'Skill name',
         'name': widget.dictShowFullData['skillName'].toString(),
       },
@@ -75,9 +79,22 @@ created: Mar 31st, 2023, 11:04 am
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarScreen(
-        str_app_bar_title: 'Grind Details',
-        str_back_button_status: '1',
+      appBar: AppBar(
+        title: text_bold_style_custom(
+          //
+          widget.dictShowFullData['grindName'].toString(),
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        //automaticallyImplyLeading: true,
+        backgroundColor: navigation_color,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -89,64 +106,68 @@ created: Mar 31st, 2023, 11:04 am
         backgroundColor: navigation_color,
         child: const Icon(
           Icons.edit,
+          color: Colors.white,
         ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            for (int i = 0; i < customParse.length; i++) ...[
-              /*(customParse[i]['name'].toString() == '')
-                  ? const SizedBox()
-                  : */
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 10.0,
-                  left: 10,
-                  right: 10,
-                  bottom: 10,
-                ),
-                color: Colors.transparent,
-                width: MediaQuery.of(context).size.width,
-                height: 30,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: text_with_bold_style_black(
-                    //
-                    customParse[i]['title'].toString(),
-                    //
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              for (int i = 0; i < customParse.length; i++) ...[
+                /*(customParse[i]['name'].toString() == '')
+                    ? const SizedBox()
+                    : */
+                Container(
+                  margin: const EdgeInsets.only(
+                      // top: 10.0,
+                      // left: 10,
+                      // right: 10,
+                      // bottom: 10,
+                      ),
+                  color: Colors.transparent,
+                  width: MediaQuery.of(context).size.width,
+                  // height: 30,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_with_bold_style_black(
+                      //
+                      customParse[i]['title'].toString(),
+                      //
+                    ),
                   ),
                 ),
-              ),
-              //
-              Container(
-                margin: const EdgeInsets.only(
-                  top: 0.0,
-                  left: 10,
-                  right: 10,
-                ),
-                color: Colors.transparent,
-                width: MediaQuery.of(context).size.width,
-                height: 48.0,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: text_with_regular_style(
-                    //
-                    customParse[i]['name'].toString(),
-                    //
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                      // top: 0.0,
+                      // left: 10,
+                      // right: 10,
+                      ),
+                  color: Colors.transparent,
+                  width: MediaQuery.of(context).size.width,
+                  // height: 48.0,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_with_regular_style(
+                      //
+                      customParse[i]['name'].toString(),
+                      //
+                    ),
                   ),
                 ),
-              ),
-              //
-              Container(
-                margin: const EdgeInsets.all(10.0),
-                color: Colors.grey,
-                width: MediaQuery.of(context).size.width,
-                height: 0.3,
-              ),
-              //
+                //
+                Container(
+                  margin: const EdgeInsets.all(10.0),
+                  color: Colors.grey,
+                  width: MediaQuery.of(context).size.width,
+                  height: 0.2,
+                ),
+                //
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

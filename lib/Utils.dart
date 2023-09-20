@@ -130,6 +130,8 @@ Text text_with_semi_bold_style_black(str) {
 
 /* ================================================================ */
 
+/* ================================================================ */
+
 void startLoadingUI(BuildContext context, String message) async {
   await showDialog(
     barrierDismissible: false,
@@ -139,27 +141,28 @@ void startLoadingUI(BuildContext context, String message) async {
         content: SizedBox(
           width: double.maxFinite,
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 8),
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: text_regular_style_custom(
-                      //,
-                      message,
-                      Colors.black,
-                      14.0,
-                    ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SizedBox(height: 8),
+              Flexible(
+                child: SingleChildScrollView(
+                  child: text_regular_style_custom(
+                    //,
+                    message,
+                    Colors.black,
+                    14.0,
                   ),
                 ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     Navigator.of(context).pop();
-                //   },
-                //   child: Text("OK"),
-                // )
-              ]),
+              ),
+              // ElevatedButton(
+              //   onPressed: () {
+              //     Navigator.of(context).pop();
+              //   },
+              //   child: Text("OK"),
+              // )
+            ],
+          ),
         ),
       );
     },

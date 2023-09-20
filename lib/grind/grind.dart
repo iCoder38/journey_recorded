@@ -396,6 +396,7 @@ class _GrindScreenState extends State<GrindScreen> {
                       ),
                     ),
                     //
+                    const Spacer(),
                     Container(
                       margin: const EdgeInsets.all(10.0),
                       color: Colors.transparent,
@@ -424,6 +425,19 @@ class _GrindScreenState extends State<GrindScreen> {
                       ),
                     ),
                     //
+                    IconButton(
+                      onPressed: () {
+                        if (kDebugMode) {
+                          print('object1');
+                        }
+                        //
+                      },
+                      icon: const Icon(
+                        Icons.delete_forever,
+                        color: Colors.red,
+                        size: 30,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -455,7 +469,7 @@ class _GrindScreenState extends State<GrindScreen> {
                       Container(
                         margin: const EdgeInsets.all(10.0),
                         color: Colors.transparent,
-                        width: 120,
+                        // width: 120,
                         height: 50,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,6 +487,9 @@ class _GrindScreenState extends State<GrindScreen> {
                               ),
                             ),
                             //
+                            const SizedBox(
+                              width: 30.0,
+                            ),
                             Container(
                               height: 40,
                               width: 40,
@@ -491,7 +508,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 ),
                               ),
                             ),
-                            /*IconButton(
+                            IconButton(
                               onPressed: () {
                                 if (kDebugMode) {
                                   print('object1');
@@ -507,7 +524,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 color: Colors.red,
                                 size: 30,
                               ),
-                            ),*/
+                            ),
                           ],
                         ),
                       ),

@@ -1,10 +1,11 @@
-// ignore_for_file: non_constant_identifier_names, unused_local_variable, prefer_typing_uninitialized_variables
+// ignore_for_file: non_constant_identifier_names, unused_local_variable, prefer_typing_uninitialized_variables, avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/habits/create_new_habit/create_new_habit.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
@@ -29,6 +30,7 @@ class HabitsInfoScreen extends StatefulWidget {
     required this.str_get_time_name,
     required this.str_get_skill_name,
     required this.str_get_skill_id,
+    required this.str_get_class,
   });
 
   final String str_habit_id;
@@ -52,6 +54,8 @@ class HabitsInfoScreen extends StatefulWidget {
   final String str_get_danger;
   final String str_get_pro;
   final String str_get_specify;
+
+  final String str_get_class;
 
   @override
   State<HabitsInfoScreen> createState() => _HabitsInfoScreenState();
@@ -116,14 +120,11 @@ class _HabitsInfoScreenState extends State<HabitsInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: text_bold_style_custom(
           //
-          navigation_title_habits_info,
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          habits_info_EN,
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -464,6 +465,67 @@ class _HabitsInfoScreenState extends State<HabitsInfoScreen> {
             Container(
               height: 1,
               width: MediaQuery.of(context).size.width,
+              color: Colors.grey,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            Container(
+              // height: 100,
+              width: MediaQuery.of(context).size.width,
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 10.0,
+                      right: 10.0,
+                    ),
+                    color: Colors.transparent,
+                    height: 30.0,
+                    width: MediaQuery.of(context).size.width,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        //
+                        'Select Class',
+                        //
+                        style: TextStyle(
+                          fontFamily: font_style_name,
+                          fontSize: 18.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      color: Colors.transparent,
+                      width: MediaQuery.of(context).size.width,
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          //
+                          widget.str_get_class.toString(),
+                          style: TextStyle(
+                            fontFamily: font_style_name,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 1,
+              width: MediaQuery.of(context).size.width,
               color: Colors.transparent,
             ),
             const SizedBox(
@@ -558,6 +620,7 @@ class _HabitsInfoScreenState extends State<HabitsInfoScreen> {
                   widget.str_get_danger.toString(),
                   widget.str_get_pro.toString(),
                   widget.str_get_specify.toString(),
+                  widget.str_get_class.toString(),
                 );
               },
               child: Container(
@@ -629,6 +692,7 @@ class _HabitsInfoScreenState extends State<HabitsInfoScreen> {
     String str_danger,
     String str_pro,
     String str_specify,
+    String str_class,
   ) async {
     final result = await Navigator.push(
       context,
@@ -650,6 +714,7 @@ class _HabitsInfoScreenState extends State<HabitsInfoScreen> {
           str_fetch_get_category_name: widget.str_get_category_name.toString(),
           str_fetch_get_skill: widget.str_get_skill_name,
           str_fetch_get_time: widget.str_get_time_name,
+          str_fetched_select_class: str_class.toString(),
         ),
       ),
     );
