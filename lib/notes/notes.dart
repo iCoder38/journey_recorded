@@ -1,8 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, avoid_print
 
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class NotesScreen extends StatefulWidget {
 class _NotesScreenState extends State<NotesScreen> {
   //
   var str_category_id = '';
+  var strCategoryName = '';
+  var strFilterName = '';
+  //
   var str_main_loader = '0';
   var str_get_message;
   var str_note_id;
@@ -136,22 +140,39 @@ class _NotesScreenState extends State<NotesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: app_bar_notes_UI(),
+      appBar: AppBar(
+        backgroundColor: navigation_color,
+        title: text_bold_style_custom(
+          'Notes',
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            //
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           push_to_create_notes(context);
         },
         backgroundColor: navigation_color,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
-            // Expanded(
-            //   flex: 1,
-            //   child: top_three_buttons_UI(),
-            // ),
+            //
             top_three_buttons_UI(),
             //
             if (str_main_loader == 'notes_loader_start')
@@ -165,154 +186,76 @@ class _NotesScreenState extends State<NotesScreen> {
                 str_status: '4',
               )
             else
-              ListView.builder(
+              ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    color: Colors.grey,
+                  );
+                },
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                //scrollDirection: Axis.vertical,
-                //shrinkWrap: true,
                 itemCount: arr_notes_list.length,
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
-                    onTap: () {},
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        top: 10.0,
-                        bottom: 0.0,
+                    onTap: () {
+                      //
+                    },
+                    child: ListTile(
+                      //
+                      title: text_bold_style_custom(
+                        //
+                        arr_notes_list[index]['created'].toString(),
+                        Colors.black,
+                        16.0,
                       ),
-                      // height: 100,
-                      width: MediaQuery.of(context).size.width,
-                      color: Colors.white,
-                      child: ListTile(
-                        // leading: const FlutterLogo(size: 72.0),
-                        title: Text(
-                          //
-                          arr_notes_list[index]['created'].toString(),
-                          // _tabController.index.toString(),
-                          //
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontWeight: FontWeight.w900,
-                          ),
+                      subtitle: Container(
+                        margin: const EdgeInsets.only(
+                          top: 10.0,
+                          bottom: 10.0,
                         ),
-                        subtitle: Container(
-                          margin: const EdgeInsets.only(
-                            top: 10.0,
-                            bottom: 10.0,
-                          ),
-                          child: Text(
-                            //
-                            arr_notes_list[index]['message'].toString(),
-                            // '2',
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
-                            ),
-                          ),
+                        child: text_regular_style_custom(
+                          //
+                          arr_notes_list[index]['message'].toString(),
+                          Colors.black,
+                          14.0,
                         ),
-                        /*trailing: Icon(
-                              Icons.more_vert,
-                            ),*/
-                        isThreeLine: true,
-                        trailing: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: IconButton(
-                                onPressed: (() {
-                                  // print(index);
-                                  str_get_message = arr_notes_list[index]
-                                          ['message']
-                                      .toString();
-                                  str_note_id = arr_notes_list[index]['noteId']
-                                      .toString();
-                                  str_profession_id = arr_notes_list[index]
-                                          ['profesionalId']
-                                      .toString();
-                                  str_professional_type = arr_notes_list[index]
-                                          ['profesionalType']
-                                      .toString();
+                      ),
+                      isThreeLine: true,
+                      trailing: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: IconButton(
+                              onPressed: (() {
+                                // print(index);
+                                str_get_message =
+                                    arr_notes_list[index]['message'].toString();
+                                str_note_id =
+                                    arr_notes_list[index]['noteId'].toString();
+                                str_profession_id = arr_notes_list[index]
+                                        ['profesionalId']
+                                    .toString();
+                                str_professional_type = arr_notes_list[index]
+                                        ['profesionalType']
+                                    .toString();
 
-                                  gear_popup(
-                                    'Manage Notes',
-                                    arr_notes_list[index]['noteId'].toString(),
-                                  );
-                                }),
-                                icon: const Icon(
-                                  Icons.settings,
-                                  color: Colors.black,
-                                ),
+                                gear_popup(
+                                  'Manage Notes',
+                                  arr_notes_list[index]['noteId'].toString(),
+                                );
+                              }),
+                              icon: const Icon(
+                                Icons.settings,
+                                color: Colors.black,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   );
                 },
               ),
-            // Expanded(
-            //   flex: 10,
-            //   child: list_view_in_notes_UI(),
-            // ),
-            /*Expanded(
-              flex: 2,
-              child: Container(
-                // height: 300,
-                width: MediaQuery.of(context).size.width,
-                color: Colors.transparent,
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 4,
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 10.0,
-                          bottom: 20.0,
-                          top: 10.0,
-                        ),
-                        // height: 40,
-                        color: Colors.transparent,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            // hintText: 'Tell us about yourself',
-                            // helperText: 'Keep it short, this is just a demo.',
-                            labelText: 'Save any notes2',
-                          ),
-                          maxLines: 3,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Container(
-                        // height: 40,
-                        color: Colors.transparent,
-                        child: const Icon(
-                          Icons.save,
-                        ),
-                      ),
-                    ),
-                    Container(),
-                  ],
-                ),
-              ),
-            ),*/
-            /*Container(
-              //height: 80,
-              width: MediaQuery.of(context).size.width,
-              color: navigation_color,
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  //
-                  
-                  //
-                  
-                  //
-                ],
-              ),
-            ),*/
+            //
           ],
         ),
       ),
@@ -367,6 +310,81 @@ class _NotesScreenState extends State<NotesScreen> {
   Container top_three_buttons_UI() {
     return Container(
       color: Colors.blue[900],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  //
+                  open_category_list(context);
+                },
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(
+                      12.0,
+                    ),
+                  ),
+                  child: Center(
+                    child: (strCategoryName == '')
+                        ? text_bold_style_custom(
+                            'Category',
+                            Colors.black,
+                            14.0,
+                          )
+                        : text_bold_style_custom(
+                            'Category ( $strCategoryName )',
+                            Colors.black,
+                            14.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            //
+            const SizedBox(
+              width: 20.0,
+            ),
+            //
+            Expanded(
+              child: GestureDetector(
+                onTap: () {
+                  //
+                  open_filter_action_sheet(context);
+                },
+                child: Container(
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(
+                      12.0,
+                    ),
+                  ),
+                  child: Center(
+                    child: (strFilterName == '')
+                        ? text_bold_style_custom(
+                            'Filter',
+                            Colors.black,
+                            14.0,
+                          )
+                        : text_bold_style_custom(
+                            'Filter ( $strFilterName )',
+                            Colors.black,
+                            14.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
+            //
+          ],
+        ),
+      ),
+    ); /*Container(
+      color: Colors.blue[900],
       child: Row(
         children: <Widget>[
           Expanded(
@@ -374,50 +392,31 @@ class _NotesScreenState extends State<NotesScreen> {
               padding: const EdgeInsets.all(
                 8.0,
               ),
-              child: InkWell(
+              child: GestureDetector(
                 onTap: () {
+                  //
                   open_category_list(context);
                 },
                 child: Container(
-                  height: 60,
-                  // width: MediaQuery.of(context).size.width,
-
-                  decoration: const BoxDecoration(
-                    // color: Colors.orange,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        60.0,
-                      ),
-                      bottomLeft: Radius.circular(
-                        10.0,
-                      ),
-                      bottomRight: Radius.circular(
-                        60.0,
-                      ),
-                      topRight: Radius.circular(
-                        10.0,
-                      ),
-                    ),
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(250, 220, 10, 1),
-                        Color.fromRGBO(252, 215, 10, 1),
-                        Color.fromRGBO(251, 195, 11, 1),
-                        Color.fromRGBO(250, 180, 10, 1),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(
+                      12.0,
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Categories'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: (strCategoryName == '')
+                        ? text_bold_style_custom(
+                            'Category',
+                            Colors.black,
+                            14.0,
+                          )
+                        : text_bold_style_custom(
+                            'Category ( $strCategoryName )',
+                            Colors.black,
+                            14.0,
+                          ),
                   ),
                 ),
               ),
@@ -514,23 +513,28 @@ class _NotesScreenState extends State<NotesScreen> {
                       end: Alignment.bottomCenter,
                     ),
                   ),
-                  child: Center(
-                    child: Text(
-                      'Filters'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
+                  child: (strFilterName == '')
+                      ? Center(
+                          child: text_bold_style_custom(
+                            'Filters',
+                            Colors.black,
+                            14.0,
+                          ),
+                        )
+                      : Center(
+                          child: text_bold_style_custom(
+                            'Filters ( $strFilterName )',
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
                 ),
               ),
             ),
           ),
         ],
       ),
-    );
+    );*/
   }
 
   AppBar app_bar_notes_UI() {
@@ -819,75 +823,8 @@ class _NotesScreenState extends State<NotesScreen> {
     // setState(() {});
   }
 
-  void open_category_list(BuildContext context) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoActionSheet(
-        title: const Text('Categories'),
-        // message: const Text(''),
-        actions: <CupertinoActionSheetAction>[
-          //
-          CupertinoActionSheetAction(
-            isDestructiveAction: false,
-            onPressed: () {
-              Navigator.pop(context);
-              //
-              func_notes_WB();
-              //
-            },
-            child: text_regular_style_custom(
-              'All',
-              Colors.black,
-              16.0,
-            ),
-          ),
-          //
-          for (int i = 0; i < arr_get_category_list.length; i++) ...[
-            CupertinoActionSheetAction(
-              onPressed: () async {
-                Navigator.pop(context);
-                note_list_by_category_list_WB(
-                    arr_get_category_list[i]['id'].toString());
-
-                str_category_id = arr_get_category_list[i]['id'].toString();
-              },
-              child: Text(
-                arr_get_category_list[i]['name'].toString(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 18.0,
-                ),
-              ),
-            ),
-          ],
-          CupertinoActionSheetAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(
-              'Dismiss',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /*
-[action] => notelist
-    [userId] => 45
-    [categoryId] => 1
-    [pageNo] => 1
-  */
 // NOTES
-  Future note_list_by_category_list_WB(
-    String str_category_id,
-  ) async {
+  Future funcFilterCatAndFiltersWB() async {
     print('=====> POST : NOTES 1');
 
     setState(() {
@@ -896,26 +833,136 @@ class _NotesScreenState extends State<NotesScreen> {
     //
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    final resposne = await http.post(
-      Uri.parse(
-        application_base_url,
-      ),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      //   [action] => notelist
-      // [userId] => 45
-      // [categoryId] => 1
-      // [pageNo] => 1
-      body: jsonEncode(
-        <String, String>{
-          'action': 'notelist',
-          'userId': prefs.getInt('userId').toString(),
-          'categoryId': str_category_id.toString(),
-          'pageNo': '',
+    var resposne;
+
+    /* if (str_category_id != '' && strFilterName != '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
         },
-      ),
-    );
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            'categoryId': str_category_id.toString(),
+            'profesionalType': strFilterName.toString(),
+            'pageNo': '1',
+          },
+        ),
+      );
+    } else if (str_category_id == '') {
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            // 'categoryId': str_category_id.toString(),
+            'pageNo': '1',
+          },
+        ),
+      );
+    }*/
+    if (str_category_id != '' && strFilterName == '') {
+      if (kDebugMode) {
+        print('================================================');
+        print('CATEGORY IS NOT BLANK BUT FILTER IS BLANK');
+        print('=================================================');
+      }
+
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            'categoryId': str_category_id.toString(),
+          },
+        ),
+      );
+    } else if (str_category_id != '' && strFilterName != '') {
+      if (kDebugMode) {
+        print('================================================');
+        print('CATEGORY and FILTER BOTH ARE NOT BLANK');
+        print('=================================================');
+      }
+
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            'categoryId': str_category_id.toString(),
+            'profesionalType': strFilterName.toString(),
+          },
+        ),
+      );
+    } else if (str_category_id == '' && strFilterName != '') {
+      if (kDebugMode) {
+        print('================================================');
+        print('CATEGORY IS BLANK BUT FILTER IS NOT BLANK');
+        print('=================================================');
+      }
+
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            // 'categoryId': strCategoryId.toString(),
+            'profesionalType': strFilterName.toString(),
+          },
+        ),
+      );
+    } else if (str_category_id == '' && strFilterName == '') {
+      if (kDebugMode) {
+        print('================================================');
+        print('CATEGORY and FILTER BOTH ARE BLANK');
+        print('=================================================');
+      }
+
+      resposne = await http.post(
+        Uri.parse(
+          application_base_url,
+        ),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: jsonEncode(
+          <String, String>{
+            'action': 'notelist',
+            'userId': prefs.getInt('userId').toString(),
+            // 'categoryId': strCategoryId.toString(),
+            // 'profesionalType': strFilterName.toString(),
+          },
+        ),
+      );
+    }
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
@@ -949,129 +996,183 @@ class _NotesScreenState extends State<NotesScreen> {
     }
   }
 
+  void open_category_list(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoActionSheet(
+        title: const Text('Categories'),
+        // message: const Text(''),
+        actions: <CupertinoActionSheetAction>[
+          //
+          CupertinoActionSheetAction(
+            isDestructiveAction: false,
+            onPressed: () {
+              Navigator.pop(context);
+              str_category_id = '';
+              strCategoryName = '';
+              //
+              funcFilterCatAndFiltersWB();
+              //
+            },
+            child: text_regular_style_custom(
+              'All',
+              Colors.black,
+              16.0,
+            ),
+          ),
+          //
+          for (int i = 0; i < arr_get_category_list.length; i++) ...[
+            CupertinoActionSheetAction(
+              onPressed: () async {
+                Navigator.pop(context);
+                //
+                funcFilterCatAndFiltersWB();
+                //
+                str_category_id = arr_get_category_list[i]['id'].toString();
+                strCategoryName = arr_get_category_list[i]['name'].toString();
+              },
+              child: text_regular_style_custom(
+                //
+                arr_get_category_list[i]['name'].toString(),
+                Colors.black,
+                14.0,
+              ),
+            ),
+          ],
+          CupertinoActionSheetAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Dismiss',
+              style: TextStyle(
+                fontFamily: font_style_name,
+                fontSize: 18.0,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*
+[action] => notelist
+    [userId] => 45
+    [categoryId] => 1
+    [pageNo] => 1
+  */
+
   // action
   void open_filter_action_sheet(BuildContext context) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
-        title: const Text('Filters'),
+        title: text_bold_style_custom(
+          'Filter',
+          Colors.black,
+          16.0,
+        ),
         // message: const Text(''),
         actions: <CupertinoActionSheetAction>[
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = '';
               //
-              func_notes_WB();
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'All',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Goal';
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Goal');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Goal',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Task';
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Task');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Task',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Quest';
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Quest');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Quest',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Mission';
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Mission');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Mission',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Training';
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Training');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Training',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
             onPressed: () async {
               Navigator.pop(context);
+              strFilterName = 'Profile';
+
               //
-              (str_category_id == '')
-                  ? search_notes_without_category_id_WB
-                  : search_notes_with_category_id_WB('Profile');
+              funcFilterCatAndFiltersWB();
               //
             },
-            child: Text(
+            child: text_regular_style_custom(
               'Profile',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.black,
+              14.0,
             ),
           ),
           CupertinoActionSheetAction(
@@ -1188,7 +1289,7 @@ class _NotesScreenState extends State<NotesScreen> {
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
     print(get_data);
-    // print(get_data['data'][0]['id']);
+    //
     if (resposne.statusCode == 200) {
       //
       arr_notes_list.clear();

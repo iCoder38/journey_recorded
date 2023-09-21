@@ -1,8 +1,16 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
+
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/inventory/add_item_delivery/add_item_delivery.dart';
 import 'package:journey_recorded/inventory/edit_inventory/edit_inventory.dart';
+import 'package:journey_recorded/inventory/inventory_tabs_ui/inventory_assets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InventoryScreen extends StatefulWidget {
   const InventoryScreen({super.key});
@@ -12,6 +20,10 @@ class InventoryScreen extends StatefulWidget {
 }
 
 class _InventoryScreenState extends State<InventoryScreen> {
+  //
+  var strInventoryLoader = '';
+  var arrInventory = [];
+  var strUserSelectProfileStatus = '1';
   //
   var arr_inventory_header = [
     {'name': 'ASSETS'},
@@ -24,10 +36,101 @@ class _InventoryScreenState extends State<InventoryScreen> {
     {'name': 'Job'},
   ];
   //
+  //
+
+//
+  @override
+  void initState() {
+    super.initState();
+
+    if (kDebugMode) {
+      print('========================');
+    }
+    //
+    funcInventoryWB(
+      '1',
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  funcInventoryWB(
+    strType,
+  ) async {
+    if (kDebugMode) {
+      print('=====> POST : INVENTORY LIST TYPE ==> $strType');
+    }
+
+    setState(() {
+      strInventoryLoader = '0';
+    });
+    //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'businessproductlist',
+          'userId': prefs.getInt('userId').toString(),
+          'type': strType.toString(),
+          'pageNo': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+    // print(get_data['data'][0]['id']);
+    if (resposne.statusCode == 200) {
+      //
+      arrInventory.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          arrInventory.add(i);
+        }
+        if (arrInventory.isEmpty) {
+          setState(() {
+            strInventoryLoader = '2';
+          });
+        } else {
+          setState(() {
+            strInventoryLoader = '1';
+          });
+        }
+        // get_category_list_WB();
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: text_bold_style_custom(
+          //
+          'Inventory',
+          Colors.white,
+          16.0,
+        ),
         leading: IconButton(
           icon: const Icon(
             Icons.chevron_left,
@@ -36,157 +139,230 @@ class _InventoryScreenState extends State<InventoryScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: navigation_color,
-        title: Text(
-          ///
-          navigation_title_inventory,
-
-          ///
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          //
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddItemDeliveryScreen(),
+            ),
+          );
+        },
+        backgroundColor: navigation_color,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
           children: <Widget>[
-            Container(
-              // margin: const EdgeInsets.all(10.0),
-              color: Colors.amber[600],
-              width: MediaQuery.of(context).size.width,
-              height: 60,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: 48.0,
-                      height: 60,
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.black,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  //
-
-                  Expanded(
-                    child: Container(
-                      // margin: const EdgeInsets.all(10.0),
-                      width: 48.0,
-                      height: 60,
-                      decoration: const BoxDecoration(
-                        color: Colors.brown,
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.brown,
-                            width: 2,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  //
-
-                  Expanded(
-                    child: Container(
-                      // margin: const EdgeInsets.all(10.0),
-                      color: Colors.pink,
-                      width: 48.0,
-                      height: 60,
-                      // child: widget
-                    ),
-                  ),
-                  //
-                ],
+            tabUI(),
+            //
+            if (strInventoryLoader == '0') ...[
+              const Center(
+                child: CircularProgressIndicator(),
+              )
+            ] else if (strInventoryLoader == '2') ...[
+              //
+              const SizedBox(
+                height: 200.0,
               ),
-            )
 
-            //
-            /*category_finance_UI(context),
-            //
-            const SizedBox(
-              height: 40.0,
-            ),
-            Container(
-              height: 1,
-              width: MediaQuery.of(context).size.width,
-              color: Colors.grey,
-            ),
-            for (var i = 0; i < arr_inventory_header.length; i++) ...[
-              ExpansionTile(
-                title: Text(
-                  //
-                  arr_inventory_header[i]['name'].toString(),
-                  //
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18.0,
-                  ),
+              //
+              text_bold_style_custom(
+                'No data found',
+                Colors.black,
+                16.0,
+              ),
+              //
+            ] else ...[
+              for (int i = 0; i < arrInventory.length; i++) ...[
+                // assets ui
+                InventoryTabsUIScreen(
+                  arrGetAssetsWithIndex: arrInventory[i],
+                ), //
+                Container(
+                  height: 1,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.grey,
                 ),
-                // subtitle: Text('Trailing expansion arrow icon'),
-
-                children: <Widget>[
-                  for (var j = 0; j < arr_inventory_sub_tiles.length; j++) ...[
-                    ListTile(
-                      leading: const FlutterLogo(size: 72.0),
-                      title: Text(
-                        arr_inventory_sub_tiles[j]['name'].toString(),
-                        style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      subtitle: const Text(
-                          'A sufficiently long subtitle warrants three lines.'),
-                      trailing: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const EditInventoryScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 80,
-                          decoration: BoxDecoration(
-                            color: const Color.fromRGBO(
-                              250,
-                              0,
-                              60,
-                              1,
-                            ),
-                            borderRadius: BorderRadius.circular(
-                              20.0,
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '\$500',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      isThreeLine: true,
-                    ),
-                  ]
-                ],
-              ),
-            ],*/
+              ]
+            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Container tabUI() {
+    return Container(
+      color: Colors.blue[900],
+      child: Row(
+        children: [
+          //
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                //
+                arrInventory.clear();
+                setState(() {
+                  strUserSelectProfileStatus = '1';
+                }); //
+                funcInventoryWB(
+                  '1',
+                );
+              },
+              child: (strUserSelectProfileStatus == '1')
+                  ? Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.pink,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                      child: Center(
+                        child: text_bold_style_custom(
+                          'Assets',
+                          Colors.white,
+                          18.0,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      child: Center(
+                        child: text_regular_style_custom(
+                          'Assets',
+                          Colors.white,
+                          14.0,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          //
+          Container(
+            height: 40,
+            width: 0.4,
+            color: Colors.white,
+          ),
+          //
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                //
+                arrInventory.clear();
+                setState(() {
+                  strUserSelectProfileStatus = '2';
+                });
+                //
+                funcInventoryWB(
+                  '2',
+                );
+              },
+              child: (strUserSelectProfileStatus == '2')
+                  ? Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.pink,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                      child: Center(
+                        child: text_bold_style_custom(
+                          'Liabilities',
+                          Colors.white,
+                          18.0,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      child: Center(
+                        child: text_regular_style_custom(
+                          'Liabilities',
+                          Colors.white,
+                          14.0,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          //
+          Container(
+            height: 40,
+            width: 0.4,
+            color: Colors.white,
+          ),
+          //
+          Expanded(
+            child: GestureDetector(
+              onTap: () {
+                //
+                arrInventory.clear();
+                setState(() {
+                  strUserSelectProfileStatus = '3';
+                });
+                //
+                funcInventoryWB(
+                  '3',
+                );
+              },
+              child: (strUserSelectProfileStatus == '3')
+                  ? Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.pink,
+                            width: 3.0,
+                          ),
+                        ),
+                      ),
+                      child: Center(
+                        child: text_bold_style_custom(
+                          'Other',
+                          Colors.white,
+                          18.0,
+                        ),
+                      ),
+                    )
+                  : Container(
+                      height: 60,
+                      decoration: const BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                      child: Center(
+                        child: text_regular_style_custom(
+                          'Other',
+                          Colors.white,
+                          14.0,
+                        ),
+                      ),
+                    ),
+            ),
+          ),
+          //
+        ],
       ),
     );
   }
