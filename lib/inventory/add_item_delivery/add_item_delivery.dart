@@ -1,7 +1,14 @@
-import 'package:flutter/cupertino.dart';
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddItemDeliveryScreen extends StatefulWidget {
   const AddItemDeliveryScreen({super.key});
@@ -11,6 +18,28 @@ class AddItemDeliveryScreen extends StatefulWidget {
 }
 
 class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
+  //
+  var strCategoryFetched = '0';
+  var str_category_id = '';
+  var str_category_name = '';
+  var arr_get_category_list = [];
+  var strSelectItemType = '1';
+  var strSaveAndContinueStatus = '0';
+  //
+  var arr_select_item = [
+    {
+      'name': 'Assets',
+      'id': '1',
+    },
+    {
+      'name': 'Liability',
+      'id': '2',
+    },
+    {
+      'name': 'Other',
+      'id': '3',
+    }
+  ];
   //
   final formKey = GlobalKey<FormState>();
   late final TextEditingController contItemName;
@@ -41,6 +70,8 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
     contPurchaseAdd = TextEditingController();
     contDescription = TextEditingController();
 
+    // api = category list
+    getCategoryList();
     super.initState();
   }
 
@@ -77,7 +108,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
             Icons.chevron_left,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop('0'),
         ),
         backgroundColor: navigation_color,
       ),
@@ -160,50 +191,59 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 ),
               ),
               //
-              Container(
-                margin: const EdgeInsets.only(
-                  left: 10.0,
-                  right: 10.0,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    14,
-                  ),
-                  color: Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0xffDDDDDD),
-                      blurRadius: 6.0,
-                      spreadRadius: 2.0,
-                      offset: Offset(0.0, 0.0),
+              (strCategoryFetched == '0')
+                  ? CircularProgressIndicator(
+                      color: Colors.pink[200],
                     )
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: TextFormField(
-                    readOnly: true,
-                    controller: contCategory,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Category',
+                  : Container(
+                      margin: const EdgeInsets.only(
+                        left: 10.0,
+                        right: 10.0,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(
+                          14,
+                        ),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0xffDDDDDD),
+                            blurRadius: 6.0,
+                            spreadRadius: 2.0,
+                            offset: Offset(0.0, 0.0),
+                          )
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: TextFormField(
+                          readOnly: true,
+                          controller: contCategory,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Category',
+                            suffixIcon: Icon(
+                              Icons.arrow_drop_down,
+                            ),
+                          ),
+                          onTap: () {
+                            //
+                            if (kDebugMode) {
+                              print('category click');
+                            }
+                            //
+                            category_list_POPUP('context');
+                          },
+                          // validation
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter category';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                     ),
-                    onTap: () {
-                      //
-                      if (kDebugMode) {
-                        print('category click');
-                      }
-                    },
-                    // validation
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter category';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-              ),
               // /***********************************************************/
               // /***********************************************************/
               Padding(
@@ -248,12 +288,17 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Item Type',
+                      suffixIcon: Icon(
+                        Icons.arrow_drop_down,
+                      ),
                     ),
                     onTap: () {
                       //
                       if (kDebugMode) {
                         print('item type click');
                       }
+                      //
+                      itemTypePOPUP();
                     },
                     // validation
                     validator: (value) {
@@ -309,11 +354,38 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Purchase Date',
+                      suffixIcon: Icon(
+                        Icons.calendar_month,
+                      ),
                     ),
-                    onTap: () {
+                    onTap: () async {
                       //
                       if (kDebugMode) {
                         print('purchase date click');
+                      }
+                      //
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(), //get today's date
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101));
+
+                      if (pickedDate != null) {
+                        if (kDebugMode) {
+                          print(pickedDate);
+                        }
+                        String formattedDate =
+                            DateFormat('yyyy-MM-dd').format(pickedDate);
+                        if (kDebugMode) {
+                          print(formattedDate);
+                        }
+
+                        setState(() {
+                          contPurchaseDate.text =
+                              formattedDate; //set foratted date to TextField value.
+                        });
+                      } else {
+                        print("Date is not selected");
                       }
                     },
                     // validation
@@ -365,6 +437,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: contValueAtPurchase,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -420,6 +493,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: contPrice,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -475,6 +549,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: cont1stPayment,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -530,6 +605,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: contMonthlyPayment,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -585,6 +661,7 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(6.0),
                   child: TextFormField(
+                    keyboardType: TextInputType.number,
                     controller: contHowManyMonthlyPayment,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
@@ -770,58 +847,342 @@ class _AddItemDeliveryScreenState extends State<AddItemDeliveryScreen> {
                 onTap: () {
                   if (formKey.currentState!.validate()) {
                     //
-                    // funcCreateGrind();
-                    //
-                    // ScaffoldMessenger.of(context).showSnackBar(
-                    //   const SnackBar(content: Text('Processing Data')),
-                    // );
+                    func_reward_WB();
                   }
                 },
-                child: Container(
-                  margin: const EdgeInsets.all(
-                    10.0,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      12.0,
-                    ),
-                    color: const Color.fromRGBO(
-                      250,
-                      42,
-                      18,
-                      1,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(
-                          0,
-                          3,
-                        ), // changes position of shadow
+                child: (strSaveAndContinueStatus == '1')
+                    ? Container(
+                        margin: const EdgeInsets.all(
+                          10.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                          color: const Color.fromRGBO(
+                            250,
+                            42,
+                            18,
+                            1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(
+                                0,
+                                3,
+                              ), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : Container(
+                        margin: const EdgeInsets.all(
+                          10.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            12.0,
+                          ),
+                          color: const Color.fromRGBO(
+                            250,
+                            42,
+                            18,
+                            1,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 5,
+                              blurRadius: 7,
+                              offset: const Offset(
+                                0,
+                                3,
+                              ), // changes position of shadow
+                            ),
+                          ],
+                        ),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Text(
+                            'Save and Continue',
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
-                    ],
-                  ),
-                  height: 60,
-                  width: MediaQuery.of(context).size.width,
-                  child: Center(
-                    child: Text(
-                      'Save and Continue',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              )
+              ),
+              const SizedBox(
+                height: 40.0,
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  //
+  getCategoryList() async {
+    if (kDebugMode) {
+      print('=====> POST : GET CATEGORY');
+    }
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'category',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var getData = jsonDecode(resposne.body);
+    // print(get_data['data']);
+    if (resposne.statusCode == 200) {
+      if (getData['status'].toString().toLowerCase() == 'success') {
+        //
+        arr_get_category_list = getData['data'];
+
+        setState(() {
+          strCategoryFetched = '1';
+        });
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  // ALERT
+  Future<void> category_list_POPUP(
+    String str_message,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Please select Category',
+            style: TextStyle(
+              fontFamily: font_style_name,
+              fontSize: 16.0,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  height: 300,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: ListView.builder(
+                    itemCount: arr_get_category_list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          //
+                          str_category_id =
+                              arr_get_category_list[index]['id'].toString();
+                          //
+                          contCategory.text =
+                              arr_get_category_list[index]['name'].toString();
+                          //
+                          setState(() {});
+                        },
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.category,
+                          ),
+                          title: Text(
+                            arr_get_category_list[index]['name'].toString(),
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+              ],
+              //
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ALERT
+  Future<void> itemTypePOPUP() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: text_bold_style_custom(
+            //
+            'Please select Item Type',
+            Colors.black,
+            16.0,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  height: 180,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: ListView.builder(
+                    itemCount: arr_select_item.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          //
+                          Navigator.of(context).pop();
+                          strSelectItemType =
+                              arr_select_item[index]['id'].toString();
+                          contSelectItemType.text =
+                              arr_select_item[index]['name'].toString();
+                        },
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.category,
+                          ),
+                          title: text_regular_style_custom(
+                            //
+                            arr_select_item[index]['name'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+              ],
+              //
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //
+
+  func_reward_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : ADD INVENTORY ITEM ');
+    }
+
+    setState(() {
+      strSaveAndContinueStatus = '1';
+    });
+    //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'businessproducts',
+          'userId': prefs.getInt('userId').toString(),
+          'categoryId': str_category_id.toString(),
+          'name': contItemName.text.toString(),
+          'type': strSelectItemType.toString(),
+          'purchaseDate': contPurchaseDate.text.toString(),
+          'cost': contValueAtPurchase.text.toString(),
+          'salePrice': contPrice.text.toString(),
+          'firstPayment': cont1stPayment.text.toString(),
+          'MonthlyPayment': contMonthlyPayment.text.toString(),
+          'No_of_month': contHowManyMonthlyPayment.text.toString(),
+          'expense': contImportantExpense.text.toString(),
+          'advertisement': contPurchaseAdd.text.toString(),
+          'description': contDescription.text.toString(),
+          'businessType': 'Item'.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        strSaveAndContinueStatus = '0';
+        Navigator.pop(context, '1');
+      } else {
+        //
+        setState(() {
+          strSaveAndContinueStatus = '0';
+        });
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      setState(() {
+        strSaveAndContinueStatus = '0';
+      });
+    }
   }
 }

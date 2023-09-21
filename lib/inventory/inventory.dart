@@ -143,12 +143,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddItemDeliveryScreen(),
-            ),
-          );
+          pushToAddItem(context);
         },
         backgroundColor: navigation_color,
         child: const Icon(
@@ -182,9 +177,32 @@ class _InventoryScreenState extends State<InventoryScreen> {
             ] else ...[
               for (int i = 0; i < arrInventory.length; i++) ...[
                 // assets ui
-                InventoryTabsUIScreen(
-                  arrGetAssetsWithIndex: arrInventory[i],
-                ), //
+                GestureDetector(
+                  onTap: () {
+                    //
+                    pushToEditItem(
+                      context,
+                      arrInventory[i],
+                    );
+                  },
+                  child: ListTile(
+                    title: text_bold_style_custom(
+                      //
+                      arrInventory[i]['name'].toString(),
+                      Colors.black,
+                      16.0,
+                    ),
+                    subtitle: text_regular_style_custom(
+                      //
+                      arrInventory[i]['purchaseDate'].toString(),
+                      Colors.black,
+                      10.0,
+                    ),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                    ),
+                  ),
+                ),
                 Container(
                   height: 1,
                   width: MediaQuery.of(context).size.width,
@@ -620,5 +638,51 @@ class _InventoryScreenState extends State<InventoryScreen> {
         ),
       ],
     );
+  }
+
+// push = add item
+  Future<void> pushToAddItem(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const AddItemDeliveryScreen(),
+      ),
+    );
+
+    // ignore: prefer_interpolation_to_compose_strings
+    print('result =====> ' + result);
+
+    if (!mounted) return;
+
+    if (result == '1') {
+      strUserSelectProfileStatus = '1';
+      funcInventoryWB(
+        '1',
+      );
+    }
+  }
+
+  // push = edit item
+  Future<void> pushToEditItem(BuildContext context, fulldata) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditInventoryScreen(
+          dictGetInventoryDetails: fulldata,
+        ),
+      ),
+    );
+
+    // ignore: prefer_interpolation_to_compose_strings
+    print('result =====> ' + result);
+
+    if (!mounted) return;
+
+    if (result == '1') {
+      strUserSelectProfileStatus = '1';
+      funcInventoryWB(
+        '1',
+      );
+    }
   }
 }

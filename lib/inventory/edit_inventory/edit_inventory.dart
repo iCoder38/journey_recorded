@@ -1,571 +1,1210 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, avoid_print
+import 'dart:convert';
 
+import 'package:http/http.dart' as http;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditInventoryScreen extends StatefulWidget {
-  const EditInventoryScreen({super.key});
+  const EditInventoryScreen({super.key, this.dictGetInventoryDetails});
+
+  final dictGetInventoryDetails;
 
   @override
   State<EditInventoryScreen> createState() => _EditInventoryScreenState();
 }
 
 class _EditInventoryScreenState extends State<EditInventoryScreen> {
+  //
+  var strCategoryFetched = '0';
+  var str_category_id = '';
+  var str_category_name = '';
+  var arr_get_category_list = [];
+  var strSelectItemType = '1';
+  var strSaveAndContinueStatus = '0';
+  //
+  var arr_select_item = [
+    {
+      'name': 'Assets',
+      'id': '1',
+    },
+    {
+      'name': 'Liability',
+      'id': '2',
+    },
+    {
+      'name': 'Other',
+      'id': '3',
+    }
+  ];
+  //
+  final formKey = GlobalKey<FormState>();
+  late final TextEditingController contItemName;
+  late final TextEditingController contCategory;
+  late final TextEditingController contSelectItemType;
+  late final TextEditingController contPurchaseDate;
+  late final TextEditingController contValueAtPurchase;
+  late final TextEditingController contPrice;
+  late final TextEditingController cont1stPayment;
+  late final TextEditingController contMonthlyPayment;
+  late final TextEditingController contHowManyMonthlyPayment;
+  late final TextEditingController contImportantExpense;
+  late final TextEditingController contPurchaseAdd;
+  late final TextEditingController contDescription;
+  //
+  @override
+  void initState() {
+    print('======================= INVENTORY DETAILS ========================');
+    print(widget.dictGetInventoryDetails);
+    print('==================================================================');
+
+    // name
+    contItemName = TextEditingController(
+        text: widget.dictGetInventoryDetails['name'].toString());
+    // category id
+    // str_category_id = widget.dictGetInventoryDetails['name'].toString();
+    //
+    contCategory = TextEditingController();
+    contSelectItemType = TextEditingController(
+        text: widget.dictGetInventoryDetails['type'].toString());
+    contPurchaseDate = TextEditingController(
+        text: widget.dictGetInventoryDetails['purchaseDate'].toString());
+    contValueAtPurchase = TextEditingController(
+        text: widget.dictGetInventoryDetails['cost'].toString());
+    contPrice = TextEditingController(
+        text: widget.dictGetInventoryDetails['salePrice'].toString());
+    cont1stPayment = TextEditingController(
+        text: widget.dictGetInventoryDetails['firstPayment'].toString());
+    contMonthlyPayment = TextEditingController(
+        text: widget.dictGetInventoryDetails['MonthlyPayment'].toString());
+    contHowManyMonthlyPayment = TextEditingController(
+        text: widget.dictGetInventoryDetails['No_of_month'].toString());
+    contImportantExpense = TextEditingController(
+        text: widget.dictGetInventoryDetails['expense'].toString());
+    contPurchaseAdd = TextEditingController(
+        text: widget.dictGetInventoryDetails['advertisement'].toString());
+    contDescription = TextEditingController(
+        text: widget.dictGetInventoryDetails['description'].toString());
+
+    // api = category list
+    getCategoryList();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    contItemName.dispose();
+    contCategory.dispose();
+    contSelectItemType.dispose();
+    contPurchaseDate.dispose();
+    contValueAtPurchase.dispose();
+    contPrice.dispose();
+    cont1stPayment.dispose();
+    contMonthlyPayment.dispose();
+    contHowManyMonthlyPayment.dispose();
+    contImportantExpense.dispose();
+    contPurchaseAdd.dispose();
+    contDescription.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            leading: IconButton(
-              icon: const Icon(
-                Icons.chevron_left,
-                color: Colors.white,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: text_bold_style_custom(
+            //
+            'Edit',
+            Colors.white,
+            16.0,
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.chevron_left,
+              color: Colors.white,
             ),
-            backgroundColor: navigation_color,
-            title: Text(
-              ///
-              navigation_title_edit_inventory,
-
-              ///
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
-            ),
-            bottom: TabBar(
-              indicatorColor: Colors.lime,
-              isScrollable: true,
-              // labelColor: Colors.amber,
-              tabs: [
+            onPressed: () => Navigator.of(context).pop('0'),
+          ),
+          backgroundColor: navigation_color,
+        ),
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                // /***********************************************************/
+                // /***********************************************************/
                 Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Edit',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Item Name',
+                      Colors.black,
+                      14.0,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Sell',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      controller: contItemName,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Item Name',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter item name';
+                        }
+                        return null;
+                      },
                     ),
                   ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Category',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                (strCategoryFetched == '0')
+                    ? CircularProgressIndicator(
+                        color: Colors.pink[200],
+                      )
+                    : Container(
+                        margin: const EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(
+                            14,
+                          ),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xffDDDDDD),
+                              blurRadius: 6.0,
+                              spreadRadius: 2.0,
+                              offset: Offset(0.0, 0.0),
+                            )
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: contCategory,
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: 'Category',
+                              suffixIcon: Icon(
+                                Icons.arrow_drop_down,
+                              ),
+                            ),
+                            onTap: () {
+                              //
+                              if (kDebugMode) {
+                                print('category click');
+                              }
+                              //
+                              category_list_POPUP('context');
+                            },
+                            // validation
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter category';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Select Item Type',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: contSelectItemType,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Item Type',
+                        suffixIcon: Icon(
+                          Icons.arrow_drop_down,
+                        ),
+                      ),
+                      onTap: () {
+                        //
+                        if (kDebugMode) {
+                          print('item type click');
+                        }
+                        //
+                        itemTypePOPUP();
+                      },
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select item type';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Purchase Date',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      readOnly: true,
+                      controller: contPurchaseDate,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Purchase Date',
+                        suffixIcon: Icon(
+                          Icons.calendar_month,
+                        ),
+                      ),
+                      onTap: () async {
+                        //
+                        if (kDebugMode) {
+                          print('purchase date click');
+                        }
+                        //
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(), //get today's date
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101));
+
+                        if (pickedDate != null) {
+                          if (kDebugMode) {
+                            print(pickedDate);
+                          }
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          if (kDebugMode) {
+                            print(formattedDate);
+                          }
+
+                          setState(() {
+                            contPurchaseDate.text =
+                                formattedDate; //set foratted date to TextField value.
+                          });
+                        } else {
+                          print("Date is not selected");
+                        }
+                      },
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter purchase date';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Value at Purchase',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: contValueAtPurchase,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Value at Purchase',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter value at purchase';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Price',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: contPrice,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Price',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter price';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      '1st Payment',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: cont1stPayment,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: '1st Payment',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter 1st Payment';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Monthly Payment',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: contMonthlyPayment,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Monthly Payment',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter monthly payment';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'How many monthly payment',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      controller: contHowManyMonthlyPayment,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'How many monthly payment',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter how many montly payment';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Important Expense',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      controller: contImportantExpense,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Important Expense',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter important expense';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Purchase add. or property add.',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      controller: contPurchaseAdd,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Purchase add. or property add.',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter purchase add. or property add.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                // /***********************************************************/
+                // /***********************************************************/
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 10.0,
+                    top: 10.0,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: text_regular_style_custom(
+                      'Description',
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 10.0,
+                    right: 10.0,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      14,
+                    ),
+                    color: Colors.white,
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0xffDDDDDD),
+                        blurRadius: 6.0,
+                        spreadRadius: 2.0,
+                        offset: Offset(0.0, 0.0),
+                      )
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(6.0),
+                    child: TextFormField(
+                      controller: contDescription,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                        hintText: 'Description',
+                      ),
+
+                      // validation
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter description';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    if (formKey.currentState!.validate()) {
+                      //
+                      func_reward_WB();
+                    }
+                  },
+                  child: (strSaveAndContinueStatus == '1')
+                      ? Container(
+                          margin: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            color: const Color.fromRGBO(
+                              250,
+                              42,
+                              18,
+                              1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(
+                                  0,
+                                  3,
+                                ), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            color: const Color.fromRGBO(
+                              250,
+                              42,
+                              18,
+                              1,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(
+                                  0,
+                                  3,
+                                ), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: Text(
+                              'Save and Continue',
+                              style: TextStyle(
+                                fontFamily: font_style_name,
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(
+                  height: 40.0,
                 ),
               ],
             ),
-          ),
-          body: TabBarView(
-            children: <Widget>[
-              tabbar_EDIT_ui(context),
-
-              // tab 2
-              Column(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                      left: 10.0,
-                      right: 10.0,
-                      top: 10.0,
-                    ),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.transparent,
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.transparent,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                                color: const Color.fromRGBO(
-                                  235,
-                                  235,
-                                  235,
-                                  1,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(
-                                    18.0,
-                                  ),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'SALES PRICE',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                                color: const Color.fromRGBO(
-                                  235,
-                                  235,
-                                  235,
-                                  1,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  topRight: Radius.circular(
-                                    18.0,
-                                  ),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'INTEREST',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      left: 10.0,
-                      right: 10.0,
-                    ),
-                    height: 1,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.grey,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      left: 10.0,
-                      right: 10.0,
-                      top: 0.0,
-                    ),
-                    height: 60,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.transparent,
-                    child: Container(
-                      height: 40,
-                      width: 40,
-                      color: Colors.transparent,
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                                color: const Color.fromRGBO(
-                                  255,
-                                  255,
-                                  255,
-                                  1,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: Radius.circular(
-                                    18.0,
-                                  ),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Lost or Gain',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 0.5,
-                                ),
-                                color: const Color.fromRGBO(
-                                  255,
-                                  255,
-                                  255,
-                                  1,
-                                ),
-                                borderRadius: const BorderRadius.only(
-                                  bottomRight: Radius.circular(
-                                    18.0,
-                                  ),
-                                ),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '\$1.000',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 18.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(
-                      top: 20.0,
-                      left: 20.0,
-                      right: 20.0,
-                    ),
-                    // height: 40,
-                    width: MediaQuery.of(context).size.width,
-                    color: Colors.transparent,
-                    child: Text(
-                      'If monthly payment the item will stay in the transferer inventory until fully paid. And will send a duplicate to the buyer.',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ),
         ),
       ),
     );
   }
 
-  SingleChildScrollView tabbar_EDIT_ui(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Container(
-            height: 160,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.amber,
-            child: Row(
-              children: <Widget>[
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                  ),
-                  height: 120,
-                  width: 120,
-                  color: Colors.deepPurple,
-                ),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(
-                      left: 20.0,
-                      right: 20.0,
-                    ),
-                    height: 120,
-                    width: 120,
-                    color: const Color.fromRGBO(
-                      240,
-                      20,
-                      74,
-                      1,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1.0,
-                              ),
-                            ),
-                            child: Center(
-                              child: Text(
-                                'FINANCE, SOCIAL',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Expanded(
-                                // flex: 2,
-                                child: Center(
-                                  child: Text(
-                                    '18',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  '\$300.',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 16.0,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.transparent,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'Other',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.transparent,
-                                      width: 1.0,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    '-\$400',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1.0,
-                              ),
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 2,
-                                  child: Center(
-                                    child: Text(
-                                      'PURCHASE \$',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    'Impr.',
-                                    style: TextStyle(
-                                      fontFamily: font_style_name,
-                                      fontSize: 16.0,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.transparent,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'Total',
-                                      style: TextStyle(
-                                        fontFamily: font_style_name,
-                                        fontSize: 16.0,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Name of item:',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18.0,
-                  ),
-                ),
-                Text(
-                  'VIN# 1838849KF833',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: 1,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
-          ),
-          Container(
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text(
-                  'Purchase Date : ',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18.0,
-                  ),
-                ),
-                Text(
-                  'VALUE AT PURCHASE',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 18.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: 1,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
-          ),
-          const SizedBox(
-            height: 40.0,
-          ),
-          Card(
-            elevation: 50,
-            shadowColor: Colors.black,
-            color: Colors.greenAccent[100],
-            child: SizedBox(
-              width: 300,
-              // height: 500,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    CircleAvatar(
-                      backgroundColor: Colors.green[500],
-                      radius: 108,
-                      child: const CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            "https://media.geeksforgeeks.org/wp-content/uploads/20210101144014/gfglogo.png"), //NetworkImage
-                        radius: 100,
-                      ), //CircleAvatar
-                    ), //CircleAvatar
-                    const SizedBox(
-                      height: 10,
-                    ), //SizedBox
-                    Text(
-                      'GeeksforGeeks',
-                      style: TextStyle(
-                        fontSize: 30,
-                        color: Colors.green[900],
-                        fontWeight: FontWeight.w500,
-                      ), //Textstyle
-                    ), //Text
-                    const SizedBox(
-                      height: 10,
-                    ), //SizedBox
-                    const Text(
-                      'GeeksforGeeks is a computer science portal for geeks at geeksforgeeks.org. It contains well written, well thought and well explained computer science and programming articles, quizzes, projects, interview experiences and much more!!GeeksforGeeks is a computer science portal for geeks at geeksforgeeks.org. It contains well written, well thought and well explained computer science and programming articles, quizzes, projects, interview experiences and much more!!GeeksforGeeks is a computer science portal for geeks at geeksforgeeks.org. It contains well written, well thought and well explained computer science and programming articles, quizzes, projects, interview experiences and much more!!GeeksforGeeks is a computer science portal for geeks at geeksforgeeks.org. It contains well written, well thought and well explained computer science and programming articles, quizzes, projects, interview experiences and much more!!',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.green,
-                      ), //Textstyle
-                    ), //Text
-                    const SizedBox(
-                      height: 10,
-                    ), //SizedBox
-                  ],
-                ), //Column
-              ), //Padding
-            ), //SizedBox
-          ),
-          const SizedBox(
-            height: 60.0,
-          ),
-        ],
+//
+  getCategoryList() async {
+    if (kDebugMode) {
+      print('=====> POST : GET CATEGORY');
+    }
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'category',
+        },
       ),
     );
+
+    // convert data to dict
+    var getData = jsonDecode(resposne.body);
+    // print(get_data['data']);
+    if (resposne.statusCode == 200) {
+      if (getData['status'].toString().toLowerCase() == 'success') {
+        //
+        arr_get_category_list = getData['data'];
+
+        setState(() {
+          strCategoryFetched = '1';
+        });
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  // ALERT
+  Future<void> category_list_POPUP(
+    String str_message,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Please select Category',
+            style: TextStyle(
+              fontFamily: font_style_name,
+              fontSize: 16.0,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  height: 300,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: ListView.builder(
+                    itemCount: arr_get_category_list.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          //
+                          str_category_id =
+                              arr_get_category_list[index]['id'].toString();
+                          //
+                          contCategory.text =
+                              arr_get_category_list[index]['name'].toString();
+                          //
+                          setState(() {});
+                        },
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.category,
+                          ),
+                          title: Text(
+                            arr_get_category_list[index]['name'].toString(),
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+              ],
+              //
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // ALERT
+  Future<void> itemTypePOPUP() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: text_bold_style_custom(
+            //
+            'Please select Item Type',
+            Colors.black,
+            16.0,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Container(
+                  height: 180,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  child: ListView.builder(
+                    itemCount: arr_select_item.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return InkWell(
+                        onTap: () {
+                          //
+                          Navigator.of(context).pop();
+                          strSelectItemType =
+                              arr_select_item[index]['id'].toString();
+                          contSelectItemType.text =
+                              arr_select_item[index]['name'].toString();
+                        },
+                        child: ListTile(
+                          leading: const Icon(
+                            Icons.category,
+                          ),
+                          title: text_regular_style_custom(
+                            //
+                            arr_select_item[index]['name'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 2.0,
+                ),
+              ],
+              //
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //
+
+  func_reward_WB() async {
+    if (kDebugMode) {
+      print('=====> POST : EDIT INVENTORY ITEM ');
+    }
+
+    setState(() {
+      strSaveAndContinueStatus = '1';
+    });
+    //
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'businessproducts',
+          'userId': prefs.getInt('userId').toString(),
+          'categoryId': str_category_id.toString(),
+          'name': contItemName.text.toString(),
+          'type': strSelectItemType.toString(),
+          'purchaseDate': contPurchaseDate.text.toString(),
+          'cost': contValueAtPurchase.text.toString(),
+          'salePrice': contPrice.text.toString(),
+          'firstPayment': cont1stPayment.text.toString(),
+          'MonthlyPayment': contMonthlyPayment.text.toString(),
+          'No_of_month': contHowManyMonthlyPayment.text.toString(),
+          'expense': contImportantExpense.text.toString(),
+          'advertisement': contPurchaseAdd.text.toString(),
+          'description': contDescription.text.toString(),
+          'businessType': 'Item'.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        strSaveAndContinueStatus = '0';
+        Navigator.pop(context, '1');
+      } else {
+        //
+        setState(() {
+          strSaveAndContinueStatus = '0';
+        });
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      setState(() {
+        strSaveAndContinueStatus = '0';
+      });
+    }
   }
 }
