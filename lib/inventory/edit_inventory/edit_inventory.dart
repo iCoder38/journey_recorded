@@ -1163,6 +1163,8 @@ class _EditInventoryScreenState extends State<EditInventoryScreen> {
       body: jsonEncode(
         <String, String>{
           'action': 'businessproducts',
+          'business_productId':
+              widget.dictGetInventoryDetails['business_productId'].toString(),
           'userId': prefs.getInt('userId').toString(),
           'categoryId': str_category_id.toString(),
           'name': contItemName.text.toString(),
