@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 import 'dart:ui';
@@ -26,7 +26,9 @@ class TaskDetailsScreen extends StatefulWidget {
       required this.str_add_reminder,
       required this.str_reminder_warning,
       required this.str_task_details,
-      required this.str_due_date});
+      required this.str_due_date,
+      required this.str_reward_type,
+      this.dictTaskFullDetails});
 
   final String str_due_date;
   final String str_task_details;
@@ -37,6 +39,8 @@ class TaskDetailsScreen extends StatefulWidget {
   final String str_professional_id;
   final String str_add_reminder;
   final String str_reminder_warning;
+  final String str_reward_type;
+  final dictTaskFullDetails;
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -56,6 +60,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   @override
   void initState() {
     super.initState();
+    if (kDebugMode) {
+      print('=========== TASK DETAILS =================');
+      print(widget.dictTaskFullDetails);
+      print('==========================================');
+    }
+    if (widget.dictTaskFullDetails != null) {
+      if (kDebugMode) {
+        print('TASK DETAILS NOT NULL');
+        print('==========================================');
+      }
+    }
     func_get_task_list_WB();
   }
 
@@ -161,7 +176,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               ),
             ],
             onTap: (value) {
-              print(value);
+              if (kDebugMode) {
+                print(value);
+              }
               if (value == 4) {
                 //
 
@@ -201,7 +218,54 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             tab_1_info_UI(context),
 
             // tab 2
-            tab_1_rewards_UI(context),
+            (widget.dictTaskFullDetails != null)
+                ? Column(
+                    children: [
+                      //
+                      task_header_UI(context),
+                      //
+                      const SizedBox(
+                        height: 40.0,
+                      ),
+                      text_bold_style_custom(
+                        'Rewards type ITEMS',
+                        Colors.black,
+                        18.0,
+                      ),
+                      //
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+
+                      Container(
+                        height: 40,
+                        width: MediaQuery.of(context).size.width,
+                        color: Colors.amber,
+                        child: Center(
+                          child: text_regular_style_custom(
+                            'Items',
+                            Colors.black,
+                            14.0,
+                          ),
+                        ),
+                      ),
+                      //
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+
+                      Container(
+                        height: 120,
+                        width: 120,
+                        color: Colors.amber,
+                        child: Image.network(
+                          widget.dictTaskFullDetails['rewardImage'].toString(),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ],
+                  )
+                : tab_1_rewards_UI(context),
 
             // tab 3 ( reminders )
             tab_3_reminder_UI(context),

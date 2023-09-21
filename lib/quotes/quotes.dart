@@ -149,12 +149,10 @@ class _QuotesScreenState extends State<QuotesScreen> {
         length: 4,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
+            title: text_bold_style_custom(
               'Quotes',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+              Colors.white,
+              16.0,
             ),
             leading: IconButton(
               icon: const Icon(
@@ -170,46 +168,34 @@ class _QuotesScreenState extends State<QuotesScreen> {
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Affirmations',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
+                  child: text_regular_style_custom(
                     'Quotes',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    ' Strong Why',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                  child: text_regular_style_custom(
+                    'Strong Why',
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Consequece',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      fontSize: 20.0,
-                      backgroundColor: Colors.transparent,
-                    ),
+                  child: text_regular_style_custom(
+                    'Consequences',
+                    Colors.white,
+                    14.0,
                   ),
                 ),
                 // Padding(
@@ -257,6 +243,7 @@ class _QuotesScreenState extends State<QuotesScreen> {
                   },
                   icon: const Icon(
                     Icons.add,
+                    color: Colors.white,
                   ),
                 ),
               )

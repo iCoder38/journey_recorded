@@ -42,14 +42,10 @@ class _AddRoutineScreenState extends State<AddRoutineScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
+        title: text_bold_style_custom(
           'Routine',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         backgroundColor: navigation_color,
         leading: IconButton(

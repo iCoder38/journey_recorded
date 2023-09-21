@@ -85,14 +85,10 @@ class _FriendsScreenState extends State<FriendsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
+        title: text_bold_style_custom(
           'Friends',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         backgroundColor: navigation_color,
         leading: IconButton(
@@ -109,6 +105,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
             },
             icon: const Icon(
               Icons.group_add_outlined,
+              color: Colors.white,
             ),
           )
         ],
@@ -160,14 +157,30 @@ class _FriendsScreenState extends State<FriendsScreen> {
             width: 10,
           ),
           SizedBox(
-            width: 80,
+            // width: 80,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: (arr_friends[i]['To_profile_picture'].toString() == '')
-                  ? Image.asset('assets/images/logo.png')
-                  : FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/loader.gif',
-                      image: arr_friends[i]['To_profile_picture'].toString(),
+                  ? SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          30.0,
+                        ),
+                        child: Image.network(
+                          arr_friends[i]['To_profile_picture'].toString(),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
             ),
           ),
@@ -240,17 +253,30 @@ class _FriendsScreenState extends State<FriendsScreen> {
           const SizedBox(
             width: 10,
           ),
-          SizedBox(
-            width: 80,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              child: (arr_friends[i]['From_profile_picture'].toString() == '')
-                  ? Image.asset('assets/images/logo.png')
-                  : FadeInImage.assetNetwork(
-                      placeholder: 'assets/images/loader.gif',
-                      image: arr_friends[i]['From_profile_picture'].toString(),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12.0),
+            child: (arr_friends[i]['From_profile_picture'].toString() == '')
+                ? SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.cover,
                     ),
-            ),
+                  )
+                : SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        30.0,
+                      ),
+                      child: Image.network(
+                        arr_friends[i]['From_profile_picture'].toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(
             width: 10,

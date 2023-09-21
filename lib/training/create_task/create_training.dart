@@ -244,7 +244,23 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
             ),
             child: TextFormField(
               onTap: () async {
-                print('time');
+                if (kDebugMode) {
+                  print('time');
+                }
+                final TimeOfDay? newTime = await showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay.now(),
+                );
+                if (newTime != null) {
+                  setState(() {
+                    if (kDebugMode) {
+                      print(newTime.format(context));
+                    }
+
+                    cont_reminder_time.text = newTime.format(context);
+                  });
+                }
+                /*print('time');
                 TimeOfDay? pickedTime = await showTimePicker(
                   initialTime: TimeOfDay.now(),
                   context: context,
@@ -264,7 +280,7 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
                   //
                 } else {
                   print("Time is not selected");
-                }
+                }*/
               },
               controller: cont_reminder_time,
               //keyboardType: TextInputType.number,

@@ -23,11 +23,23 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
   var str_friends_loader = '0';
   var arr_friends = [];
   //
+  late final TextEditingController contSearchHere;
+  //
 
   @override
   void initState() {
     super.initState();
+    //
+    contSearchHere = TextEditingController();
+    //
     get_invite_user_list();
+  }
+
+  @override
+  void dispose() {
+    contSearchHere.dispose();
+
+    super.dispose();
   }
 
   // get routine list
@@ -78,14 +90,10 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
+        title: text_bold_style_custom(
           'Invite User',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         backgroundColor: navigation_color,
         leading: IconButton(
@@ -99,9 +107,33 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
         scrollDirection: Axis.vertical,
         child: Column(
           children: [
+            //
+            Container(
+              margin: const EdgeInsets.all(
+                10.0,
+              ),
+              child: TextField(
+                controller: contSearchHere,
+                textInputAction: TextInputAction.go,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Search here...',
+                ),
+                onSubmitted: (value) {
+                  //
+                  searchFriendWB(value);
+                },
+              ),
+            ),
+            //
             if (str_friends_loader == '0')
               const CustomeLoaderPopUp(
                 str_custom_loader: 'please wait...',
+                str_status: '4',
+              )
+            else if (str_friends_loader == '2')
+              const CustomeLoaderPopUp(
+                str_custom_loader: 'No data found',
                 str_status: '4',
               )
             else
@@ -217,10 +249,7 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
-        // arr_friends = get_data['data'];
-        // main_loader = '1';
-        // str_friends_loader = '1';
-        // setState(() {});
+        contSearchHere.text = '';
         get_invite_user_list();
       } else {
         print(
@@ -231,4 +260,62 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
       // return postList;
     }
   }
+
+  //
+  //
+  // accept decline friend request
+  searchFriendWB(
+    String strSearchedWord,
+  ) async {
+    print('=====> POST : FRIENDS LIST');
+
+    setState(() {
+      str_friends_loader = '0';
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // str_login_user_id = prefs.getInt('userId').toString();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'userlist',
+          'userId': prefs.getInt('userId').toString(),
+          'for_friend': 'Yes',
+          'keyword': strSearchedWord.toString(),
+          'pageNo': '1',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    // print(get_data);
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+
+        arr_friends = get_data['data'];
+
+        if (arr_friends.isEmpty) {
+          str_friends_loader = '2';
+        } else {
+          str_friends_loader = '1';
+        }
+        setState(() {});
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+  //
 }

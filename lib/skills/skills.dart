@@ -165,14 +165,10 @@ class _SkillsScreenState extends State<SkillsScreen> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title: Text(
-              //
-              navigation_title_skills,
-              //
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+            title: text_bold_style_custom(
+              'Skills',
+              Colors.white,
+              16.0,
             ),
             backgroundColor: navigation_color,
             leading: IconButton(

@@ -437,7 +437,9 @@ class _CreateNewHabitScreenState extends State<CreateNewHabitScreen> {
                         ),
                       ),
                       onTap: () async {
-                        print('time');
+                        if (kDebugMode) {
+                          print('time');
+                        }
                         final TimeOfDay? newTime = await showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.now(),
