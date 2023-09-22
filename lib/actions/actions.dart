@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print, prefer_typing_uninitialized_variables, unused_local_variable
 
 import 'dart:convert';
 
@@ -22,6 +22,10 @@ class _ActionsScreenState extends State<ActionsScreen> {
   var str_team_loader = '0';
   // var arr_actions = [];
   var arr_actions_list = [];
+  var arrStoreProfessionalIds = [];
+  var arrStoreProfessionalNames = [];
+  //
+  var arrRemoveIds = [];
   //
   @override
   void initState() {
@@ -48,6 +52,9 @@ class _ActionsScreenState extends State<ActionsScreen> {
         <String, String>{
           'action': 'teamlist',
           'fromId': prefs.getInt('userId').toString(),
+          'mainProfesionalId': '',
+          'mainProfesionalType': '',
+          'groupId_Main': '',
         },
       ),
     );
@@ -55,7 +62,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
     if (kDebugMode) {
-      print(get_data);
+      // print(get_data);
     }
 
     if (resposne.statusCode == 200) {
@@ -66,13 +73,8 @@ class _ActionsScreenState extends State<ActionsScreen> {
           //
           arr_actions_list.add(get_data['data'][i]);
         }
-
+        funcManageAllMembers();
         //
-        setState(() {
-          str_team_loader = '1';
-        });
-        //
-
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -84,11 +86,113 @@ class _ActionsScreenState extends State<ActionsScreen> {
     }
   }
 
+  funcManageAllMembers() {
+    main();
+  }
+
+  void main() {
+    // print('==================================================================');
+    // print(arr_actions_list);
+    // print('==================================================================');
+    //
+    var save_data_for_names = [];
+    /*for (int i = 0; i < arr_actions_list.length; i++) {
+      var names = {
+        'id': arr_actions_list[i]['profesionalId'].toString(),
+        'task_name': arr_actions_list[i]['taskName'].toString()
+      };
+      save_data_for_names.add(names);
+    }*/
+    //
+    arrStoreProfessionalIds.clear();
+    // print(arr_actions_list);
+    for (int i = 0; i < arr_actions_list.length; i++) {
+      /*var fetch = {
+        'id': arr_actions_list[i]['profesionalId'].toString(),
+        'name': arr_actions_list[i]['taskName'].toString()
+      };*/
+      arrStoreProfessionalIds
+          .add(arr_actions_list[i]['profesionalId'].toString());
+    }
+    print('================ FULL IDs ====================');
+    print(arrStoreProfessionalIds);
+    print(arrStoreProfessionalIds.length);
+    print('======= AFTER REMOVE DUPLICATE IDs ===========');
+    var idsAfterRemoveDuplicate = arrStoreProfessionalIds.toSet().toList();
+    // print(idsAfterRemoveDuplicate);
+    print('==================================================================');
+    print('======= CREATE CUSTOM AFTER REMOVE IDs ===========');
+
+    //
+    for (int i = 0; i < idsAfterRemoveDuplicate.length; i++) {
+      var list1 = {
+        'id': idsAfterRemoveDuplicate[i].toString(),
+        'name': 'one',
+        'data': [],
+      };
+      arrRemoveIds.add(list1);
+    }
+    // print(arrRemoveIds);
+    // print(arrRemoveIds.length);
+    print('==================================================================');
+    print('======= LOOP FOR MAIN ARRAY DATA =================================');
+    var arrMainArrayToCustom = [];
+    //
+    for (int i = 0; i < arr_actions_list.length; i++) {
+      var list1 = {
+        'id': arr_actions_list[i]['profesionalId'].toString(),
+        'name': arr_actions_list[i]['To_userName'].toString(),
+      };
+      arrMainArrayToCustom.add(list1);
+    }
+    // print(arrMainArrayToCustom);
+    // print(arrMainArrayToCustom.length);
+    print('==================================================================');
+    for (int i = 0; i < arrRemoveIds.length; i++) {
+      for (int j = 0; j < arrMainArrayToCustom.length; j++) {
+        if (arrRemoveIds[i]['id'].toString() ==
+            arrMainArrayToCustom[j]['id'].toString()) {
+          (arrRemoveIds[i]['data'] as List)
+              .add(arrMainArrayToCustom[j]..remove('id'));
+//         with woNum
+//         (list1[i]['materials'] as List).add(list2[j]);
+        }
+      }
+    }
+    // print(arrRemoveIds);
+    // print(arrRemoveIds.length);
+    // print(save_data_for_names);
+    // final loop
+    var sum = 0;
+    for (int p = 0; p < arrRemoveIds.length; p++) {
+      //
+      // print(arrRemoveIds[p]);
+      for (int o = 0; o < save_data_for_names.length; o++) {
+        //
+        // print(save_data_for_names[0]);
+        if (arrRemoveIds[p]['id'].toString() ==
+            save_data_for_names[o]['id'].toString()) {
+          // print('object');
+          sum += 1;
+        }
+      }
+    }
+    print(sum);
+    setState(() {
+      str_team_loader = '1';
+    });
+  }
+
   //
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: text_bold_style_custom(
+          'Active Team',
+          Colors.white,
+          14.0,
+        ),
         backgroundColor: navigation_color,
         leading: IconButton(
           icon: const Icon(
@@ -96,15 +200,6 @@ class _ActionsScreenState extends State<ActionsScreen> {
             color: Colors.white,
           ),
           onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          //
-          'Active Team',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
         ),
       ),
       body: (str_team_loader == '0')
@@ -131,17 +226,23 @@ class _ActionsScreenState extends State<ActionsScreen> {
                           width: 10,
                         ),
                         Expanded(
-                          child: Container(
-                            height: 80,
-                            color: Colors.transparent,
-                            child: Align(
-                              child: Text(
-                                'Actions',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 16.0,
-                                  color: Colors.white,
-                                  // fontWeight: FontWeight.bold,
+                          child: GestureDetector(
+                            onTap: () {
+                              //
+                              funcManageAllMembers();
+                            },
+                            child: Container(
+                              height: 80,
+                              color: Colors.transparent,
+                              child: Align(
+                                child: Text(
+                                  'Actions',
+                                  style: TextStyle(
+                                    fontFamily: font_style_name,
+                                    fontSize: 16.0,
+                                    color: Colors.white,
+                                    // fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -183,81 +284,26 @@ class _ActionsScreenState extends State<ActionsScreen> {
                   ),
                   //
 
-                  for (var i = 0; i < arr_actions_list.length; i++) ...[
+                  for (var i = 0; i < arrRemoveIds.length; i++) ...[
                     ExpansionTile(
                       title: Text(
                         //
-                        arr_actions_list[i]['taskName'].toString(),
+                        arrRemoveIds[i]['name'].toString(),
                         //
                         style: TextStyle(
                           fontFamily: font_style_name,
                           fontSize: 18.0,
                         ),
                       ),
-                      // subtitle: Text('Trailing expansion arrow icon'),
-
-                      /*children: <Widget>[
+                      children: [
                         for (var j = 0;
-                            j < arr_actions[i]['checklist'].length;
+                            j < arrRemoveIds[i]['data'].length;
                             j++) ...[
-                          ListTile(
-                            /*leading: Container(
-                        width: 80,
-                        height: 80,
-                        color: Colors.yellow,
-                      ),*/
-                            title: Text(
-                              //
-                              arr_actions[i]['checklist'][j]['message']
-                                  .toString(),
-                              //
-                              style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
-                            ),
-                            /*subtitle: Text(
-                        // 'skills : ${arr_send_teammate_request[j]['skill']}\nTask name : ${arr_send_teammate_request[j]['taskName']}',
-                        'sub-title',
-                      ),*/
-                            trailing: InkWell(
-                              onTap: () {
-                                print('sub-title click');
-                              },
-                              child: Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
-                                  color: Colors.transparent,
-                                  borderRadius: BorderRadius.circular(
-                                    20.0,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: IconButton(
-                                    onPressed: () {
-                                      print('object');
-                                    },
-                                    icon: (arr_actions[i]['checklist'][j]
-                                                    ['message']
-                                                .toString() ==
-                                            '0')
-                                        ? Icon(
-                                            Icons.check_box_outline_blank,
-                                            color: navigation_color,
-                                          )
-                                        : Icon(
-                                            Icons.check_box,
-                                            color: navigation_color,
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            isThreeLine: false,
-                          ),
+                          Text(
+                            arrRemoveIds[i]['data'][j]['name'].toString(),
+                          )
                         ]
-                      ],*/
+                      ],
                     ),
                   ],
                   //

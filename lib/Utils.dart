@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 // base URL
-var application_base_url =
-    'https://demo4.evirtualservices.net/journey/services/index/';
+// var application_base_url =
+// 'https://demo4.evirtualservices.net/journey/services/index/';
 
-// var application_base_url = 'https://app.journey-recorded.com/services/index';
+var application_base_url = 'https://app.journey-recorded.com/services/index';
 
 var navigation_color = Color.fromRGBO(2, 25, 75, 1);
 
