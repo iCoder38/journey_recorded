@@ -425,7 +425,7 @@ class _GrindScreenState extends State<GrindScreen> {
                       ),
                     ),
                     //
-                    IconButton(
+                    /*IconButton(
                       onPressed: () {
                         if (kDebugMode) {
                           print('object1');
@@ -437,7 +437,7 @@ class _GrindScreenState extends State<GrindScreen> {
                         color: Colors.red,
                         size: 30,
                       ),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
@@ -474,41 +474,65 @@ class _GrindScreenState extends State<GrindScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                if (kDebugMode) {
-                                  print('object1');
-                                }
-                              },
-                              icon: const Icon(
-                                Icons.watch_later_rounded,
-                                color: Colors.pink,
-                                size: 30,
-                              ),
-                            ),
-                            //
-                            const SizedBox(
-                              width: 30.0,
-                            ),
                             Container(
-                              height: 40,
-                              width: 40,
+                              height: 36,
+                              width: 36,
                               decoration: BoxDecoration(
-                                color: navigation_color,
+                                color: Colors.pink,
                                 borderRadius: BorderRadius.circular(
-                                  8.0,
+                                  12.0,
                                 ),
                               ),
                               child: Center(
                                 child: text_bold_style_custom(
-                                  arrGrindList[i]['time_to_complete']
+                                  //
+                                  arrGrindList[i]['total_completed_Count']
                                       .toString(),
                                   Colors.white,
                                   14.0,
                                 ),
                               ),
                             ),
-                            IconButton(
+                            //
+                            const SizedBox(
+                              width: 30.0,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                //
+                                // print(arrGrindList[i]);
+                                //
+                                addOneGrindWB(
+                                  arrGrindList[i]['grindId'].toString(),
+                                  arrGrindList[i]['categoryId'].toString(),
+                                  int.parse(arrGrindList[i]
+                                              ['total_completed_Count']
+                                          .toString()) +
+                                      1,
+                                  arrGrindList[i]['grindName'].toString(),
+                                );
+                                //
+                              },
+                              child: Container(
+                                height: 36,
+                                width: 36,
+                                decoration: BoxDecoration(
+                                  color: navigation_color,
+                                  borderRadius: BorderRadius.circular(
+                                    12.0,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: text_bold_style_custom(
+                                    arrGrindList[i]['time_to_complete']
+                                        .toString(),
+                                    Colors.white,
+                                    14.0,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            /*IconButton(
                               onPressed: () {
                                 if (kDebugMode) {
                                   print('object1');
@@ -524,7 +548,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 color: Colors.red,
                                 size: 30,
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                       ),
@@ -595,7 +619,8 @@ class _GrindScreenState extends State<GrindScreen> {
     print('hello 1');
     if (!mounted) return;
     print('hello 2');
-    if (result == 'back_from_create_grind') {
+    if (result == 'back_from_create_grind' ||
+        result == 'successfully_deleted') {
       setState(() {
         strGrindLoader = '0';
         getGrindWB();
@@ -608,71 +633,22 @@ class _GrindScreenState extends State<GrindScreen> {
   }
 
   //
-  // ALERT
-  Future<void> deleteGrindPopUp(strGrindName, strGrindId) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: text_with_bold_style_black(
-            'Delete',
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Container(
-                  // height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.transparent,
-                  child: text_with_regular_style(
-                    'Are you sure you want to delete "' + strGrindName + '" ?',
-                  ),
-                ),
-              ],
-              //
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text(
-                'Dismiss',
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text(
-                'Yes, delete',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.red,
-                ),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-                //
-                deleteGrindWB(
-                  strGrindId,
-                );
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // delete grind
-  deleteGrindWB(getGrindId) async {
+  addOneGrindWB(
+    getGrindId,
+    categoryId,
+    totalPoint,
+    name,
+  ) async {
     if (kDebugMode) {
-      print('=====> POST : GRINDS LIST');
+      print('=====> POST : ADD GRINDS');
     }
 
     setState(() {
       strGrindLoader = '0';
     });
+    //
+    print('qwerty');
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -684,9 +660,12 @@ class _GrindScreenState extends State<GrindScreen> {
       },
       body: jsonEncode(
         <String, String>{
-          'action': 'girnddelete',
+          'action': 'grandadd',
           'userId': prefs.getInt('userId').toString(),
           'grindId': getGrindId.toString(),
+          'grindName': name.toString(),
+          'categoryId': categoryId.toString(),
+          'totalPoint': totalPoint.toString(),
         },
       ),
     );
@@ -714,5 +693,32 @@ class _GrindScreenState extends State<GrindScreen> {
       }
     }
   }
-  //
+
+  Future<void> pushToGridDetails(BuildContext context, i) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => GrindDetailsScreen(
+          dictShowFullData: arrGrindList[i],
+        ),
+      ),
+    );
+
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
+
+    if (!mounted) return;
+
+    if (result == 'successfully_deleted') {
+      setState(() {
+        strGrindLoader = '0';
+        getGrindWB();
+      });
+    } else {
+      //
+      print('error while refreshing');
+      //
+    }
+  }
 }

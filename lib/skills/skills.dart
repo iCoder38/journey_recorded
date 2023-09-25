@@ -450,13 +450,16 @@ class _SkillsScreenState extends State<SkillsScreen> {
                         if (arr_skills[i]['TrainingCount'].toString() == '0') {
                           //
                           push_add_training(
-                              context, arr_skills[i]['skillId'].toString());
+                            context,
+                            arr_skills[i]['skillId'].toString(),
+                            arr_skills[i],
+                          );
                           //
                         } else {
                           //
                           if (kDebugMode) {
                             print(arr_skills[i]);
-                            print('object');
+                            print('object 2');
                           }
                           //
                           Navigator.push(
@@ -465,8 +468,9 @@ class _SkillsScreenState extends State<SkillsScreen> {
                               builder: (context) => TrainingListScreen(
                                 str_skill_id:
                                     arr_skills[i]['skillId'].toString(),
-                                str_training_id:
-                                    arr_skills[i]['trainingId'].toString(),
+                                str_training_id: arr_skills[i]['TrainingList']
+                                        [0]['trainingId']
+                                    .toString(),
                                 strUserIdEnabled: 'yes',
                               ),
                             ),
@@ -497,10 +501,21 @@ class _SkillsScreenState extends State<SkillsScreen> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12.0),
                               child: (arr_skills[i]['image'].toString() == '')
-                                  ? Image.asset('assets/images/logo.png')
-                                  : FadeInImage.assetNetwork(
-                                      placeholder: 'assets/images/loader.gif',
-                                      image: arr_skills[i]['image'].toString(),
+                                  ? SizedBox(
+                                      height: 50,
+                                      width: 50.0,
+                                      child: Image.asset(
+                                        'assets/images/logo.png',
+                                      ),
+                                    )
+                                  : SizedBox(
+                                      height: 50,
+                                      width: 50.0,
+                                      child: FadeInImage.assetNetwork(
+                                        placeholder: 'assets/images/loader.gif',
+                                        image:
+                                            arr_skills[i]['image'].toString(),
+                                      ),
                                     ),
                             ),
                             const SizedBox(
@@ -1063,17 +1078,16 @@ class _SkillsScreenState extends State<SkillsScreen> {
 
   //
   Future<void> push_add_training(
-    BuildContext context,
-    get_skill_id,
-  ) async {
+      BuildContext context, get_skill_id, data) async {
     //
-    print(get_skill_id);
+    // print(data);
     //
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CreateTrainingScreen(
           str_skill_id: get_skill_id.toString(),
+          str_skill_class: data['SkillClass'].toString(),
         ),
       ),
     );

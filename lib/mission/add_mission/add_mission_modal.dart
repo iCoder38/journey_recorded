@@ -45,7 +45,7 @@ class AddMissionModal {
         <String, String>{
           'action': action_name.toString(),
           'userId': prefs.getInt('userId').toString(),
-          'goalId': goal_id.toString(),
+          'profesionalId': goal_id.toString(),
           'categoryId': category_id.toString(),
           'description': description.toString(),
           'deadline': mission_deadline.toString(),

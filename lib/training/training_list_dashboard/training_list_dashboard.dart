@@ -236,7 +236,7 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                               ),
                               child: Center(
                                 child: text_bold_style_custom(
-                                  'Level : ${int.parse(arr_training_list[i]['currentLavel'].toString()) + 1}',
+                                  'Level : ${int.parse(arr_training_list[i]['currentLavel'].toString())}',
                                   Colors.white,
                                   14.0,
                                 ),

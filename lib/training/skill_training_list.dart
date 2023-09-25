@@ -13,9 +13,11 @@ import 'package:journey_recorded/training/training_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SkillTrainingListScreen extends StatefulWidget {
-  const SkillTrainingListScreen({super.key, required this.str_skill_id});
+  const SkillTrainingListScreen(
+      {super.key, required this.str_skill_id, required this.strClassName});
 
   final String str_skill_id;
+  final String strClassName;
 
   @override
   State<SkillTrainingListScreen> createState() =>
@@ -308,6 +310,7 @@ class _SkillTrainingListScreenState extends State<SkillTrainingListScreen> {
       MaterialPageRoute(
         builder: (context) => CreateTrainingScreen(
           str_skill_id: widget.str_skill_id.toString(),
+          str_skill_class: widget.strClassName.toString(),
         ),
       ),
     );

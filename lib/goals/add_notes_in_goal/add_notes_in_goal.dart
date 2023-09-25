@@ -45,6 +45,7 @@ class _AddNotesInGoalScreenState extends State<AddNotesInGoalScreen> {
   // get category list
   get_category_list_WB() async {
     print('=====> POST : GET CATEGORY');
+    print(widget.str_profession_id);
 
     final resposne = await http.post(
       Uri.parse(

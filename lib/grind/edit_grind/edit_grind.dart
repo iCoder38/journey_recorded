@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_interpolation_to_compose_strings
 
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
@@ -125,13 +125,15 @@ class _EditGrindScreenState extends State<EditGrindScreen> {
     return Scaffold(
       appBar: AppBar(
         title: text_bold_style_custom(
-          widget.getSelectedGrindData['grindName'],
+          //
+          'Edit ' + widget.getSelectedGrindData['grindName'],
           Colors.white,
           16.0,
         ),
         leading: IconButton(
           icon: const Icon(
             Icons.chevron_left,
+            color: Colors.white,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),

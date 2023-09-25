@@ -62,7 +62,7 @@ class CreateTaskModal {
           'experiencePointDeduct': experiencePointDeduct,
           'Assigment': Assigment,
           'skill': skill,
-          'addreminder': 'saddreminder',
+          'addreminder': addreminder,
           'reminderWarning': reminderWarning,
           'profesionalId': profesionalId.toString(),
           'profesionalType': profesionalType,

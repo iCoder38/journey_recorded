@@ -36,6 +36,7 @@ class AddMissionScreen extends StatefulWidget {
 
 class _AddMissionScreenState extends State<AddMissionScreen> {
   //
+  var loader = '0';
   var str_category_id = 'n.a.';
   var arr_get_category_list = [];
   //
@@ -100,19 +101,12 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: navigation_color,
-        title: Text(
-          ///
-          ///
+        title: text_bold_style_custom(
           (widget.str_edit_status == '1')
               ? 'Edit'
               : widget.str_navigation_title,
-
-          ///
-          ///
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(
@@ -236,6 +230,9 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
             ),
             InkWell(
               onTap: () {
+                setState(() {
+                  loader = '1';
+                });
                 (widget.str_navigation_title == 'Add Quest')
                     ? (widget.str_edit_status == '1')
                         ? edit_mission_WB()
@@ -263,7 +260,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                                 'addmission')
                             .then((value) {
                             print('do something');
-                            Navigator.pop(context);
+                            Navigator.pop(context, 'add_mission_successfully');
                           });
               },
               child: Container(
@@ -294,27 +291,35 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                 ),
                 height: 60,
                 width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: (widget.str_edit_status == '1')
-                      ? Text(
-                          'Edit Mission',
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        )
-                      : Text(
-                          'Add',
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                child: (loader == '1')
+                    ? const Center(
+                        child: SizedBox(
+                          height: 40.0,
+                          width: 40.0,
+                          child: CircularProgressIndicator(),
                         ),
-                ),
+                      )
+                    : Center(
+                        child: (widget.str_edit_status == '1')
+                            ? Text(
+                                'Edit Mission',
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              )
+                            : Text(
+                                'Add',
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
               ),
             ),
           ],

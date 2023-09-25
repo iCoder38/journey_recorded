@@ -4193,20 +4193,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         print('add mission');
       }
       //
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => AddMissionScreen(
-            str_category_id: widget.str_category_id.toString(),
-            str_goal_id: widget.str_get_goal_id.toString(),
-            str_edit_status: '0',
-            str_deadline: '',
-            str_mission_text: '',
-            str_mission_id: '',
-            str_navigation_title: 'Add Mission',
-          ),
-        ),
-      );
+      push_to_Add_mission(context);
+
       //
     } else if (str_tab_press == '4') {
       if (kDebugMode) {
@@ -4216,6 +4204,36 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       setState(() {
         str_show_ui = 'add_reward';
       });
+    }
+  }
+
+  Future<void> push_to_Add_mission(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddMissionScreen(
+          str_category_id: widget.str_category_id.toString(),
+          str_goal_id: widget.str_get_goal_id.toString(),
+          str_edit_status: '0',
+          str_deadline: '',
+          str_mission_text: '',
+          str_mission_id: '',
+          str_navigation_title: 'Add Mission',
+        ),
+      ),
+    );
+
+    // ignore: prefer_interpolation_to_compose_strings
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
+
+// back_after_add_sub_goal
+
+    if (!mounted) return;
+
+    if (result == 'add_mission_successfully') {
+      setState(() {});
     }
   }
 

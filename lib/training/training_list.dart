@@ -158,20 +158,8 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         get_str_time = splitted[1].toString();
         //
         strNewSkillClass = dict_save_training_full_data['SkillClass'];
-        //
-        // get and parse data
-        //
-        // totalMinute+totalMinute_Grind+totalMinute_Habit
-        funcAddTotalExp(get_data);
-        //
 
-        if (kDebugMode) {
-          print('one');
-          print(dict_save_training_full_data);
-        }
-        setState(() {
-          str_main_loader = '1';
-        });
+        funcHitApiBeforeCalculation(get_data);
       } else {
         if (kDebugMode) {
           print(
@@ -240,7 +228,60 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         if (kDebugMode) {
           print(dict_save_training_full_data);
         }
-        funcAddTotalExp(get_data);
+        //
+        funcHitApiBeforeCalculation(get_data);
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
+  // /*************************************************************************/
+  // /************************** CALCULATIONS *********************************/
+  funcHitApiBeforeCalculation(get_data_full) async {
+    if (kDebugMode) {
+      print('=====> POST : SKILL => TRAINING LIST 2');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'categorybyskilllabel',
+          'userId': prefs.getInt('userId').toString(),
+          'categoryId': get_data_full['data'][0]['categoryId'].toString()
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print('=================== category by skill lable');
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        funcAddTotalExp(get_data_full, get_data['currentLabel'].toString());
         setState(() {
           str_main_loader = '1';
         });
@@ -259,11 +300,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     }
   }
 
-  // /*************************************************************************/
-  // /************************** CALCULATIONS *********************************/
-  funcAddTotalExp(
-    fullData,
-  ) {
+  funcAddTotalExp(fullData, current_label_from_skill_cat) {
     print('======================');
     // print(fullData['data']);
     // print(fullData['data'][0]['totalMinute_Habit'].toString());
@@ -274,18 +311,21 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     var validateHabit = '0';
     var validateMinute = '0';
     var validateGrind = '0';
+    print('========== habit ============');
     // habit
     if (fullData['data'][0]['totalMinute_Habit'] == '') {
       validateHabit = '0';
     } else {
       validateHabit = fullData['data'][0]['totalMinute_Habit'].toString();
     }
+    print('========== minute ============');
     // minute
     if (fullData['data'][0]['totalMinute'] == '') {
       validateMinute = '0';
     } else {
       validateMinute = fullData['data'][0]['totalMinute'].toString();
     }
+    print('========== grind ============');
     // grind
     if (fullData['data'][0]['totalMinute_Grind'] == '') {
       validateGrind = '0';
@@ -302,19 +342,21 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     print('TOTAL EXPERINCE ====> $strTotalExp');
     //
     funcCalculateNextLevelXP(
+      current_label_from_skill_cat,
       fullData,
       strTotalExp,
     );
   }
 
   funcCalculateNextLevelXP(
+    current_label_for_calculation,
     nextLevelXPdata,
     getSumOfHabitMinuteAndGrind,
   ) {
     print('======= LVL XP =========');
     print(nextLevelXPdata['data']);
-    // print(getSumOfHabitMinuteAndGrind);
-    // print(nextLevelXPdata['data'][0]['currentLavel']);
+    print(getSumOfHabitMinuteAndGrind);
+    print(nextLevelXPdata['data'][0]['currentLavel'].toString());
     // strNextLevelXP
     print('======================');
     // # 1 : vaue=totalMinute_Grind+totalMinute+totalMinute_Habit+currentLabel_value
@@ -322,18 +364,20 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     // # 3 : nextlvlValue=currentLabel_value-vaue
     var getValue = int.parse(getSumOfHabitMinuteAndGrind.toString()) +
         int.parse(nextLevelXPdata['data'][0]['currentLavel'].toString());
-    // print(getValue.toString());
+    print(getValue.toString());
     //
-    // print('FORMULA IS ====> ');
+    print('FORMULA IS ====> ');
     var setValue = int.parse(getValue.toString()) -
-        int.parse(nextLevelXPdata['data'][0]['lavel_value'].toString());
+        int.parse(current_label_for_calculation.toString());
     print(setValue.toString());
     //
     var setNextLevelValue =
         int.parse(nextLevelXPdata['data'][0]['currentLavel'].toString()) -
             int.parse(setValue.toString());
-    // print(setNextLevelValue.toString());
+    print(setNextLevelValue.toString());
     strNextLevelXP = setNextLevelValue.toString();
+    //
+    print('============ END ==========');
   }
 
   // /*************************************************************************/
@@ -2393,7 +2437,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       str_main_loader = 'notes_loader_start';
     });
     //
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
       Uri.parse(
@@ -2405,7 +2449,8 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       body: jsonEncode(
         <String, String>{
           'action': 'notelist',
-          'pageNo': '',
+          'userId': prefs.getInt('userId').toString(),
+          'pageNo': '1',
           'profesionalId': widget.str_training_id.toString(),
           'profesionalType': 'Training',
         },
@@ -2450,7 +2495,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       print('=====> POST : QUOTES');
     }
 
-    str_UI_show = 'notes';
+    str_UI_show = 'quotes';
     str_bottom_bar_color = '0';
 
     setState(() {
@@ -2470,7 +2515,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         <String, String>{
           'action': 'quotlist',
           'userId': prefs.getInt('userId').toString(),
-          'pageNo': '',
+          'pageNo': '1',
           'profesionalId': widget.str_training_id.toString(),
           'profesionalType': 'Training',
         },
@@ -2517,7 +2562,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => AddQuotesScreen(
-          str_add_quotes_main_id: widget.str_skill_id.toString(),
+          str_add_quotes_main_id: widget.str_training_id.toString(),
           str_profession_type: 'Training'.toString(),
         ),
       ),
@@ -2538,11 +2583,12 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
 
   // add note
   Future<void> push_to_create_notes(BuildContext context) async {
+    print(widget.str_training_id.toString());
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AddNotesInGoalScreen(
-          str_profession_id: widget.str_skill_id.toString(),
+          str_profession_id: widget.str_training_id.toString(),
           str_profession_type: 'Training'.toString(),
         ),
       ),
@@ -2551,13 +2597,9 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     // ignore: prefer_interpolation_to_compose_strings
     print('result =====> ' + result);
 
-// get_back_from_add_notes
-
     if (!mounted) return;
 
-    // if (result)
     func_notes_WB();
-    // setState(() {});
   }
 
   // ALERT
@@ -3016,7 +3058,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
         builder: (context) => EditNotesInGoalScreen(
           str_message: str_get_message,
           str_note_id: str_note_id.toString(),
-          str_professional_id: str_profession_id.toString(),
+          str_professional_id: widget.str_training_id.toString(),
           str_professional_type: 'Training'.toString(),
         ),
       ),

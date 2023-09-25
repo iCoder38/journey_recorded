@@ -12,9 +12,12 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateTrainingScreen extends StatefulWidget {
-  const CreateTrainingScreen({super.key, required this.str_skill_id});
+  const CreateTrainingScreen(
+      {super.key, required this.str_skill_id, required this.str_skill_class});
 
   final String str_skill_id;
+  final String str_skill_class;
+
   @override
   State<CreateTrainingScreen> createState() => _CreateTrainingScreenState();
 }
@@ -651,6 +654,7 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
           'Frequency': cont_select_day.text.toString(),
           // 'totalMinute': cont_skill_description.text.toString(),
           'SetReminder': time.toString(),
+          'totalMinute': '0', 'SkillClass': widget.str_skill_class.toString(),
         },
       ),
     );
