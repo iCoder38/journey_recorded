@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/actions/actions.dart';
 import 'package:journey_recorded/active_team/active_team.dart';
+import 'package:journey_recorded/all_quotes_list/add_description.dart';
 import 'package:journey_recorded/all_quotes_list/all_quotes_list.dart';
 // import 'package:journey_recorded/category_list/category_list.dart';
 import 'package:journey_recorded/custom_files/drawer.dart';
@@ -47,6 +48,8 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   //
   var login_user_name;
+  var arrCategoryList = [];
+  var arrSaveIdAndMessage = [];
   //
   final PageController controller = PageController();
   late final TabController _controller;
@@ -148,8 +151,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
         strTotalCoins = prefs.getInt('totalPoints').toString();
         strLoginUserLevel = prefs.getInt('skill_Lavel').toString();
-
-        setState(() {});
+        //
+        notesListWB();
+        //
       } else {
         if (kDebugMode) {
           print(
@@ -163,6 +167,91 @@ class _DashboardScreenState extends State<DashboardScreen> {
         print('something went wrong');
       }
     }
+  }
+
+  // get cart
+  notesListWB() async {
+    if (kDebugMode) {
+      print('=====> POST : NOTES LIST');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'notelist',
+          'userId': prefs.getInt('userId').toString(),
+          'profesionalType': 'Category',
+          'onlycategory': 'Yes',
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          //
+          arrCategoryList.add(get_data['data'][i]);
+          //
+        }
+        funcParse();
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
+  funcParse() {
+    //
+    if (kDebugMode) {
+      print('===============================================');
+      print('===============================================');
+      print(arrCategoryList);
+      print('===============================================');
+      print('===============================================');
+    }
+    // arrSaveIdAndMessage
+    for (int i = 0; i < arrCategoryList.length; i++) {
+      // arrSaveIdAndMessage
+      var custom = {
+        'id': arrCategoryList[i]['profesionalId'].toString(),
+        'name': arrCategoryList[i]['message'].toString(),
+      };
+      arrSaveIdAndMessage.add(custom);
+    }
+    //
+
+    if (kDebugMode) {
+      print('**************************************************');
+      print(arrSaveIdAndMessage);
+      print('**************************************************');
+    }
+    setState(() {});
+    //
   }
 
   @override
@@ -227,28 +316,82 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       //
                                       if (kDebugMode) {
                                         print(
-                                          arr_category[i]['id'].toString(),
+                                          arr_category[i],
                                         );
                                       }
 
                                       //
                                       //
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              AllQuotesListScreen(
-                                            str_cateogry_id: arr_category[i]
-                                                    ['id']
-                                                .toString(),
-                                            str_cateogry_name: arr_category[i]
-                                                    ['name']
-                                                .toString(),
+                                      if (kDebugMode) {
+                                        print('dishant rajput');
+                                        print(arrSaveIdAndMessage);
+                                      }
+
+                                      var strCheckIdStatus = '0';
+                                      var strMessage = '';
+                                      //
+                                      var strGetProfessionalId = '';
+                                      var strGetProfessionalType = '';
+
+                                      for (int j = 0;
+                                          j < arrSaveIdAndMessage.length;
+                                          j++) {
+                                        //
+                                        if (arr_category[i]['categoryId']
+                                                .toString() ==
+                                            arrSaveIdAndMessage[j]['id']
+                                                .toString()) {
+                                          //
+                                          strCheckIdStatus = '1';
+                                          strMessage = arrSaveIdAndMessage[j]
+                                                  ['name']
+                                              .toString();
+                                        } else {
+                                          //
+
+                                          strGetProfessionalId = arr_category[i]
+                                                  ['categoryId']
+                                              .toString();
+                                          strGetProfessionalType =
+                                              arr_category[i]['category']
+                                                  .toString();
+                                          //
+                                        }
+                                      }
+                                      //
+                                      // print(strMessage);
+                                      if (strCheckIdStatus == '1') {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AllQuotesListScreen(
+                                              str_cateogry_id: arr_category[i]
+                                                      ['categoryId']
+                                                  .toString(),
+                                              str_cateogry_name: arr_category[i]
+                                                      ['category']
+                                                  .toString(),
+                                              dictGetData: arr_category[i],
+                                              str_message:
+                                                  strMessage.toString(),
+                                            ),
                                           ),
-                                        ),
-                                      );
-                                      //
-                                      //
+                                        );
+                                      } else {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddDescriptionScreen(
+                                              strProfessionalId:
+                                                  strGetProfessionalId,
+                                              strProfessionalType:
+                                                  strGetProfessionalType,
+                                            ),
+                                          ),
+                                        );
+                                      }
                                     },
                                     child: Container(
                                       margin: const EdgeInsets.only(
