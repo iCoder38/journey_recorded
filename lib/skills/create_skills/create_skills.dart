@@ -98,7 +98,7 @@ class _CreateSkillsState extends State<CreateSkills>
       cont_skill_name = TextEditingController();
       cont_skill_category = TextEditingController();
       cont_skill_select_class = TextEditingController();
-      cont_skill_select_rank = TextEditingController();
+      cont_skill_select_rank = TextEditingController(text: 'NOVOICE');
       cont_skill_stats_skill = TextEditingController();
       cont_skill_how_to_learn = TextEditingController();
       cont_skill_description = TextEditingController();
@@ -169,14 +169,10 @@ class _CreateSkillsState extends State<CreateSkills>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
-          'Create Skills',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+        title: text_bold_style_custom(
+          'Create skill',
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(

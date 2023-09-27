@@ -311,6 +311,8 @@ class _SkillTrainingListScreenState extends State<SkillTrainingListScreen> {
         builder: (context) => CreateTrainingScreen(
           str_skill_id: widget.str_skill_id.toString(),
           str_skill_class: widget.strClassName.toString(),
+          strCategoryId: '',
+          strCategoryName: '',
         ),
       ),
     );

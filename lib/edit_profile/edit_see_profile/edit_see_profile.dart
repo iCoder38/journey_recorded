@@ -56,6 +56,9 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
           Colors.white,
           16.0,
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         actions: [
           IconButton(
             onPressed: () {

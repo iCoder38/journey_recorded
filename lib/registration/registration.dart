@@ -1,10 +1,11 @@
-// ignore_for_file: non_constant_identifier_names, unused_element, unused_local_variable
+// ignore_for_file: non_constant_identifier_names, unused_element, unused_local_variable, avoid_print
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/custom_files/app_bar/app_bar.dart';
 import 'package:journey_recorded/registration/full_registration/full_registration_modal.dart';
+import 'package:journey_recorded/registration/member_full_registration/member_full_registration.dart';
 import 'package:journey_recorded/registration/registration_verify_username_modal/verify_username_modal.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -123,7 +124,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     right: 20.0,
                     top: 0.0,
                   ),
-                  height: 80,
+                  height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -139,8 +140,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       Expanded(
                         child: Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(
-                              10.0,
+                            padding: const EdgeInsets.only(
+                              left: 10.0,
                             ),
                             child: TextFormField(
                               controller: cont_username,
@@ -150,7 +151,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   color: navigation_color,
                                 ),
                                 border: InputBorder.none,
-                                labelText: 'Username...',
+                                hintText: 'Username...',
                               ),
                             ),
                           ),
@@ -160,7 +161,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         margin: const EdgeInsets.only(
                           right: 20.0,
                         ),
-                        height: 50,
+                        // height: 50,
                         width: 50,
                         decoration: BoxDecoration(
                           color: Colors.transparent,
@@ -183,13 +184,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 },
                                 child: Center(
                                   child: (str_verify_username_status == '2')
-                                      ? Text(
+                                      ? text_regular_style_custom(
                                           'Verified',
-                                          style: TextStyle(
-                                            fontFamily: font_style_name,
-                                            fontSize: 14.0,
-                                            color: Colors.green,
-                                          ),
+                                          Colors.green,
+                                          12.0,
                                         )
                                       : Text(
                                           'Verify',
@@ -205,13 +203,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     ],
                   ),
                 ),
+                //
                 Container(
                   margin: const EdgeInsets.only(
                     left: 20.0,
                     right: 20.0,
                     top: 10.0,
                   ),
-                  height: 80,
+                  height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -224,8 +223,46 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                        10.0,
+                      padding: const EdgeInsets.only(
+                        left: 10.0,
+                      ),
+                      child: TextFormField(
+                        controller: cont_full_name,
+                        // keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          suffixIcon: Icon(
+                            Icons.email,
+                            color: navigation_color,
+                          ),
+                          border: InputBorder.none,
+                          hintText: 'Full name...',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                //
+                Container(
+                  margin: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20.0,
+                    top: 10.0,
+                  ),
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      28.0,
+                    ),
+                  ),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 10.0,
                       ),
                       child: TextFormField(
                         controller: cont_email_address,
@@ -236,7 +273,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             color: navigation_color,
                           ),
                           border: InputBorder.none,
-                          labelText: 'Email Address...',
+                          hintText: 'Email Address...',
                         ),
                       ),
                     ),
@@ -248,7 +285,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     right: 20.0,
                     top: 10.0,
                   ),
-                  height: 80,
+                  height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -261,8 +298,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                        10.0,
+                      padding: const EdgeInsets.only(
+                        left: 10.0,
                       ),
                       child: TextFormField(
                         controller: cont_password,
@@ -273,7 +310,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             color: navigation_color,
                           ),
                           border: InputBorder.none,
-                          labelText: 'Password...',
+                          hintText: 'Password...',
                         ),
                       ),
                     ),
@@ -289,7 +326,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       left: 20.0,
                       right: 20.0,
                     ),
-                    height: 80,
+                    height: 60,
                     decoration: BoxDecoration(
                       color: Colors.grey,
                       borderRadius: BorderRadius.circular(
@@ -400,7 +437,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Container user_business_UI(BuildContext context) {
     return Container(
       // margin: EdgeInsets.only(top: 10),
-      height: 160,
+      height: 100,
       width: MediaQuery.of(context).size.width,
       color: Colors.transparent,
       child: Row(
@@ -414,7 +451,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 margin: const EdgeInsets.only(
                   left: 20.0,
                 ),
-                height: 80,
+                height: 60,
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(
                     250,
@@ -554,7 +591,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   left: 20.0,
                   right: 20.0,
                 ),
-                height: 80,
+                height: 60,
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(
                     36,
@@ -780,7 +817,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           } else {
             //
             str_register_now_status = '1';
-            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MemberFullRegistrationScree(),
+              ),
+            );
             print('=====> SUCCESSFULLY REGISTRATION <======');
             //
           }

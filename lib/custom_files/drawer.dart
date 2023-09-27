@@ -6,6 +6,7 @@ import 'package:journey_recorded/dashboard/dashboard.dart';
 import 'package:journey_recorded/edit_profile/edit_profile.dart';
 import 'package:journey_recorded/edit_profile/edit_see_profile/edit_see_profile.dart';
 import 'package:journey_recorded/login/login.dart';
+import 'package:journey_recorded/settings/settings.dart';
 import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
 // import 'package:journey_recorded/splash/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -227,7 +228,7 @@ class _navigationDrawerState extends State<navigationDrawer> {
                   ),
                   iconColor: Colors.white,
                   title: Text(
-                    'Account Settings',
+                    'Settings',
                     style: TextStyle(
                       fontFamily: font_style_name,
                       color: Colors.white,
@@ -236,9 +237,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                   ),
                   onTap: () {
                     // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SettingsScreen(
+                            // get_login_sender_chat_id: 'Dashboard',
+                            ),
+                      ),
+                    );
                   },
                 ),
                 ListTile(

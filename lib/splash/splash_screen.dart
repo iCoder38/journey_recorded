@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/login/login.dart';
+import 'package:journey_recorded/registration/member_full_registration/member_full_registration.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 

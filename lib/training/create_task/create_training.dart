@@ -13,10 +13,16 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateTrainingScreen extends StatefulWidget {
   const CreateTrainingScreen(
-      {super.key, required this.str_skill_id, required this.str_skill_class});
+      {super.key,
+      required this.str_skill_id,
+      required this.str_skill_class,
+      required this.strCategoryId,
+      required this.strCategoryName});
 
   final String str_skill_id;
   final String str_skill_class;
+  final String strCategoryId;
+  final String strCategoryName;
 
   @override
   State<CreateTrainingScreen> createState() => _CreateTrainingScreenState();
@@ -42,7 +48,8 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
     super.initState();
 
     cont_name = TextEditingController();
-    cont_category = TextEditingController();
+    cont_category =
+        TextEditingController(text: widget.strCategoryName.toString());
     cont_select_frequncy = TextEditingController();
     cont_select_day = TextEditingController();
     cont_reminder_date = TextEditingController();
@@ -107,14 +114,10 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
+        title: text_bold_style_custom(
           'Training',
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         backgroundColor: navigation_color,
         leading: IconButton(
@@ -151,8 +154,9 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
               10.0,
             ),
             child: TextFormField(
+              readOnly: true,
               onTap: () {
-                category_list_POPUP('str_message');
+                // category_list_POPUP('str_message');
               },
               controller: cont_category,
               //keyboardType: TextInputType.number,
@@ -648,7 +652,7 @@ class _CreateTrainingScreenState extends State<CreateTrainingScreen> {
           'userId': prefs.getInt('userId').toString(),
           // 'trainingId': cont_skill_name.text.toString(),
           'TrainingName': cont_name.text.toString(),
-          'categoryId': str_category_id.toString(),
+          'categoryId': widget.strCategoryId.toString(),
           'skillId': widget.str_skill_id.toString(),
           'TStats': cont_select_frequncy.text.toString(),
           'Frequency': cont_select_day.text.toString(),

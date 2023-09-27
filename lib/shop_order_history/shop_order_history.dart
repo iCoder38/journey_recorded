@@ -94,6 +94,9 @@ class _ShopOrderHistoryScreenState extends State<ShopOrderHistoryScreen> {
           Colors.white,
           16.0,
         ),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
       ),
       drawer: const navigationDrawer(),
       body: NotificationListener(

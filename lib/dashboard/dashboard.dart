@@ -274,6 +274,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Colors.white,
             16.0,
           ),
+          iconTheme: const IconThemeData(
+            color: Colors.white,
+          ),
           actions: const [
             Padding(
               padding: EdgeInsets.only(

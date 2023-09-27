@@ -3,8 +3,10 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:journey_recorded/Utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Registration_Status {
   final String success_alert;
@@ -32,12 +34,15 @@ class RegistrationModal {
     String role,
   ) async {
     //
-    print('full name =====> $full_name');
-    print('Username =====> $username');
-    print('email =====> $email');
-    print('phone =====> $contact_number');
-    print('password =====> $password');
-    print('role =====> $role');
+    if (kDebugMode) {
+      print('full name =====> $full_name');
+      print('Username =====> $username');
+      print('email =====> $email');
+      print('phone =====> $contact_number');
+      print('password =====> $password');
+      print('role =====> $role');
+    }
+
     //
     final response = await http.post(
       Uri.parse(
@@ -59,7 +64,7 @@ role:Member / Business
       body: jsonEncode(
         <String, String>{
           'action': 'registration',
-          'fullName': username.toString(),
+          'fullName': full_name.toString(),
           'username': username,
           'email': email,
           'contactNumber': (Random().nextInt(900000) + 100000).toString(),
@@ -69,7 +74,7 @@ role:Member / Business
       ),
     );
     // print();
-
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (response.statusCode == 201) {
       print('=========> 201');
       print(response.body);
@@ -80,6 +85,8 @@ role:Member / Business
       print(response.body);
 
       Map<String, dynamic> success_status = jsonDecode(response.body);
+      Map<String, dynamic> user = success_status['data'];
+      await prefs.setInt('userId', user['userId']);
 
       var success_text = success_status['status'].toString().toLowerCase();
 

@@ -1088,6 +1088,8 @@ class _SkillsScreenState extends State<SkillsScreen> {
         builder: (context) => CreateTrainingScreen(
           str_skill_id: get_skill_id.toString(),
           str_skill_class: data['SkillClass'].toString(),
+          strCategoryId: data['categoryId'].toString(),
+          strCategoryName: data['categoryName'].toString(),
         ),
       ),
     );
