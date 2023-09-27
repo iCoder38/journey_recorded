@@ -21,7 +21,11 @@ class _ShopOrderHistoryDetailsScreenState
   @override
   void initState() {
     if (kDebugMode) {
+      print('=================================');
+      print('=================================');
       print(widget.getFullData);
+      print('=================================');
+      print('=================================');
     }
     super.initState();
   }
@@ -236,6 +240,111 @@ class _ShopOrderHistoryDetailsScreenState
               ),
             ),
             //
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Container(
+                // height: 120,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(
+                    12.0,
+                  ),
+                  border: Border.all(
+                    width: 0.4,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20.0,
+                    ),
+                    text_bold_style_custom(
+                      'Shipping Info',
+                      Colors.black,
+                      16.0,
+                    ),
+                    //
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          text_bold_style_custom(
+                            'Name : ',
+                            Colors.black,
+                            16.0,
+                          ),
+                          text_regular_style_custom(
+                            //
+                            widget.getFullData['ShippingName'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          text_bold_style_custom(
+                            'Address : ',
+                            Colors.black,
+                            16.0,
+                          ),
+                          text_regular_style_custom(
+                            //
+                            widget.getFullData['ShippingAddress'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ],
+                      ),
+                    ), //
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          text_bold_style_custom(
+                            'Phone : ',
+                            Colors.black,
+                            16.0,
+                          ),
+                          text_regular_style_custom(
+                            //
+                            widget.getFullData['ShippingPhone'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    //
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          text_bold_style_custom(
+                            'Postal Code : ',
+                            Colors.black,
+                            16.0,
+                          ),
+                          text_regular_style_custom(
+                            //
+                            widget.getFullData['ShippingZipcode'].toString(),
+                            Colors.black,
+                            14.0,
+                          ),
+                        ],
+                      ),
+                    ),
+                    //
+
+                    //
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
