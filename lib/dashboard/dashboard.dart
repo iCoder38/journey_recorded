@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, deprecated_member_use
 
 import 'dart:convert';
 
@@ -63,6 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var strTotalCoins = '0';
   var strLoginUserLevel = '0';
   //
+  var strCatLoader = '0';
   var arr_dashboard_data = [
     'Goals',
     'Sub Goals',
@@ -115,7 +116,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (kDebugMode) {
       print('=====> POST : CATEGORY');
     }
-
+    setState(() {
+      strCatLoader = '1';
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -250,7 +253,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       print(arrSaveIdAndMessage);
       print('**************************************************');
     }
-    setState(() {});
+    setState(() {
+      strCatLoader = '0';
+    });
     //
   }
 
@@ -262,7 +267,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       child: Scaffold(
         drawer: const navigationDrawer(),
-        appBar: dashboard_app_bar_UI(),
+        appBar: AppBar(
+          backgroundColor: navigation_color,
+          title: text_bold_style_custom(
+            'Home',
+            Colors.white,
+            16.0,
+          ),
+          actions: const [
+            Padding(
+              padding: EdgeInsets.only(
+                right: 20.0,
+              ),
+              child: Icon(
+                Icons.notifications,
+                color: Colors.white,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                right: 20.0,
+              ),
+              child: Icon(
+                Icons.margin,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
@@ -301,151 +333,163 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           end: Alignment.bottomCenter,
                         ),
                       ),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: <Widget>[
-                              if (str_dashboard_category_loader == '1') ...[
-                                for (int i = 0;
-                                    i < arr_category.length;
-                                    i++) ...[
-                                  InkWell(
-                                    onTap: () {
-                                      //
-                                      if (kDebugMode) {
-                                        print(
-                                          arr_category[i],
-                                        );
-                                      }
+                      child: (strCatLoader == '1')
+                          ? const Align(
+                              alignment: Alignment.topCenter,
+                              child: SizedBox(
+                                height: 40.0,
+                                width: 40.0,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          : Align(
+                              alignment: Alignment.topCenter,
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                  children: <Widget>[
+                                    if (str_dashboard_category_loader ==
+                                        '1') ...[
+                                      for (int i = 0;
+                                          i < arr_category.length;
+                                          i++) ...[
+                                        InkWell(
+                                          onTap: () {
+                                            //
+                                            if (kDebugMode) {
+                                              print(
+                                                arr_category[i],
+                                              );
+                                            }
 
-                                      //
-                                      //
-                                      if (kDebugMode) {
-                                        print('dishant rajput');
-                                        print(arrSaveIdAndMessage);
-                                      }
+                                            //
+                                            //
+                                            if (kDebugMode) {
+                                              print('dishant rajput');
+                                              print(arrSaveIdAndMessage);
+                                            }
 
-                                      var strCheckIdStatus = '0';
-                                      var strMessage = '';
-                                      //
-                                      var strGetProfessionalId = '';
-                                      var strGetProfessionalType = '';
+                                            var strCheckIdStatus = '0';
+                                            var strMessage = '';
+                                            //
+                                            var strGetProfessionalId = '';
+                                            var strGetProfessionalType = '';
 
-                                      for (int j = 0;
-                                          j < arrSaveIdAndMessage.length;
-                                          j++) {
-                                        //
-                                        if (arr_category[i]['categoryId']
-                                                .toString() ==
-                                            arrSaveIdAndMessage[j]['id']
-                                                .toString()) {
-                                          //
-                                          strCheckIdStatus = '1';
-                                          strMessage = arrSaveIdAndMessage[j]
-                                                  ['name']
-                                              .toString();
-                                        } else {
-                                          //
-
-                                          strGetProfessionalId = arr_category[i]
-                                                  ['categoryId']
-                                              .toString();
-                                          strGetProfessionalType =
-                                              arr_category[i]['category']
-                                                  .toString();
-                                          //
-                                        }
-                                      }
-                                      //
-                                      // print(strMessage);
-                                      if (strCheckIdStatus == '1') {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AllQuotesListScreen(
-                                              str_cateogry_id: arr_category[i]
-                                                      ['categoryId']
-                                                  .toString(),
-                                              str_cateogry_name: arr_category[i]
-                                                      ['category']
-                                                  .toString(),
-                                              dictGetData: arr_category[i],
-                                              str_message:
-                                                  strMessage.toString(),
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddDescriptionScreen(
-                                              strProfessionalId:
-                                                  strGetProfessionalId,
-                                              strProfessionalType:
-                                                  strGetProfessionalType,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                        top: 20.0,
-                                        left: 20.0,
-                                        right: 10.0,
-                                      ),
-                                      height: 60,
-                                      width: 200,
-                                      decoration: const BoxDecoration(
-                                        // color: Colors.orange,
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                            // image name
-                                            'assets/images/dashboard_upper_button.png',
-                                          ),
-                                          fit: BoxFit.fill,
-                                          // opacity: .4,
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        children: <Widget>[
-                                          Center(
-                                            child: Text(
+                                            for (int j = 0;
+                                                j < arrSaveIdAndMessage.length;
+                                                j++) {
                                               //
-                                              arr_category[i]['category'] +
-                                                  ' : LV ' +
-                                                  arr_category[i]['skill_Lavel']
-                                                      .toString(),
-                                              //
-                                              style: const TextStyle(
-                                                color: Colors.white,
+                                              if (arr_category[i]['categoryId']
+                                                      .toString() ==
+                                                  arrSaveIdAndMessage[j]['id']
+                                                      .toString()) {
+                                                //
+                                                strCheckIdStatus = '1';
+                                                strMessage =
+                                                    arrSaveIdAndMessage[j]
+                                                            ['name']
+                                                        .toString();
+                                              } else {
+                                                //
+
+                                                strGetProfessionalId =
+                                                    arr_category[i]
+                                                            ['categoryId']
+                                                        .toString();
+                                                strGetProfessionalType =
+                                                    arr_category[i]['category']
+                                                        .toString();
+                                                //
+                                              }
+                                            }
+                                            //
+                                            // print(strMessage);
+                                            if (strCheckIdStatus == '1') {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AllQuotesListScreen(
+                                                    str_cateogry_id:
+                                                        arr_category[i]
+                                                                ['categoryId']
+                                                            .toString(),
+                                                    str_cateogry_name:
+                                                        arr_category[i]
+                                                                ['category']
+                                                            .toString(),
+                                                    dictGetData:
+                                                        arr_category[i],
+                                                    str_message:
+                                                        strMessage.toString(),
+                                                  ),
+                                                ),
+                                              );
+                                            } else {
+                                              pushToAddDescription(
+                                                context,
+                                                strGetProfessionalId,
+                                                strGetProfessionalType,
+                                              );
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.only(
+                                              top: 20.0,
+                                              left: 20.0,
+                                              right: 10.0,
+                                            ),
+                                            height: 60,
+                                            width: 200,
+                                            decoration: const BoxDecoration(
+                                              // color: Colors.orange,
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                  // image name
+                                                  'assets/images/dashboard_upper_button.png',
+                                                ),
+                                                fit: BoxFit.fill,
+                                                // opacity: .4,
                                               ),
                                             ),
+                                            child: Stack(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Text(
+                                                    //
+                                                    arr_category[i]
+                                                            ['category'] +
+                                                        ' : LV ' +
+                                                        arr_category[i]
+                                                                ['skill_Lavel']
+                                                            .toString(),
+                                                    //
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ],
+                                        ),
+                                      ],
+                                    ] else ...[
+                                      const Center(
+                                        child: Text(
+                                          'please wait...',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ] else ...[
-                                const Center(
-                                  child: Text(
-                                    'please wait...',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                    ],
+                                  ],
                                 ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
+                              ),
+                            ),
                     ),
                     Container(
                       margin: const EdgeInsets.only(
@@ -971,35 +1015,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  AppBar dashboard_app_bar_UI() {
-    return AppBar(
-      backgroundColor: navigation_color,
-      title: text_regular_style_custom(
-        'Home',
-        Colors.white,
-        16.0,
-      ),
-      actions: const [
-        Padding(
-          padding: EdgeInsets.only(
-            right: 20.0,
-          ),
-          child: Icon(
-            Icons.notifications,
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(
-            right: 20.0,
-          ),
-          child: Icon(
-            Icons.margin,
-          ),
-        ),
-      ],
-    );
-  }
-
   func_add() {
     if (kDebugMode) {
       print('check');
@@ -1040,5 +1055,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     login_user_name = prefs.getString('fullName');
 
     setState(() {});
+  }
+
+  Future<void> pushToAddDescription(
+    BuildContext context,
+    professionalId,
+    professionalType,
+  ) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddDescriptionScreen(
+          strProfessionalId: professionalId,
+          strProfessionalType: professionalType,
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (result == 'added_description') {
+      setState(() {});
+      get_category_list_WB();
+    }
   }
 }

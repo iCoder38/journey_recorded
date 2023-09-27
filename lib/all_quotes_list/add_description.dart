@@ -28,8 +28,10 @@ class _AddDescriptionScreenState extends State<AddDescriptionScreen> {
   @override
   void initState() {
     if (kDebugMode) {
+      print('==================================');
       print(widget.strProfessionalId);
       print(widget.strProfessionalType);
+      print('==================================');
     }
 
     super.initState();
@@ -41,14 +43,15 @@ class _AddDescriptionScreenState extends State<AddDescriptionScreen> {
       appBar: AppBar(
         backgroundColor: navigation_color,
         title: text_bold_style_custom(
-          navigation_title_notes,
+          //
+          'Description',
           Colors.white,
           16.0,
         ),
         leading: IconButton(
           onPressed: () {
             //
-            Navigator.pop(context);
+            Navigator.pop(context, 'added_description');
           },
           icon: const Icon(
             Icons.chevron_left,
@@ -71,8 +74,8 @@ class _AddDescriptionScreenState extends State<AddDescriptionScreen> {
               controller: cont_add_note_text,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                hintText: 'write note...',
-                labelText: 'Write Note',
+                hintText: 'write description...',
+                labelText: 'Write Description',
               ),
               maxLines: 5,
             ),
@@ -168,7 +171,7 @@ class _AddDescriptionScreenState extends State<AddDescriptionScreen> {
           loader = '0';
         });
         //
-        Navigator.pop(context);
+        Navigator.pop(context, 'added_description');
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',

@@ -33,13 +33,16 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
   var strUserSelectProfile = '1';
   var arrCategoryList = [];
   var strName = '';
+  var strImage = '';
   //
   @override
   void initState() {
     //
     if (kDebugMode) {
+      print('==================================');
       print(widget.dictGetData);
       print(widget.str_message);
+      print('==================================');
     }
     allApiWB();
     super.initState();
@@ -103,48 +106,45 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
                     notesUI(),
                   ]
                 ] else if (strUserSelectProfile == '5') ...[
-                  if (arrCategoryList.isNotEmpty) ...[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        // height: 50,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(
-                            12.0,
-                          ),
-                          border: Border.all(
-                            width: 0.4,
-                          ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      // height: 50,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(
+                          12.0,
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: text_bold_style_custom(
-                                'Description',
-                                Colors.black,
-                                16.0,
-                              ),
-                            ),
-                            //
-                            // const Spacer(),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: text_bold_style_custom(
-                                //,
-                                widget.str_message.toString(),
-                                Colors.black,
-                                14.0,
-                              ),
-                            ),
-                          ],
+                        border: Border.all(
+                          width: 0.4,
                         ),
                       ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: text_bold_style_custom(
+                              'Description',
+                              Colors.black,
+                              16.0,
+                            ),
+                          ),
+                          //
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: text_bold_style_custom(
+                              //,
+                              widget.str_message.toString(),
+                              Colors.black,
+                              14.0,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ]
+                  ),
                 ]
               ],
             ),
@@ -514,6 +514,7 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
                 setState(() {
                   strUserSelectProfile = '5';
                 });
+                print('object 2');
                 // allApiWB();
                 // arrCategoryList.clear();
               },
@@ -581,11 +582,25 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
               height: 120,
               width: 120,
               decoration: BoxDecoration(
-                color: Colors.amberAccent,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(
                   12.0,
                 ),
               ),
+              child: (strImage == '')
+                  ? Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.cover,
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        12.0,
+                      ),
+                      child: Image.network(
+                        strImage.toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
             ),
             Expanded(
               child: Container(
@@ -610,7 +625,6 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
                       16.0,
                     ),
                     //
-
                     Container(
                       margin: const EdgeInsets.only(
                         top: 10.0,
@@ -751,6 +765,7 @@ class _AllQuotesListScreenState extends State<AllQuotesListScreen> {
 
         if (strUserSelectProfile == '1') {
           strName = arrCategoryList[0]['userName'].toString();
+          strImage = arrCategoryList[0]['image'].toString();
         }
         setState(() {});
         //

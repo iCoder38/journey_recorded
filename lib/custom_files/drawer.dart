@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/dashboard/dashboard.dart';
 import 'package:journey_recorded/edit_profile/edit_profile.dart';
+import 'package:journey_recorded/edit_profile/edit_see_profile/edit_see_profile.dart';
 import 'package:journey_recorded/login/login.dart';
 import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
 // import 'package:journey_recorded/splash/splash_screen.dart';
@@ -81,14 +82,6 @@ class _navigationDrawerState extends State<navigationDrawer> {
                 10,
                 1,
               ),
-              // image: const DecorationImage(
-              //   image: AssetImage(
-              //     // image name
-              //     'assets/images/login_back.png',
-              //   ),
-              //   fit: BoxFit.fitHeight,
-              //   opacity: .4,
-              // ),
             ),
             child: Column(
               children: [
@@ -106,7 +99,7 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     ),
                   ),
                   onTap: () {
-                    print('1.1.1');
+                    // print('1.1.1');
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -115,72 +108,8 @@ class _navigationDrawerState extends State<navigationDrawer> {
                             ),
                       ),
                     );
-
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawrer
-                    // Navigator.pop(context);
                   },
                 ),
-                /*ListTile(
-                  leading: const Icon(
-                    Icons.list_alt,
-                  ),
-                  iconColor: Colors.white,
-                  title: Text(
-                    'Categories',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {
-                    print('1.1.1');
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const DashboardScreen(
-                    //       get_login_sender_chat_id: 'Dashboard',
-                    //     ),
-                    //   ),
-                    // );
-
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawrer
-                    // Navigator.pop(context);
-                  },
-                ),*/
-                /*ListTile(
-                  leading: const Icon(
-                    Icons.filter_alt,
-                  ),
-                  trailing: const Icon(
-                    Icons.add,
-                  ),
-                  iconColor: Colors.white,
-                  title: Text(
-                    'Filters',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DashboardScreen(
-                            // get_login_sender_chat_id: 'Dashboard',
-                            ),
-                      ),
-                    );
-                    // Then close the drawer
-                    Navigator.pop(context);
-                  },
-                ),*/
                 ListTile(
                   leading: const Icon(
                     Icons.edit,
@@ -198,7 +127,7 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const EditProfileScreen(
+                        builder: (context) => const EdtiSeeProfileScreen(
                             // get_login_sender_chat_id: 'Dashboard',
                             ),
                       ),

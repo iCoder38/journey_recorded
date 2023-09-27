@@ -1,9 +1,10 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
 // import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:journey_recorded/Utils.dart';
@@ -19,7 +20,9 @@ import 'package:http/http.dart' as http;
 // import 'package:image_picker/image_picker.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  const EditProfileScreen({super.key});
+  const EditProfileScreen({super.key, this.getLoginUserDetails});
+
+  final getLoginUserDetails;
 
   @override
   State<EditProfileScreen> createState() => _EditProfileScreenState();
@@ -35,6 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
   // ImagePicker picker = ImagePicker();
   // XFile? image;
   File? imageFile;
+  var strImageSetType = '0';
   //
   final _formKey = GlobalKey<FormState>();
   //
@@ -55,47 +59,34 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     //
 
     //
-    cont_full_name = TextEditingController();
-    cont_user_name = TextEditingController();
-    cont_email_address = TextEditingController();
-    cont_mobile_number = TextEditingController();
-    cont_address = TextEditingController();
-    cont_career = TextEditingController();
-    cont_skills = TextEditingController();
+    cont_full_name = TextEditingController(
+        text: widget.getLoginUserDetails['fullName'].toString());
+    cont_user_name = TextEditingController(
+        text: widget.getLoginUserDetails['username'].toString());
+    cont_email_address = TextEditingController(
+        text: widget.getLoginUserDetails['email'].toString());
+    cont_mobile_number = TextEditingController(
+        text: widget.getLoginUserDetails['contactNumber'].toString());
+    cont_address = TextEditingController(
+        text: widget.getLoginUserDetails['address'].toString());
+    cont_career = TextEditingController(
+        text: widget.getLoginUserDetails['career'].toString());
+    cont_skills = TextEditingController(
+        text: widget.getLoginUserDetails['favroite_quote'].toString());
     //
     func_get_login_user_data_all_value();
   }
 
   // func_
   func_get_login_user_data_all_value() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    print(prefs.getString('key'));
-    /*
-    await prefs.setString('role', user['role']);
-        await prefs.setString('businessName', user['businessName']);
-        await prefs.setString('businessEmail', user['businessEmail']);
-        await prefs.setString('businessWebSite', user['businessWebSite']);
-        await prefs.setString('businessAddress', user['businessAddress']);
-        await prefs.setString('businessFax', user['businessFax']);
-        await prefs.setString('businessPhone', user['businessPhone']);
-     */
-    str_business_address = prefs.getString('businessWebSite').toString();
-    str_business_fax = prefs.getString('businessFax').toString();
-    cont_full_name.text = prefs.getString('fullName').toString();
-    cont_user_name.text = prefs.getString('username').toString();
-    cont_email_address.text = prefs.getString('businessEmail').toString();
-    cont_mobile_number.text = prefs.getString('businessPhone').toString();
-    cont_address.text = prefs.getString('businessAddress').toString();
-    cont_career.text = prefs.getString('career').toString();
-    cont_skills.text = prefs.getString('favroite_quote').toString();
-
     // print(prefs.getString('image'));
-    if (prefs.getString('image').toString() == '') {
+    if (widget.getLoginUserDetails['image'].toString() == '') {
       imageFile = null;
     } else {
-      imageFile = File(prefs.getString('image')!);
-      // print(imageFile);
-      // str_image = prefs.getString('image').toString();
+      imageFile = File(widget.getLoginUserDetails['image']!);
+      // print(imageFile.toString());
+      strImageSetType = '1';
+
       setState(() {});
     }
   }
@@ -105,15 +96,22 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     return Scaffold(
       appBar: AppBar(
         backgroundColor: navigation_color,
-        title: Text(
-          'Edit  Profile',
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
+        title: text_bold_style_custom(
+          'Edit Profile',
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            //
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
           ),
         ),
       ),
-      drawer: const navigationDrawer(),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Form(
@@ -136,7 +134,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_full_name,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Full Name',
                   ),
                   onChanged: (value) {},
@@ -153,7 +151,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_user_name,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Username',
                   ),
                   onChanged: (value) {},
@@ -170,7 +168,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_email_address,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Email address',
                   ),
                   onChanged: (value) {},
@@ -186,7 +184,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_mobile_number,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Mobile Number',
                   ),
                   onChanged: (value) {},
@@ -202,13 +200,13 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_address,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Address',
                   ),
                   onChanged: (value) {},
                 ),
               ),
-              /*Container(
+              Container(
                 margin: const EdgeInsets.all(
                   10.0,
                 ),
@@ -218,7 +216,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_career,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Career',
                   ),
                   onChanged: (value) {},
@@ -234,12 +232,12 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                   },
                   controller: cont_skills,
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
+                    // border: OutlineInputBorder(),
                     labelText: 'Skills',
                   ),
                   onChanged: (value) {},
                 ),
-              ),*/
+              ),
               //
               if (str_save_and_continue_loader == '1')
                 const Padding(
@@ -287,7 +285,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                     ),
                   ),
                 ),
-              InkWell(
+              /*InkWell(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -338,7 +336,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                     ),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
@@ -358,31 +356,55 @@ class _EditProfileScreenState extends State<EditProfileScreen>
                 height: 140,
                 width: 140,
                 decoration: BoxDecoration(
-                  color: Colors.pink,
+                  color: Colors.amber,
                   borderRadius: BorderRadius.circular(
                     12,
                   ),
                 ),
               )
-            : Container(
-                height: 140,
-                width: 140,
-                decoration: BoxDecoration(
-                  color: Colors.pink,
-                  borderRadius: BorderRadius.circular(
-                    12,
+            : (strImageSetType == '1')
+                ? Container(
+                    height: 140,
+                    width: 140,
+                    decoration: BoxDecoration(
+                      color: Colors.pink,
+                      borderRadius: BorderRadius.circular(
+                        12,
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        12.0,
+                      ),
+                      child: Image.network(
+                        fit: BoxFit.cover,
+                        //
+                        widget.getLoginUserDetails['image'].toString(),
+                        // str_image,
+                        //
+                        height: 150.0,
+                        width: 100.0,
+                      ),
+                    ),
+                  )
+                : SizedBox(
+                    height: 140,
+                    width: 140,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        12.0,
+                      ),
+                      child: Image.file(
+                        fit: BoxFit.cover,
+                        //
+                        imageFile!,
+                        // str_image,
+                        //
+                        height: 150.0,
+                        width: 100.0,
+                      ),
+                    ),
                   ),
-                ),
-                child: Image.file(
-                  fit: BoxFit.cover,
-                  //
-                  imageFile!,
-                  // str_image,
-                  //
-                  height: 150.0,
-                  width: 100.0,
-                ),
-              ),
       ),
     );
   }
@@ -407,6 +429,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
               if (pickedFile != null) {
                 setState(() {
                   str_image_status = '1';
+                  strImageSetType = '0';
                   imageFile = File(pickedFile.path);
                 });
               }
@@ -434,6 +457,7 @@ class _EditProfileScreenState extends State<EditProfileScreen>
 
                 setState(() {
                   str_image_status = '1';
+                  strImageSetType = '0';
                   imageFile = File(pickedFile.path);
                 });
               }
@@ -472,7 +496,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     if (str_image_status == '0') {
       func_update_profile_without_image();
     } else {
-      print('with image');
+      if (kDebugMode) {
+        print('with image');
+      }
       upload_info_profile_picture();
     }
   }
@@ -542,7 +568,16 @@ class _EditProfileScreenState extends State<EditProfileScreen>
 
         setState(() {
           str_save_and_continue_loader = '0';
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              closeIconColor: Colors.amber,
+              content: Text(
+                get_data['msg'].toString(),
+              ),
+            ),
+          );
         });
+        Navigator.pop(context, 'get_back_from_edit_profile');
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -563,17 +598,6 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     var request =
         await http.MultipartRequest('POST', Uri.parse(application_base_url));
 
-/*
-'action': 'editprofile',
-          'userId': prefs.getInt('userId').toString(),
-          'fullName': cont_full_name.text.toString(),
-          'contactNumber': cont_mobile_number.text.toString(),
-          'address': cont_address.text.toString(),
-          'career': cont_career.text.toString(),
-          'favroite_quote': cont_skills.text.toString(),
-          'deviceToken': '',
-          'device': 'iOS',
-          */
     request.fields['action'] = 'editprofile';
     request.fields['userId'] = prefs.getInt('userId').toString();
 
@@ -590,7 +614,9 @@ class _EditProfileScreenState extends State<EditProfileScreen>
     var response = await request.send();
     var responsed = await http.Response.fromStream(response);
     final responsedData = json.decode(responsed.body);
-    print(responsedData);
+    if (kDebugMode) {
+      print(responsedData);
+    }
 
     if (responsedData['status'].toString() == 'success') {
       Map<String, dynamic> user = responsedData['data'];
@@ -616,6 +642,15 @@ class _EditProfileScreenState extends State<EditProfileScreen>
 
       setState(() {
         str_save_and_continue_loader = '0';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            closeIconColor: Colors.amber,
+            content: Text(
+              responsedData['msg'].toString(),
+            ),
+          ),
+        );
+        Navigator.pop(context, 'get_back_from_edit_profile');
       });
     }
 
