@@ -1,7 +1,8 @@
 // ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, avoid_print, use_build_context_synchronously
 
 import 'dart:convert';
-// import 'dart:html';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -13,9 +14,6 @@ import 'package:journey_recorded/edit_business_profile/edit_business_profile.dar
 
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 // import 'package:image_picker/image_picker.dart';
 

@@ -794,21 +794,63 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
   AppBar app_bar_goals_UI() {
     return AppBar(
-      backgroundColor: navigation_color,
-      title: Text(
-        ///
-        navigation_title_goal,
-
-        ///
-        style: TextStyle(
-          fontFamily: font_style_name,
-          fontSize: 18.0,
+      title: text_bold_style_custom(
+        //
+        'Goals', Colors.white, 16.0,
+      ),
+      leading: IconButton(
+        onPressed: () {
+          //
+          Navigator.pop(context);
+        },
+        icon: const Icon(
+          Icons.chevron_left,
           color: Colors.white,
         ),
       ),
-      // leading: Icon(
-      //   Icons.abc,
-      // ),
+      backgroundColor: navigation_color,
+      actions: [
+        InkWell(
+          onTap: () {
+            if (kDebugMode) {
+              print('click on add goals');
+            }
+            _navigateAndDisplaySelection(context);
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const AddGoals(),
+            //   ),
+            // );
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(
+              right: 20.0,
+            ),
+            child: CircleAvatar(
+              radius: 14,
+              backgroundColor: app_yellow_color,
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+                size: 16,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+    /*AppBar(
+      backgroundColor: navigation_color,
+      title: text_bold_style_custom(
+        'Goals',
+        Colors.white,
+        16.0,
+      ),
+      iconTheme:  icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
       actions: [
         // Padding(
         //   padding: const EdgeInsets.all(8.0),
@@ -850,22 +892,8 @@ class _GoalsScreenState extends State<GoalsScreen> {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            right: 20.0,
-          ),
-          child: CircleAvatar(
-            radius: 14,
-            backgroundColor: app_yellow_color,
-            child: const Icon(
-              Icons.question_mark,
-              color: Colors.black,
-              size: 16,
-            ),
-          ),
-        ),
       ],
-    );
+    );*/
   }
 
   Future<void> _navigateAndDisplaySelection(BuildContext context) async {

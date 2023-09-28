@@ -641,7 +641,7 @@ class _GoalsDetailsScreenState extends State<GoalsDetailsScreen> {
                                     width: 10,
                                   ),
                                   Text(
-                                    'Complete',
+                                    'Complete 3',
                                     style: TextStyle(
                                       fontFamily: font_style_name,
                                       fontWeight: FontWeight.bold,

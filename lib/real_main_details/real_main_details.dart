@@ -90,6 +90,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var str_which_tab_bar_index_selected = 0;
   var str_show_ui = 'n.a';
   //
+  var strUserClickedWhichTabProfile = '';
   // notes
   var arr_notes_list = [];
   var str_get_message;
@@ -118,11 +119,13 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var arr_sub_goals = [];
 
   // tasks
-  var str_task_count = '...';
+  var str_task_count = '';
+  var str_task_count_completed = '';
   var arr_task_list = [];
-
-  // tasks
   var str_main_loader = '0';
+  var strTotalThisGoalTaskCount = '';
+  var strTotalThisGoalTaskComplete = '';
+  var strTotalTaskCompletepercentage = '';
 
   // quest
   var str_quest_count = '...';
@@ -135,6 +138,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var arr_mission_info = [];
   var str_total_task_complete = '0';
   var str_professtional_id = '0';
+
   // reward
   var arr_reward = [];
   //
@@ -142,6 +146,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   double _currentSliderValue = 0;
   final GetDifferenceBetweenDate parse_days_left = GetDifferenceBetweenDate();
   var str_sub_goal_show = '0';
+  double sliderMaxValue = 0;
+  var sliderValue = '';
+  var sliderTotalvalue = '';
   //
   late TabController _tabController;
   //
@@ -1379,6 +1386,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               str_custom_loader: 'Task not Added yet.',
               str_status: '4',
             )
+          else if (str_main_loader == 'tasks_not_completed')
+            const CustomeLoaderPopUp(
+              str_custom_loader: 'Task not Completed yet.',
+              str_status: '4',
+            )
           else
             for (int i = 0; i < arr_task_list.length; i++) ...[
               InkWell(
@@ -2380,7 +2392,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                             child: Row(
                               children: <Widget>[
                                 const SizedBox(
-                                  width: 10,
+                                  width: 20,
                                 ),
                                 text_regular_style_custom(
                                   'Complete',
@@ -2388,11 +2400,51 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                   14.0,
                                 ),
                                 const Spacer(),
-                                text_regular_style_custom(
-                                  '0%',
-                                  Colors.white,
-                                  14.0,
+                                // strTotalThisGoalTaskCount =
+                                //     strTotalThisGoalTaskComplete =
+                                Row(
+                                  children: [
+                                    text_regular_style_custom(
+                                      //
+                                      str_task_count_completed.toString(),
+                                      Colors.white,
+                                      14.0,
+                                    ),
+                                    //
+                                    text_regular_style_custom(
+                                      //
+                                      ' / '.toString(),
+                                      Colors.white,
+                                      14.0,
+                                    ),
+                                    //
+                                    text_regular_style_custom(
+                                      //
+                                      strTotalThisGoalTaskCount.toString(),
+                                      Colors.white,
+                                      14.0,
+                                    ),
+                                    //
+                                    text_regular_style_custom(
+                                      // 0%
+                                      ' '.toString(),
+                                      Colors.white,
+                                      14.0,
+                                    ),
+                                    //
+                                    text_regular_style_custom(
+                                      '( $strTotalTaskCompletepercentage % )',
+                                      Colors.white,
+                                      14.0,
+                                    ),
+                                    //
+                                  ],
                                 ),
+                                //
+                                const SizedBox(
+                                  width: 20.0,
+                                ),
+                                //
                               ],
                             ),
                           ),
@@ -2403,18 +2455,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                             height: 20,
                             color: Colors.transparent,
                             width: MediaQuery.of(context).size.width,
-                            child: Slider(
-                              value: _currentSliderValue,
-                              max: 100,
-                              divisions: 5,
-                              label: _currentSliderValue.round().toString(),
-                              onChanged: (double value) {
-                                setState(
-                                  () {
-                                    _currentSliderValue = value;
-                                  },
-                                );
-                              },
+                            child: AbsorbPointer(
+                              child: Slider(
+                                value: _currentSliderValue,
+                                max: sliderMaxValue,
+                                // divisions: 5,
+                                label: _currentSliderValue.round().toString(),
+                                onChanged: (value) => print(value),
+                              ),
                             ),
                           ),
                         ],
@@ -2423,8 +2471,13 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         height: 10.0,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
+                          //
+                          const SizedBox(
+                            width: 20.0,
+                          ),
+                          //
                           Container(
                             margin: const EdgeInsets.only(
                               bottom: 6.0,
@@ -2468,9 +2521,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                               ),
                             ),
                           ),
-                          const SizedBox(
-                            width: 6,
-                          ),
+                          const Spacer(),
                           Container(
                             height: 40,
                             width: 40,
@@ -2502,6 +2553,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                               },
                             ),
                           ),
+                          //
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          //
                         ],
                       ),
                     ],
@@ -2768,19 +2824,23 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       InkWell(
                         onTap: () {
                           print('object 2.1');
-
+                          strUserClickedWhichTabProfile = 'tab_sub_goal';
                           get_sub_goals_list_WB();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Sub-Goal'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                          child:
+                              (strUserClickedWhichTabProfile == 'tab_sub_goal')
+                                  ? text_bold_style_custom(
+                                      'Sub-Goal',
+                                      Colors.white,
+                                      16.0,
+                                    )
+                                  : text_regular_style_custom(
+                                      'Sub-Goal',
+                                      Colors.white,
+                                      14.0,
+                                    ),
                         ),
                       ),
                       Padding(
@@ -2822,6 +2882,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 InkWell(
                   onTap: () {
                     //
+                    strUserClickedWhichTabProfile = 'tab_quest';
                     if (widget.strFromViewDetails == 'yes') {
                       questListFromShopDetails();
                     } else {
@@ -2836,14 +2897,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Quest'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                          child: (strUserClickedWhichTabProfile == 'tab_quest')
+                              ? text_bold_style_custom(
+                                  'Quest',
+                                  Colors.white,
+                                  16.0,
+                                )
+                              : text_regular_style_custom(
+                                  'Quest',
+                                  Colors.white,
+                                  14.0,
+                                ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -2893,21 +2957,25 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           if (kDebugMode) {
                             print('LINE NUMBER ====> 2931');
                           }
-
+                          strUserClickedWhichTabProfile = 'tab_mission';
                           (widget.strFromViewDetails == 'yes')
                               ? get_mission_list_WB_without_user_id()
                               : get_mission_list_WB();
                         },
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Mission'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                          child:
+                              (strUserClickedWhichTabProfile == 'tab_mission')
+                                  ? text_bold_style_custom(
+                                      'Mission',
+                                      Colors.white,
+                                      16.0,
+                                    )
+                                  : text_regular_style_custom(
+                                      'Mission',
+                                      Colors.white,
+                                      14.0,
+                                    ),
                         ),
                       ),
                       Padding(
@@ -2948,6 +3016,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 ),
                 InkWell(
                   onTap: () {
+                    strUserClickedWhichTabProfile = 'tab_task';
                     (widget.strFromViewDetails == 'yes')
                         ? func_get_task_list_WB_remove_user_id()
                         : func_get_task_list_WB();
@@ -2960,14 +3029,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Tasks'.toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                            ),
-                          ),
+                          child: (strUserClickedWhichTabProfile == 'tab_task')
+                              ? text_bold_style_custom(
+                                  'Task',
+                                  Colors.white,
+                                  16.0,
+                                )
+                              : text_regular_style_custom(
+                                  'Task',
+                                  Colors.white,
+                                  14.0,
+                                ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -3006,46 +3078,64 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     bottom: 10.0,
                   ),
                 ),
-                Container(
-                  // width: 40,
-                  color: Colors.transparent,
-                  child: Row(
-                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Complete'.toUpperCase(),
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: font_style_name,
-                            fontSize: 14.0,
-                          ),
+                GestureDetector(
+                  onTap: () {
+                    //
+                    print('user clicked goal complete');
+                    //
+                    strUserClickedWhichTabProfile = 'tab_complete';
+                    (widget.strFromViewDetails == 'yes')
+                        ? funcTaskCompletedWithoutUserIdWB()
+                        : funcTaskCompletedWithUserIdWB();
+
+                    //
+                  },
+                  child: Container(
+                    // width: 40,
+                    color: Colors.transparent,
+                    child: Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              (strUserClickedWhichTabProfile == 'tab_complete')
+                                  ? text_bold_style_custom(
+                                      'Complete',
+                                      Colors.white,
+                                      16.0,
+                                    )
+                                  : text_regular_style_custom(
+                                      'Complete',
+                                      Colors.white,
+                                      14.0,
+                                    ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            borderRadius: BorderRadius.circular(
-                              14.0,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(
+                                14.0,
+                              ),
                             ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '0',
-                              style: TextStyle(
-                                fontFamily: font_style_name,
-                                fontSize: 16.0,
+                            child: Center(
+                              child: Text(
+                                //
+                                str_task_count_completed.toString(),
+                                style: TextStyle(
+                                  fontFamily: font_style_name,
+                                  fontSize: 16.0,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -3093,6 +3183,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 child: InkWell(
                   onTap: () {
                     //
+                    strUserClickedWhichTabProfile = 'tab_task';
                     (widget.strFromViewDetails == 'yes')
                         ? func_get_task_list_WB_remove_user_id()
                         : func_get_task_list_WB();
@@ -3106,11 +3197,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: text_regular_style_custom(
-                            'Task',
-                            Colors.white,
-                            14.0,
-                          ),
+                          child: (strUserClickedWhichTabProfile == 'tab_task')
+                              ? text_bold_style_custom(
+                                  'Task',
+                                  Colors.white,
+                                  16.0,
+                                )
+                              : text_regular_style_custom(
+                                  'Task',
+                                  Colors.white,
+                                  14.0,
+                                ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -3153,45 +3250,63 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             ),
           ),
           Expanded(
-            child: Container(
-              height: 40,
-              color: Colors.transparent,
-              child: Align(
-                child: Container(
-                  // width: 40,
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: text_regular_style_custom(
-                          'Complete',
-                          Colors.white,
-                          14.0,
+            child: GestureDetector(
+              onTap: () {
+                //
+                print('mission => complete clicked');
+                strUserClickedWhichTabProfile = 'tab_complete';
+                (widget.strFromViewDetails == 'yes')
+                    ? funcTaskCompletedWithoutUserIdWB()
+                    : funcTaskCompletedWithUserIdWB();
+              },
+              child: Container(
+                height: 40,
+                color: Colors.transparent,
+                child: Align(
+                  child: Container(
+                    // width: 40,
+                    color: Colors.transparent,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child:
+                              (strUserClickedWhichTabProfile == 'tab_complete')
+                                  ? text_bold_style_custom(
+                                      'Complete',
+                                      Colors.white,
+                                      16.0,
+                                    )
+                                  : text_regular_style_custom(
+                                      'Complete',
+                                      Colors.white,
+                                      14.0,
+                                    ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 26,
-                          width: 26,
-                          decoration: BoxDecoration(
-                            color: Colors.pink,
-                            borderRadius: BorderRadius.circular(
-                              8.0,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 26,
+                            width: 26,
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(
+                                8.0,
+                              ),
+                            ),
+                            child: Center(
+                              child: text_regular_style_custom(
+                                //
+                                str_task_count_completed.toString(),
+                                Colors.black,
+                                14.0,
+                              ),
                             ),
                           ),
-                          child: Center(
-                            child: text_regular_style_custom(
-                              str_total_task_complete,
-                              Colors.black,
-                              14.0,
-                            ),
-                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -3466,7 +3581,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           ),
                           child: Center(
                             child: Text(
-                              '0',
+                              //
+                              str_task_count_completed.toString(),
                               style: TextStyle(
                                 fontFamily: font_style_name,
                                 fontSize: 16.0,
@@ -3993,6 +4109,160 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     }
   }
 
+  funcTaskCompletedWithUserIdWB() async {
+    if (kDebugMode) {
+      print('=====> POST : TASKS LIST 1.0');
+    }
+
+    str_show_ui = 'tasks';
+
+    str_tab_press = 'tasks';
+
+    str_main_loader = 'tasks_loader_start';
+    setState(() {});
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'tasklist',
+          'userId': prefs.getInt('userId').toString(),
+          'profesionalId': str_professtional_id.toString(),
+          'profesionalType': widget.str_professional_type.toString(),
+          'completed': '2',
+          'pageNo': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print('task list data');
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        arr_task_list.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          // print(get_data['data'][i]);
+          arr_task_list.add(get_data['data'][i]);
+        }
+
+        // str_task_count = arr_task_list.length.toString();
+
+        if (arr_task_list.isEmpty) {
+          str_main_loader = 'tasks_not_completed';
+        } else {
+          str_main_loader = 'tasks_loader_stop';
+        }
+
+        setState(() {});
+
+        // mission_info_list_WB();
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
+  funcTaskCompletedWithoutUserIdWB() async {
+    if (kDebugMode) {
+      print('=====> POST : TASKS LIST 1.0');
+    }
+
+    str_show_ui = 'tasks';
+
+    str_tab_press = 'tasks';
+
+    str_main_loader = 'tasks_loader_start';
+    setState(() {});
+
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'tasklist',
+          // 'userId': prefs.getInt('userId').toString(),
+          'profesionalId': str_professtional_id.toString(),
+          'profesionalType': widget.str_professional_type.toString(),
+          'completed': '2',
+          'pageNo': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print('task list data');
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        //
+        arr_task_list.clear();
+        //
+        for (var i = 0; i < get_data['data'].length; i++) {
+          // print(get_data['data'][i]);
+          arr_task_list.add(get_data['data'][i]);
+        }
+
+        // str_task_count = arr_task_list.length.toString();
+
+        if (arr_task_list.isEmpty) {
+          str_main_loader = 'tasks_not_completed';
+        } else {
+          str_main_loader = 'tasks_loader_stop';
+        }
+
+        setState(() {});
+
+        // mission_info_list_WB();
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
+  }
+
   func_get_task_list_WB_remove_user_id() async {
     if (kDebugMode) {
       print('=====> POST : TASKS LIST 1.0');
@@ -4029,6 +4299,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
     if (kDebugMode) {
+      print('task list data');
       print(get_data);
     }
 
@@ -4043,7 +4314,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           arr_task_list.add(get_data['data'][i]);
         }
 
-        str_task_count = arr_task_list.length.toString();
+        // str_task_count = arr_task_list.length.toString();
 
         if (arr_task_list.isEmpty) {
           str_main_loader = 'tasks_data_empty';
@@ -4102,6 +4373,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
+    print('task list data');
     print(get_data);
 
     if (resposne.statusCode == 200) {
@@ -4115,7 +4387,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           arr_task_list.add(get_data['data'][i]);
         }
 
-        str_task_count = arr_task_list.length.toString();
+        //  str_task_count = arr_task_list.length.toString();
 
         if (arr_task_list.isEmpty) {
           str_main_loader = 'tasks_data_empty';
@@ -5892,7 +6164,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
         //
         str_sub_goal_count = 'n.a.';
-        str_task_count = get_data['data']['totalTask'].toString();
+        // str_task_count = get_data['data']['totalTask'].toString();
         str_quest_count = get_data['data']['totalQuest'].toString();
         str_mission_count = get_data['data']['totalMission'].toString();
         strGroupMainId = get_data['data']['groupId_Main'].toString();
@@ -5902,7 +6174,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
 
         str_mission_info_loader = '1';
-        setState(() {});
+        setState(() {
+          strTotalThisGoalTaskCount = get_data['data']['totalTask'].toString();
+          strTotalThisGoalTaskComplete =
+              get_data['data']['totalTaskCompleted'].toString();
+
+          var calculate = (int.parse(strTotalThisGoalTaskComplete) /
+                  int.parse(strTotalThisGoalTaskCount)) *
+              100;
+
+          int i = calculate.toInt();
+
+          strTotalTaskCompletepercentage = i.toString();
+          // slider
+          sliderValue = strTotalThisGoalTaskComplete;
+          sliderTotalvalue = strTotalThisGoalTaskCount;
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          // total task count
+          var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
+              int.parse(strTotalThisGoalTaskComplete);
+          str_task_count = totalTaskCount.toString();
+          str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+        });
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -5948,7 +6242,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
         //
         str_sub_goal_count = 'n.a.';
-        str_task_count = get_data['data']['totalTask'].toString();
+        // str_task_count = get_data['data']['totalTask'].toString();
         str_quest_count = get_data['data']['totalQuest'].toString();
         str_mission_count = get_data['data']['totalMission'].toString();
         strGroupMainId = get_data['data']['groupId_Main'].toString();
@@ -5958,7 +6252,31 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         //
 
         str_mission_info_loader = '1';
-        setState(() {});
+        setState(() {
+          strTotalThisGoalTaskCount = get_data['data']['totalTask'].toString();
+          strTotalThisGoalTaskComplete =
+              get_data['data']['totalTaskCompleted'].toString();
+
+          var calculate = (int.parse(strTotalThisGoalTaskComplete) /
+                  int.parse(strTotalThisGoalTaskCount)) *
+              100;
+
+          int i = calculate.toInt();
+
+          strTotalTaskCompletepercentage = i.toString();
+          //
+          // slider
+          sliderValue = strTotalThisGoalTaskComplete;
+          sliderTotalvalue = strTotalThisGoalTaskCount;
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          //
+          // total task count
+          var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
+              int.parse(strTotalThisGoalTaskComplete);
+          str_task_count = totalTaskCount.toString();
+          str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+        });
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
@@ -6046,13 +6364,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
+    print('get data from here');
     print(get_data);
 
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
         str_sub_goal_count = get_data['data']['totalSubGoal'].toString();
-        str_task_count = get_data['data']['totalTask'].toString();
+        // str_task_count = get_data['data']['totalTask'].toString();
         str_quest_count = get_data['data']['totalQuest'].toString();
         str_mission_count = get_data['data']['totalMission'].toString();
         strGroupMainId = get_data['data']['groupId_Main'].toString();
@@ -6060,7 +6379,33 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             get_data['data']['totalTaskCompleted'].toString();
         str_professtional_id = get_data['data']['goalId'].toString();
         //
-        setState(() {});
+        setState(() {
+          strTotalThisGoalTaskCount =
+              get_data['data']['totalThisGoalTask'].toString();
+          strTotalThisGoalTaskComplete =
+              get_data['data']['totalThisGoalTaskCompleted'].toString();
+
+          var calculate = (int.parse(strTotalThisGoalTaskComplete) /
+                  int.parse(strTotalThisGoalTaskCount)) *
+              100;
+
+          int i = calculate.toInt();
+
+          strTotalTaskCompletepercentage = i.toString();
+          // slider
+          sliderValue = strTotalThisGoalTaskComplete;
+          sliderTotalvalue = strTotalThisGoalTaskCount;
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          //
+          // total task count
+          var totalTaskCount =
+              int.parse(get_data['data']['totalTask'].toString()) -
+                  int.parse(get_data['data']['totalTaskCompleted'].toString());
+          str_task_count = totalTaskCount.toString();
+          str_task_count_completed =
+              get_data['data']['totalTaskCompleted'].toString();
+        });
       } else {
         print(
           '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',

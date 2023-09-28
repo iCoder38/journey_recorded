@@ -2,9 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/change_password/change_password.dart';
 import 'package:journey_recorded/dashboard/dashboard.dart';
 import 'package:journey_recorded/edit_profile/edit_profile.dart';
 import 'package:journey_recorded/edit_profile/edit_see_profile/edit_see_profile.dart';
+import 'package:journey_recorded/help/help.dart';
 import 'package:journey_recorded/login/login.dart';
 import 'package:journey_recorded/settings/settings.dart';
 import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
@@ -196,10 +198,35 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     ),
                   ),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HelpScreen(
+                            // get_login_sender_chat_id: 'Dashboard',
+                            ),
+                      ),
+                    );
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(
+                    Icons.lock,
+                  ),
+                  iconColor: Colors.white,
+                  title: text_regular_style_custom(
+                    'Change Password',
+                    Colors.white,
+                    14.0,
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ChangePasswordScreen(
+                            // get_login_sender_chat_id: 'Dashboard',
+                            ),
+                      ),
+                    );
                   },
                 ),
                 ListTile(

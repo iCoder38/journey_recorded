@@ -47,6 +47,14 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   //
+  var strLoginUserName = '';
+  var strCurrentLabel = '';
+  var strLoginUserImage = '';
+  var strTotalCoins = '';
+  var sliderValue = '';
+  var sliderTotalvalue = '';
+  double sliderMaxValue = 0;
+  //
   var login_user_name;
   var arrCategoryList = [];
   var arrSaveIdAndMessage = [];
@@ -60,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // slider
   double _currentSliderValue = 0;
   //
-  var strTotalCoins = '0';
+
   var strLoginUserLevel = '0';
   //
   var strCatLoader = '0';
@@ -106,9 +114,75 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-    func_add();
-    get_category_list_WB();
-    func_name();
+
+    profileWB();
+  }
+
+  // profile
+  profileWB() async {
+    if (kDebugMode) {
+      print('=====> POST : PROFILE DATA');
+    }
+    setState(() {
+      strCatLoader = '1';
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'profile',
+          'userId': prefs.getInt('userId').toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {}
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        if (kDebugMode) {
+          print('============= LOGIN USER DATA =====================');
+          print(get_data);
+          print('===================================================');
+        }
+        //
+        setState(() {
+          strLoginUserName = get_data['data']['fullName'].toString();
+          strCurrentLabel = get_data['data']['currentLabel'].toString();
+          strLoginUserImage = get_data['data']['image'].toString();
+          strTotalCoins = get_data['data']['totalPoints'].toString();
+          sliderValue = get_data['data']['T_G_H_current_level'].toString();
+          sliderTotalvalue = get_data['data']['currentLabel_value'].toString();
+          //
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+        });
+
+        get_category_list_WB();
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+      if (kDebugMode) {
+        print('something went wrong');
+      }
+    }
   }
 
 // get cart
@@ -116,9 +190,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (kDebugMode) {
       print('=====> POST : CATEGORY');
     }
-    setState(() {
-      strCatLoader = '1';
-    });
+
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -277,26 +349,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
           iconTheme: const IconThemeData(
             color: Colors.white,
           ),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.only(
-                right: 20.0,
-              ),
-              child: Icon(
-                Icons.notifications,
-                color: Colors.white,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                right: 20.0,
-              ),
-              child: Icon(
-                Icons.margin,
-                color: Colors.white,
-              ),
-            ),
-          ],
         ),
         body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
@@ -528,7 +580,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   height: 90,
                                   width: 90,
                                   decoration: BoxDecoration(
-                                    color: Colors.blue,
+                                    color: Colors.white,
                                     border: Border.all(
                                       color: Colors.white,
                                       width: 2,
@@ -539,6 +591,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ),
                                   ),
+                                  child: (strLoginUserImage == '')
+                                      ? Image.asset(
+                                          'assets/images/logo.png',
+                                        )
+                                      : ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                          child: Image.network(
+                                            strLoginUserImage.toString(),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                 ),
                               ),
                               Expanded(
@@ -560,8 +625,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         children: [
                                           //
                                           const Icon(
-                                            Icons.currency_rupee,
-                                            color: Colors.white,
+                                            Icons.confirmation_num,
+                                            color: Colors.yellow,
                                           ),
                                           //
                                           Expanded(
@@ -591,14 +656,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           const SizedBox(
                                             width: 20,
                                           ),
-                                          Text(
-                                            '13/3600',
-                                            style: TextStyle(
-                                              fontFamily: font_style_name,
-                                              fontSize: 20.0,
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          text_bold_style_custom(
+                                            //
+                                            sliderValue,
+                                            Colors.white,
+                                            18.0,
+                                          ),
+                                          text_bold_style_custom(
+                                            //
+                                            ' / ',
+                                            Colors.white,
+                                            14.0,
+                                          ),
+                                          text_bold_style_custom(
+                                            //
+                                            sliderTotalvalue,
+                                            Colors.white,
+                                            18.0,
                                           ),
                                         ],
                                       ),
@@ -610,8 +684,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           color: Colors.transparent,
                                           child: Slider(
                                             value: _currentSliderValue,
-                                            max: 100,
-                                            divisions: 5,
+                                            max: sliderMaxValue,
+                                            divisions: 100,
                                             label: _currentSliderValue
                                                 .round()
                                                 .toString(),
@@ -645,16 +719,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             color: Colors.transparent,
                             child: Align(
                               alignment: Alignment.center,
-                              child: Text(
-                                //
-                                login_user_name.toString(),
-                                //
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 14.0,
-                                  color: Colors.white,
-                                ),
+                              child: text_regular_style_custom(
+                                strLoginUserName,
+                                Colors.white,
+                                14.0,
                               ),
                             ),
                           ),
@@ -674,7 +742,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 children: <Widget>[
                                   Container(
                                     height: 60,
-                                    width: 160,
+                                    width: 180,
                                     decoration: const BoxDecoration(
                                       image: DecorationImage(
                                         image: AssetImage(
@@ -686,16 +754,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Text(
-                                        //
-                                        'Level : ' +
-                                            strLoginUserLevel.toString(),
-                                        //
-                                        style: TextStyle(
-                                          fontFamily: font_style_name,
-                                          fontSize: 14.0,
-                                          color: Colors.white,
-                                        ),
+                                      child: text_regular_style_custom(
+                                        'Level : $strCurrentLabel',
+                                        Colors.white,
+                                        14.0,
                                       ),
                                     ),
                                   ),

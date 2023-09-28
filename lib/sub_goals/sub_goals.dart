@@ -139,54 +139,21 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: navigation_color,
+        title: text_bold_style_custom(
+          //
+          'Sub - Goals', Colors.white, 16.0,
+        ),
         leading: IconButton(
+          onPressed: () {
+            //
+            Navigator.pop(context);
+          },
           icon: const Icon(
             Icons.chevron_left,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          ///
-          ///
-          navigation_title_sub_goal,
-
-          ///
-          ///
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: app_yellow_color,
-              child: const Icon(
-                Icons.add,
-                color: Colors.black,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              right: 20.0,
-            ),
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: app_yellow_color,
-              child: const Icon(
-                Icons.question_mark,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
+        backgroundColor: navigation_color,
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,

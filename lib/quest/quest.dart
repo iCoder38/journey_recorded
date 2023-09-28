@@ -117,6 +117,23 @@ class _QuestScreenState extends State<QuestScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: text_bold_style_custom(
+          //
+          'Quest', Colors.white, 16.0,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            //
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
+        ),
+        backgroundColor: navigation_color,
+      ),
+      /*AppBar(
         backgroundColor: navigation_color,
         title: Text(
           ///
@@ -171,7 +188,7 @@ class _QuestScreenState extends State<QuestScreen> {
             ),
           ),
         ],
-      ),
+      ),*/
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
