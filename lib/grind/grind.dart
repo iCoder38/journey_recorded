@@ -505,10 +505,8 @@ class _GrindScreenState extends State<GrindScreen> {
                                 addOneGrindWB(
                                   arrGrindList[i]['grindId'].toString(),
                                   arrGrindList[i]['categoryId'].toString(),
-                                  int.parse(arrGrindList[i]
-                                              ['total_completed_Count']
-                                          .toString()) +
-                                      1,
+                                  arrGrindList[i]['time_to_complete']
+                                      .toString(),
                                   arrGrindList[i]['grindName'].toString(),
                                 );
                                 //
@@ -524,7 +522,7 @@ class _GrindScreenState extends State<GrindScreen> {
                                 ),
                                 child: Center(
                                   child: text_bold_style_custom(
-                                    arrGrindList[i]['time_to_complete']
+                                    arrGrindList[i]['no_of_time_to_complete']
                                         .toString(),
                                     Colors.white,
                                     14.0,

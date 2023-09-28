@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -98,7 +99,7 @@ class _RequestAcceptDeclineScreenState
                 Expanded(
                   child: Container(
                     margin: const EdgeInsets.all(20.0),
-                    height: 80,
+                    height: 60,
                     decoration: BoxDecoration(
                       color: const Color.fromRGBO(
                         32,
@@ -141,7 +142,7 @@ class _RequestAcceptDeclineScreenState
                     },
                     child: Container(
                       margin: const EdgeInsets.all(20.0),
-                      height: 80,
+                      height: 60,
                       decoration: BoxDecoration(
                         color: const Color.fromRGBO(
                           250,
@@ -321,7 +322,9 @@ status:  //2= accept 3=decline
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);
-    print(get_data);
+    if (kDebugMode) {
+      print(get_data);
+    }
 
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {

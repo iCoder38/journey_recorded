@@ -52,14 +52,10 @@ class _CreateCheckListScreenState extends State<CreateCheckListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          //
-          'Create Checklist'.toString().toUpperCase(),
-          //
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+        title: text_bold_style_custom(
+          'Create Checklist',
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           icon: const Icon(

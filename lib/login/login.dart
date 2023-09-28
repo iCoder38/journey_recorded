@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, unused_element, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, unused_element, use_build_context_synchronously, avoid_print
 
 import 'dart:ffi';
 
@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     right: 20.0,
                     top: 20.0,
                   ),
-                  height: 80,
+                  height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(
-                        10.0,
+                        6.0,
                       ),
                       child: TextFormField(
                         controller: cont_email_address,
@@ -139,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: navigation_color,
                           ),
                           border: InputBorder.none,
-                          labelText: 'Username...',
+                          hintText: 'Username...',
                         ),
                       ),
                     ),
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     right: 20.0,
                     top: 10.0,
                   ),
-                  height: 80,
+                  height: 60,
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -164,9 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.all(
-                        10.0,
-                      ),
+                      padding: const EdgeInsets.all(6.0),
                       child: TextFormField(
                         controller: cont_password,
                         // keyboardType: TextInputType.number,
@@ -176,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: navigation_color,
                           ),
                           border: InputBorder.none,
-                          labelText: 'Password...',
+                          hintText: 'Password...',
                         ),
                       ),
                     ),
@@ -188,71 +186,72 @@ class _LoginScreenState extends State<LoginScreen> {
                 // if (str_register_now_status == '0') ... [],
 
                 InkWell(
-                    onTap: () {
-                      func_call_before_sign_in_validation();
-                    },
-                    child: (str_login_loader == '0')
-                        ? Container(
-                            margin: const EdgeInsets.only(
-                              top: 20.0,
-                              left: 20.0,
-                              right: 20.0,
+                  onTap: () {
+                    func_call_before_sign_in_validation();
+                  },
+                  child: (str_login_loader == '0')
+                      ? Container(
+                          margin: const EdgeInsets.only(
+                            top: 20.0,
+                            left: 20.0,
+                            right: 20.0,
+                          ),
+                          height: 60,
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(
+                              1,
+                              26,
+                              77,
+                              1,
                             ),
-                            height: 80,
-                            decoration: BoxDecoration(
-                              color: const Color.fromRGBO(
-                                1,
-                                26,
-                                77,
-                                1,
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                10.0,
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 5,
-                                  blurRadius: 7,
-                                  offset: const Offset(
-                                    0,
-                                    3,
-                                  ), // changes position of shadow
-                                ),
-                              ],
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Sign In',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.all(
+                            borderRadius: BorderRadius.circular(
                               10.0,
                             ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(
-                                12.0,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset: const Offset(
+                                  0,
+                                  3,
+                                ), // changes position of shadow
                               ),
-                              color: Colors.transparent,
-                            ),
-                            height: 60,
-                            width: MediaQuery.of(context).size.width,
-                            child: Center(
-                              child: Column(
-                                children: const [
-                                  CircularProgressIndicator(),
-                                ],
+                            ],
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontFamily: font_style_name,
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
                               ),
                             ),
-                          )),
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            color: Colors.transparent,
+                          ),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width,
+                          child: const Center(
+                            child: Column(
+                              children: [
+                                CircularProgressIndicator(),
+                              ],
+                            ),
+                          ),
+                        ),
+                ),
                 InkWell(
                   onTap: () {
                     Navigator.push(

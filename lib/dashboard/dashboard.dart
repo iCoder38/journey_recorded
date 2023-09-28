@@ -164,8 +164,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           sliderValue = get_data['data']['T_G_H_current_level'].toString();
           sliderTotalvalue = get_data['data']['currentLabel_value'].toString();
           //
-          _currentSliderValue = double.parse(sliderValue.toString());
-          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          if (kDebugMode) {
+            print('===========> one <============');
+            print(sliderValue);
+            print(sliderTotalvalue);
+          }
+
+          if (double.parse(sliderTotalvalue.toString()) == 0 ||
+              double.parse(sliderTotalvalue.toString()) == 0.0) {
+            print('===========> yes <============');
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse('0'.toString());
+          } else {
+            print('===========> no <============');
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          }
+
+          if (kDebugMode) {
+            print(_currentSliderValue);
+            print(sliderMaxValue);
+          }
         });
 
         get_category_list_WB();
@@ -223,10 +242,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
 
         str_dashboard_category_loader = '1';
-
+        if (kDebugMode) {
+          print('===========> three <============');
+        }
         strTotalCoins = prefs.getInt('totalPoints').toString();
         strLoginUserLevel = prefs.getInt('skill_Lavel').toString();
         //
+        if (kDebugMode) {
+          print('===========> 4 <============');
+        }
         notesListWB();
         //
       } else {
@@ -685,7 +709,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           child: Slider(
                                             value: _currentSliderValue,
                                             max: sliderMaxValue,
-                                            divisions: 100,
+                                            // divisions: 100,
                                             label: _currentSliderValue
                                                 .round()
                                                 .toString(),

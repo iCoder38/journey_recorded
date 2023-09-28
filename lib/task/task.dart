@@ -1033,8 +1033,7 @@ class _TaskScreenState extends State<TaskScreen> {
           str_add_reminder: str_get_add_warning.toString(),
           str_task_details: str_get_task_details.toString(),
           str_due_date: str_get_due_date.toString(),
-          str_reward_type: strRewardType,
-
+          str_reward_type: strRewardType, str_profile_access: 'yes',
           //
         ),
       ),
@@ -1042,8 +1041,6 @@ class _TaskScreenState extends State<TaskScreen> {
 
     // ignore: prefer_interpolation_to_compose_strings
     print('result =====> ' + result);
-
-// back_from_delete_task
 
     if (!mounted) return;
 

@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables, avoid_print
 
 import 'dart:convert';
 import 'dart:ui';
@@ -28,7 +28,8 @@ class TaskDetailsScreen extends StatefulWidget {
       required this.str_task_details,
       required this.str_due_date,
       required this.str_reward_type,
-      this.dictTaskFullDetails});
+      this.dictTaskFullDetails,
+      required this.str_profile_access});
 
   final String str_due_date;
   final String str_task_details;
@@ -41,6 +42,7 @@ class TaskDetailsScreen extends StatefulWidget {
   final String str_reminder_warning;
   final String str_reward_type;
   final dictTaskFullDetails;
+  final String str_profile_access;
 
   @override
   State<TaskDetailsScreen> createState() => _TaskDetailsScreenState();
@@ -55,14 +57,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   var arr_notes_list = [];
   //
   var arr_check_list = [];
+  var strIsAllTaskCompleteStatus = '0';
   //
   AddNoteModal add_note_service = AddNoteModal();
   @override
   void initState() {
     super.initState();
     if (kDebugMode) {
-      print('=========== TASK DETAILS =================');
+      print('=========== TASK DETAILS and TASK ID =================');
       print(widget.dictTaskFullDetails);
+      print(widget.str_professional_id);
       print('==========================================');
     }
     if (widget.dictTaskFullDetails != null) {
@@ -94,32 +98,35 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             ),
             onPressed: () => Navigator.pop(
               context,
-              // 'back_from_create_task',
-              // str_send_user_id.toString(),
+              'approved_check_list',
             ),
           ),
           actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                _showMyDialog(
-                  'Are you sure your want to delete ${widget.str_task_name.toString()} ?',
-                  widget.str_professional_id.toString(),
-                );
-              },
-              icon: const Icon(
-                Icons.delete_forever,
-                color: Colors.white,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                //
-              },
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
-            ),
+            (widget.str_profile_access == 'no')
+                ? const SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      _showMyDialog(
+                        'Are you sure your want to delete ${widget.str_task_name.toString()} ?',
+                        widget.str_professional_id.toString(),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.delete_forever,
+                      color: Colors.white,
+                    ),
+                  ),
+            (widget.str_profile_access == 'no')
+                ? const SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      //
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                      color: Colors.white,
+                    ),
+                  ),
           ],
           bottom: TabBar(
             // controller: _tabController,
@@ -182,8 +189,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
               if (value == 4) {
                 //
 
+                func_notes_WB();
+                // setState(() {});
+              } else if (value == 5) {
+                //
                 func_check_list_WB();
-                setState(() {});
               } else {
                 hide_floating_button = '0';
 
@@ -339,39 +349,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ),
                 ),
-                /*Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          '  Description'.toUpperCase(),
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            //
-                            widget.str_task_details.toString(),
-                            //
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 16.0,
-                              // fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),*/
-                // const SizedBox(
-                //   height: 20,
-                // ),
               ],
             ),
           ),
@@ -479,7 +456,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             margin: const EdgeInsets.only(
                               left: 10,
                               right: 10,
-                              top: 10,
+                              // top: 10,
                             ),
                             // height: 60,
                             width: MediaQuery.of(context).size.width,
@@ -502,54 +479,38 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   ),
                                 ),
                                 // const Spacer(),
-                                Container(
-                                  margin: const EdgeInsets.only(
-                                    right: 0.0,
-                                  ),
-                                  height: 50,
-                                  width: 120,
-                                  color: Colors.transparent,
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: IconButton(
-                                          onPressed: () {
-                                            if (kDebugMode) {
-                                              print('check list edit');
-                                            }
-
-                                            push_to_edit_checklist(
-                                              context,
-                                              arr_check_list[i]['checklistId']
-                                                  .toString(),
-                                              arr_check_list[i]['message']
-                                                  .toString(),
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: IconButton(
-                                          onPressed: () {
-                                            if (kDebugMode) {
-                                              print('ok');
-                                            }
-                                            delete_checklist_WB(
+                                (widget.str_profile_access == 'no')
+                                    ? (arr_check_list[i]['completeStatus']
+                                                .toString() ==
+                                            '1')
+                                        ? IconButton(
+                                            onPressed: () {
+                                              // complete
+                                            },
+                                            icon: const Icon(
+                                              Icons.check_box_outlined,
+                                              color: Colors.green,
+                                            ),
+                                          )
+                                        : IconButton(
+                                            onPressed: () {
+                                              //
+                                              if (kDebugMode) {
+                                                print(
+                                                    'are you sure you want to accept');
+                                              }
+                                              //
+                                              showDialogForAcceptChecklistWB(
+                                                'Did you complete your assigned task ?',
                                                 arr_check_list[i]['checklistId']
-                                                    .toString());
-                                          },
-                                          icon: const Icon(
-                                            Icons.cancel,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                )
+                                                    .toString(),
+                                              );
+                                            },
+                                            icon: const Icon(
+                                              Icons.check_box_outline_blank,
+                                            ),
+                                          )
+                                    : requestTaskAdminUI(context, i)
                               ],
                             ),
                           ),
@@ -564,35 +525,135 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ),
         ),
-        InkWell(
-          onTap: () {
-            print('full');
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            color: Colors.transparent,
-            height: 100,
-            child: Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    print('12');
-                    push_to_create_check_list(context);
-                  },
-                ),
-                Text(
-                  'Add check list',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 16.0,
+        (widget.str_profile_access == 'no')
+            ? const SizedBox()
+            : (strIsAllTaskCompleteStatus == '1')
+                ? GestureDetector(
+                    onTap: () {
+                      //
+                      approveAlertPopUp(
+                        'Are you sure you want to approve ?',
+                        widget.str_professional_id,
+                      );
+                    },
+                    child: Container(
+                      height: 60,
+                      width: MediaQuery.of(context).size.width,
+                      color: navigation_color,
+                      child: Center(
+                        child: text_bold_style_custom(
+                          'Approve',
+                          Colors.white,
+                          16.0,
+                        ),
+                      ),
+                    ),
+                  )
+                : InkWell(
+                    onTap: () {
+                      if (kDebugMode) {
+                        print('full');
+                      }
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      color: Colors.transparent,
+                      height: 100,
+                      child: Column(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: () {
+                              if (kDebugMode) {
+                                print('12');
+                              }
+                              push_to_create_check_list(context);
+                            },
+                          ),
+                          Text(
+                            'Add check list',
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 16.0,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                )
+      ],
+    );
+  }
+
+  Container requestTaskAdminUI(BuildContext context, int i) {
+    return Container(
+      margin: const EdgeInsets.only(
+        right: 0.0,
+      ),
+      height: 50,
+      width: 120,
+      color: Colors.transparent,
+      child: (arr_check_list[i]['completeStatus'].toString() == '1')
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                // height: 20,
+                width: 60,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(
+                    12.0,
+                  ),
+                ),
+                child: Center(
+                  child: text_regular_style_custom(
+                    //
+                    'Done',
+                    Colors.white,
+                    14.0,
+                  ),
+                ),
+              ),
+            )
+          : Row(
+              children: <Widget>[
+                IconButton.filledTonal(
+                  onPressed: () {
+                    if (kDebugMode) {
+                      print('check list edit');
+                    }
+
+                    push_to_edit_checklist(
+                      context,
+                      arr_check_list[i]['checklistId'].toString(),
+                      arr_check_list[i]['message'].toString(),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                    size: 16.0,
+                  ),
+                ),
+                IconButton.filledTonal(
+                  onPressed: () {
+                    if (kDebugMode) {
+                      print('ok');
+                    }
+                    //
+                    showAlertBeforeDelete(
+                      'Are you sure you want to delete this check list ?',
+                      arr_check_list[i]['checklistId'].toString(),
+                    );
+                    //
+                  },
+                  icon: const Icon(
+                    Icons.delete_forever,
+                    color: Colors.red,
+                  ),
+                ),
               ],
             ),
-          ),
-        ),
-      ],
     );
   }
 
@@ -661,7 +722,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   .toString(),
                                             );
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.edit,
                                           ),
                                         ),
@@ -669,11 +730,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       Expanded(
                                         child: IconButton(
                                           onPressed: () {
+                                            //
+                                            //
                                             delete_notes_WB(arr_notes_list[i]
                                                     ['noteId']
                                                 .toString());
                                           },
-                                          icon: Icon(
+                                          icon: const Icon(
                                             Icons.cancel,
                                           ),
                                         ),
@@ -695,36 +758,40 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ),
         ),
-        InkWell(
-          onTap: () {
-            print('full');
-          },
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            color: Colors.transparent,
-            height: 100,
-            child: Column(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.add),
-                  onPressed: () {
-                    print('12');
+        (widget.str_profile_access == 'no')
+            ? const SizedBox()
+            : InkWell(
+                onTap: () {
+                  if (kDebugMode) {
+                    print('full');
+                  }
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.transparent,
+                  height: 100,
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          print('12');
 
-                    //
-                    push_to_create_notes(context);
-                  },
-                ),
-                Text(
-                  'Add Notes',
-                  style: TextStyle(
-                    fontFamily: font_style_name,
-                    fontSize: 16.0,
+                          //
+                          push_to_create_notes(context);
+                        },
+                      ),
+                      Text(
+                        'Add Notes',
+                        style: TextStyle(
+                          fontFamily: font_style_name,
+                          fontSize: 16.0,
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
+                ),
+              ),
       ],
     );
   }
@@ -1174,8 +1241,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           // str_goal_loader = '2';
         }
 
-        // str_task_count = arr_task_list.length.toString();
-
         str_main_loader = 'stop';
         setState(() {});
 
@@ -1275,9 +1340,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   func_check_list_WB() async {
     print('=====> POST : CHECKLIST');
 
-    str_main_loader = 'checklist_loader_start';
-
-    setState(() {});
+    setState(() {
+      str_main_loader = 'checklist_loader_start';
+    });
     //
     // SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1291,7 +1356,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       body: jsonEncode(
         <String, String>{
           'action': 'checklist',
-          'pageNo': '',
+          'pageNo': '1',
           'profesionalId': widget.str_professional_id.toString(),
           'profesionalType': 'Task',
         },
@@ -1313,6 +1378,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           arr_check_list.add(i);
         }
 
+        strIsAllTaskCompleteStatus = '1';
+        for (int i = 0; i < arr_check_list.length; i++) {
+          //
+          if (arr_check_list[i]['completeStatus'].toString() == '0') {
+            strIsAllTaskCompleteStatus = '0';
+          }
+        }
+        //
+        print('all check list status');
+        print(strIsAllTaskCompleteStatus);
+        //
         setState(() {
           str_main_loader = 'checklist_loader_stop';
         });
@@ -1467,8 +1543,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   ) async {
     print('=====> POST : DELETE CHECKLIST');
 
-    // str_notes_loader_status = '0';
-    // setState(() {});
+    setState(() {
+      str_main_loader = 'checklist_loader_start';
+    });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -1579,6 +1656,68 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
     );
   }
 
+// ALERT
+  Future<void> showAlertBeforeDelete(
+    String str_message,
+    String str_delete_task_id,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Delete',
+            style: TextStyle(
+              fontFamily: font_style_name,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                text_regular_style_custom(
+                  str_message,
+                  Colors.black,
+                  14.0,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Dismiss',
+                style: TextStyle(
+                  fontFamily: font_style_name,
+                  fontSize: 16.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: text_bold_style_custom(
+                'Yes, Delete',
+                Colors.red,
+                14.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                delete_checklist_WB(
+                  str_delete_task_id.toString(),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   // delete task
   delete_task_WB(
     String str_task_id,
@@ -1662,6 +1801,227 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
       return 'overdue';
     } else {
       return '$difference days left';
+    }
+  }
+
+  //
+  // ALERT
+  Future<void> showDialogForAcceptChecklistWB(
+    String str_message,
+    String str_delete_task_id,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: text_bold_style_custom(
+            'Alert',
+            Colors.black,
+            16.0,
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  //
+                  str_message,
+                  //
+                  style: TextStyle(
+                    fontFamily: font_style_name,
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: text_regular_style_custom(
+                'Dismiss',
+                Colors.purple,
+                14.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: text_bold_style_custom(
+                'Yes, Accept',
+                Colors.green,
+                14.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                doneCheckListWB(
+                  str_delete_task_id.toString(),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //
+  doneCheckListWB(check_list_id) async {
+    print('=====> POST : DONE CHECK LIST');
+
+    setState(() {
+      str_main_loader = 'checklist_loader_start';
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'checklistcomplete',
+          'userId': prefs.getInt('userId').toString(),
+          'checklistId': check_list_id.toString(),
+          'completeStatus': '1'.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        // get and parse data
+        func_check_list_WB();
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  //
+  // ALERT
+  Future<void> approveAlertPopUp(
+    String str_message,
+    String strTaskId,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            'Approve',
+            style: TextStyle(
+              fontFamily: font_style_name,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                text_regular_style_custom(
+                  str_message,
+                  Colors.black,
+                  14.0,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Dismiss',
+                style: TextStyle(
+                  fontFamily: font_style_name,
+                  fontSize: 16.0,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: text_bold_style_custom(
+                'Yes, Approve',
+                Colors.red,
+                14.0,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                approveAllChecklistWB(
+                  strTaskId.toString(),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  //
+  // delete checklist
+  approveAllChecklistWB(
+    String note_id,
+  ) async {
+    print('=====> POST : APPROVE CHECKLIST');
+
+    setState(() {
+      str_main_loader = 'checklist_loader_start';
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'verifychecklist',
+          'userId': prefs.getInt('userId').toString(),
+          'taskId': note_id.toString(),
+          'taskCompleted': '2'.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
+        arr_notes_list = [];
+        //
+        Navigator.pop(context, 'approved_check_list');
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
     }
   }
 }

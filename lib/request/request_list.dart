@@ -151,7 +151,20 @@ class _RequestListScreenState extends State<RequestListScreen> {
               for (int i = 0; i < arr_request_list.length; i++) ...[
                 InkWell(
                   onTap: () {
-                    if (arr_request_list[i]['status'].toString() == '3') {
+                    if (arr_request_list[i]['status'].toString() == '1') {
+                      //
+                      add_quotes_push_via_future(
+                        context,
+                        arr_request_list[i]['inviteId'].toString(),
+                        arr_request_list[i]['taskName'].toString(),
+                        arr_request_list[i]['deadline'].toString(),
+                        arr_request_list[i]['description'].toString(),
+                        arr_request_list[i]['From_userName'].toString(),
+                        arr_request_list[i]['To_userName'].toString(),
+                      );
+                      //
+                    } else if (arr_request_list[i]['status'].toString() ==
+                        '3') {
                       var snackdemo = SnackBar(
                         content: text_regular_style_custom(
                           //
@@ -196,21 +209,12 @@ class _RequestListScreenState extends State<RequestListScreen> {
                             str_reward_type:
                                 arr_request_list[i]['rewardType'].toString(),
                             dictTaskFullDetails: arr_request_list[i],
-
+                            str_profile_access: 'no',
                             //
                           ),
                         ),
                       );
                     }
-                    /*add_quotes_push_via_future(
-                      context,
-                      arr_request_list[i]['inviteId'].toString(),
-                      arr_request_list[i]['taskName'].toString(),
-                      arr_request_list[i]['deadline'].toString(),
-                      arr_request_list[i]['description'].toString(),
-                      arr_request_list[i]['From_userName'].toString(),
-                      arr_request_list[i]['To_userName'].toString(),
-                    );*/
                   },
                   child: ListTile(
                     title: text_bold_style_custom(

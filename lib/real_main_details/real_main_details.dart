@@ -1397,6 +1397,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 onTap: () {
                   if (kDebugMode) {
                     print('fd 2');
+                    print(arr_task_list[i]);
                   }
 
                   func_push_to_task(
@@ -6470,7 +6471,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_add_reminder: str_get_add_warning.toString(),
           str_task_details: str_get_task_details.toString(),
           str_due_date: str_get_due_date.toString(),
-          str_reward_type: strRwardType,
+          str_reward_type: strRwardType, str_profile_access: 'yes',
 
           //
         ),
@@ -6483,10 +6484,17 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 // back_from_delete_task
 
     if (!mounted) return;
-
-    (widget.strFromViewDetails == 'yes')
-        ? func_get_task_list_WB_remove_user_id()
-        : func_get_task_list_WB();
+    print(widget.str_tray_value);
+    if (result == 'approved_check_list') {
+      func_get_goal_details_WB();
+      (widget.strFromViewDetails == 'yes')
+          ? func_get_task_list_WB_remove_user_id()
+          : func_get_task_list_WB();
+    } else {
+      (widget.strFromViewDetails == 'yes')
+          ? func_get_task_list_WB_remove_user_id()
+          : func_get_task_list_WB();
+    }
   }
 }
 
