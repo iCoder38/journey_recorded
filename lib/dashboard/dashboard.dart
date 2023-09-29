@@ -13,6 +13,7 @@ import 'package:journey_recorded/all_quotes_list/add_description.dart';
 import 'package:journey_recorded/all_quotes_list/all_quotes_list.dart';
 // import 'package:journey_recorded/category_list/category_list.dart';
 import 'package:journey_recorded/custom_files/drawer.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/finance/finance.dart';
 import 'package:journey_recorded/friends/friends.dart';
 import 'package:journey_recorded/goals/goals.dart';
@@ -46,6 +47,9 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+//
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var strLoginUserName = '';
   var strCurrentLabel = '';
@@ -89,7 +93,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     'Inventory',
     'Shops',
     'Actions',
-    'Guild',
+    'Guilds',
   ];
   var arr_dashboard_data_image = [
     'assets/images/dashboard_goal.png',
@@ -114,9 +118,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
-
+    funcSelectLanguage();
     profileWB();
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+// /********** LANGUAGE SELECTED **********************************************/
 
   // profile
   profileWB() async {
@@ -1080,21 +1095,278 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ),
                     ),
                   ),
-                  Container(
-                    // height: 10,
-                    //width: 10,
-                    color: Colors.transparent,
-                    child: Text(
-                      //
-                      arr_dashboard_data[index].toUpperCase(),
-                      //
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                  if (arr_dashboard_data[index].toString() == 'Goals') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_goal',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
                       ),
                     ),
-                  ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Sub Goals') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_sub_goal',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Quest') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_quest',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Missions') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_mission',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Tasks') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_task',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Training') ...[
+                    Container(
+                      // height: 40,
+                      //  width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_training',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        12.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Grind') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_grind',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Habits') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_habit',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Quotes') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_quotes',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Skills') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_skills',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Friends') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_friends',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Requests') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_requests',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Notes') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_notes',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Inventory') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_inventory',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Shops') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_shops',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Actions') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_actions',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arr_dashboard_data[index].toString() ==
+                      'Guilds') ...[
+                    Container(
+                      // height: 10,
+                      //width: 10,
+                      color: Colors.transparent,
+                      child: text_bold_style_custom(
+                        //
+                        languageTextConverter.funcConvertLanguage(
+                          'dashboard_guilds',
+                          strUserSelectLanguage,
+                        ),
+                        Colors.black,
+                        14.0,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),

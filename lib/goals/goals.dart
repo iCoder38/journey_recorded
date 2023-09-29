@@ -83,6 +83,14 @@ class _GoalsScreenState extends State<GoalsScreen> {
     get_goals_list_WB();
   }
 
+  // /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //strUserSelectLanguage = prefs.getString('selected_language').toString();
+    setState(() {});
+  }
+// /********** LANGUAGE SELECTED **********************************************/
+
 // get cart
   get_goals_list_WB() async {
     if (kDebugMode) {

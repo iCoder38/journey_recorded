@@ -6484,7 +6484,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 // back_from_delete_task
 
     if (!mounted) return;
-    print(widget.str_tray_value);
+    // print(widget.str_tray_value);
     if (result == 'approved_check_list') {
       func_get_goal_details_WB();
       (widget.strFromViewDetails == 'yes')

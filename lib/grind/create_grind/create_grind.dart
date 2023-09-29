@@ -122,9 +122,21 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarScreen(
-        str_app_bar_title: navigation_title_create_grind,
-        str_back_button_status: '1',
+      appBar: AppBar(
+        title: text_bold_style_custom(
+          'Create Grind',
+          Colors.white,
+          16.0,
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.chevron_left,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        //automaticallyImplyLeading: true,
+        backgroundColor: navigation_color,
       ),
       body: (strScreenLoader == '0')
           ? const Align(

@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/change_password/change_password.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/dashboard/dashboard.dart';
 import 'package:journey_recorded/edit_profile/edit_profile.dart';
 import 'package:journey_recorded/edit_profile/edit_see_profile/edit_see_profile.dart';
 import 'package:journey_recorded/help/help.dart';
 import 'package:journey_recorded/login/login.dart';
+import 'package:journey_recorded/set_language/set_language.dart';
 import 'package:journey_recorded/settings/settings.dart';
 import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
 // import 'package:journey_recorded/splash/splash_screen.dart';
@@ -21,6 +23,25 @@ class navigationDrawer extends StatefulWidget {
 }
 
 class _navigationDrawerState extends State<navigationDrawer> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
+  @override
+  void initState() {
+    //
+    funcSelectLanguage();
+    super.initState();
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    setState(() {});
+  }
+// /********** LANGUAGE SELECTED **********************************************/
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -93,13 +114,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.home,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Dashboard',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_dashboard',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     // print('1.1.1');
@@ -118,13 +140,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.edit,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Edit profile',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_edit_profile',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -143,13 +166,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.question_answer,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Q/A',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_q_a',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     // Update the state of the app
@@ -163,13 +187,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.help,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Order history',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_order_history',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -189,13 +214,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.help,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Help',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_help',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -213,10 +239,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.lock,
                   ),
                   iconColor: Colors.white,
-                  title: text_regular_style_custom(
-                    'Change Password',
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_change_password',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
-                    14.0,
+                    16.0,
                   ),
                   onTap: () {
                     Navigator.push(
@@ -234,19 +264,22 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.language,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Language',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_language',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SetLanguageScreen(),
+                      ),
+                    );
                   },
                 ),
                 ListTile(
@@ -254,13 +287,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     Icons.settings,
                   ),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Settings',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_settings',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () {
                     // Update the state of the app
@@ -277,13 +311,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                 ListTile(
                   leading: const Icon(Icons.logout),
                   iconColor: Colors.white,
-                  title: Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontFamily: font_style_name,
-                      color: Colors.white,
-                      fontSize: 16.0,
+                  title: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      'menu_logout',
+                      strUserSelectLanguage,
                     ),
+                    Colors.white,
+                    16.0,
                   ),
                   onTap: () async {
                     // Update the state of the app
