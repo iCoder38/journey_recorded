@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 // import 'package:journey_recorded/custom_files/drawer.dart';
 import 'package:journey_recorded/goals/add_goals/add_goals.dart';
 // import 'package:journey_recorded/goals/goals_details/goals_details.dart';
@@ -24,6 +25,9 @@ class GoalsScreen extends StatefulWidget {
 }
 
 class _GoalsScreenState extends State<GoalsScreen> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var str_goal_loader = '0';
   //
@@ -44,9 +48,9 @@ class _GoalsScreenState extends State<GoalsScreen> {
   @override
   void initState() {
     super.initState();
-    // print('i am goal main class');
-
-//
+    //
+    funcSelectLanguage();
+    //
     arr_filter_search_data = [
       {
         'id': '',
@@ -83,10 +87,13 @@ class _GoalsScreenState extends State<GoalsScreen> {
     get_goals_list_WB();
   }
 
-  // /********** LANGUAGE SELECTED **********************************************/
+// /********** LANGUAGE SELECTED **********************************************/
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
     setState(() {});
   }
 // /********** LANGUAGE SELECTED **********************************************/
@@ -176,15 +183,29 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
             //
             if (str_goal_loader == '0') ...[
-              const CustomeLoaderPopUp(
-                str_custom_loader: 'please wait...',
-                str_status: '0',
-              ),
+              if (strUserSelectLanguage == 'en') ...[
+                CustomeLoaderPopUp(
+                  str_custom_loader: alert_please_wait_en,
+                  str_status: '0',
+                ),
+              ] else ...[
+                CustomeLoaderPopUp(
+                  str_custom_loader: alert_please_wait_sp,
+                  str_status: '0',
+                ),
+              ]
             ] else if (str_goal_loader == '1') ...[
-              const CustomeLoaderPopUp(
-                str_custom_loader: 'Goals not Added Yet.',
-                str_status: '4',
-              ),
+              if (strUserSelectLanguage == 'en') ...[
+                CustomeLoaderPopUp(
+                  str_custom_loader: alert_goal_not_added_yet_en,
+                  str_status: '4',
+                ),
+              ] else ...[
+                CustomeLoaderPopUp(
+                  str_custom_loader: alert_goal_not_added_yet_sp,
+                  str_status: '4',
+                ),
+              ]
             ] else ...[
               ListView.separated(
                 separatorBuilder: (context, index) => const Divider(
@@ -650,7 +671,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
   Container categories_filter_UI(BuildContext context) {
     return Container(
-      height: 80,
+      height: 70,
       width: MediaQuery.of(context).size.width,
       color: const Color.fromRGBO(9, 44, 132, 1),
       child: Row(
@@ -677,7 +698,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   width: 100,
                   // width: MediaQuery.of(context).size.width,
 
@@ -716,13 +737,14 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Categories'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                    child: text_bold_style_custom(
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_categories',
+                        strUserSelectLanguage,
                       ),
+                      Colors.black,
+                      14.0,
                     ),
                   ),
                 ),
@@ -751,7 +773,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   // width: MediaQuery.of(context).size.width,
 
                   decoration: const BoxDecoration(
@@ -782,13 +804,14 @@ class _GoalsScreenState extends State<GoalsScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Filters'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                    child: text_bold_style_custom(
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_filters',
+                        strUserSelectLanguage,
                       ),
+                      Colors.black,
+                      14.0,
                     ),
                   ),
                 ),
@@ -804,7 +827,12 @@ class _GoalsScreenState extends State<GoalsScreen> {
     return AppBar(
       title: text_bold_style_custom(
         //
-        'Goals', Colors.white, 16.0,
+        languageTextConverter.funcConvertLanguage(
+          'dashboard_goal',
+          strUserSelectLanguage,
+        ),
+        Colors.white,
+        16.0,
       ),
       leading: IconButton(
         onPressed: () {

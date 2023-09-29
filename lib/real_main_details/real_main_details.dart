@@ -1,9 +1,10 @@
-// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings, avoid_print
+// ignore_for_file: non_constant_identifier_names, prefer_typing_uninitialized_variables, use_build_context_synchronously, unused_element, curly_braces_in_flow_control_structures, prefer_interpolation_to_compose_strings, avoid_print, unused_local_variable
 
 // all scroll blue 'Container type_UI(BuildContext context)'
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -68,6 +69,10 @@ class RealMainDetailsScreen extends StatefulWidget {
 
 class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     with SingleTickerProviderStateMixin {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var str_tab_press = 'n.a';
   // picker
   // ImagePicker picker = ImagePicker();
@@ -162,6 +167,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   @override
   void initState() {
     super.initState();
+    //
+    funcSelectLanguage();
+    //
 
     if (kDebugMode) {
       print('========================');
@@ -201,6 +209,19 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     //
   }
 
+// /********** LANGUAGE SELECTED **********************************************/
+
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /***************************************************************************/
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -239,48 +260,78 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               tabs: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Info',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_info',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Notes',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_notes',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Quotes',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_quotes',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Team',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_team',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Reward',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_reward',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: text_regular_style_custom(
-                    'Link',
+                  child: text_bold_style_custom(
+                    //
+                    languageTextConverter.funcConvertLanguage(
+                      //
+                      'details_link',
+                      strUserSelectLanguage,
+                    ),
                     Colors.white,
                     16.0,
                   ),
@@ -763,13 +814,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Sub-Goal'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_sub_goal',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -803,13 +856,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Quest'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_quest',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -843,13 +898,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Mission'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_mission',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -919,13 +976,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Sub-Goal'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_sub_goal',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -999,13 +1058,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Mission'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_mission',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -1039,15 +1100,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'reward_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'reward_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'No Reward Added yet.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_reward_not_added_yet_en,
+                str_status: '4',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_reward_not_added_yet_sp,
+                str_status: '4',
+              ),
+            ]
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -1377,20 +1452,41 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'tasks_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'tasks_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Task not Added yet.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_task_not_added_yet_en,
+                str_status: '4',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_task_not_added_yet_sp,
+                str_status: '4',
+              ),
+            ]
           else if (str_main_loader == 'tasks_not_completed')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Task not Completed yet.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_task_not_completed_yet_en,
+                str_status: '4',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_task_not_completed_yet_sp,
+                str_status: '4',
+              ),
+            ]
           else
             for (int i = 0; i < arr_task_list.length; i++) ...[
               InkWell(
@@ -1553,15 +1649,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'quest_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'quest_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Quest not Added yet.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_quest_not_added_yet_en,
+                str_status: '4',
+              )
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_quest_not_added_yet_sp,
+                str_status: '4',
+              )
+            ]
           //
           else
             ListView.builder(
@@ -1670,15 +1780,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'mission_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'mission_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Mission not Added yet.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_mission_not_added_yet_en,
+                str_status: '4',
+              )
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_mission_not_added_yet_sp,
+                str_status: '4',
+              )
+            ]
 
           //
           else
@@ -1784,15 +1908,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'sub_goal_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'sub_goal_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Sub-Goal not Added.',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_sub_goal_not_added_yet_en,
+                str_status: '4',
+              )
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_sub_goal_not_added_yet_sp,
+                str_status: '4',
+              )
+            ]
 
           //
           else
@@ -2117,15 +2255,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           header_UI(context),
           //
           if (str_main_loader == 'quotes_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'quotes_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Quotes not Added Yet',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_quotes_not_added_yet_en,
+                str_status: '4',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_quotes_not_added_yet_sp,
+                str_status: '4',
+              ),
+            ]
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -2396,7 +2548,12 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                   width: 20,
                                 ),
                                 text_regular_style_custom(
-                                  'Complete',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    //
+                                    'details_complete',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   14.0,
                                 ),
@@ -2705,15 +2862,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           //
           //
           if (str_main_loader == 'notes_loader_start')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'please wait...',
-              str_status: '3',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_en,
+                str_status: '3',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_please_wait_sp,
+                str_status: '3',
+              ),
+            ]
           else if (str_main_loader == 'notes_data_empty')
-            const CustomeLoaderPopUp(
-              str_custom_loader: 'Note not Added Yet',
-              str_status: '4',
-            )
+            if (strUserSelectLanguage == 'en') ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_notes_not_added_yet_en,
+                str_status: '4',
+              ),
+            ] else ...[
+              CustomeLoaderPopUp(
+                str_custom_loader: alert_notes_not_added_yet_sp,
+                str_status: '4',
+              ),
+            ]
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -2833,12 +3004,22 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           child:
                               (strUserClickedWhichTabProfile == 'tab_sub_goal')
                                   ? text_bold_style_custom(
-                                      'Sub-Goal',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        //
+                                        'dashboard_sub_goal',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       16.0,
                                     )
                                   : text_regular_style_custom(
-                                      'Sub-Goal',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        //
+                                        'dashboard_sub_goal',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -2900,12 +3081,20 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           padding: const EdgeInsets.all(8.0),
                           child: (strUserClickedWhichTabProfile == 'tab_quest')
                               ? text_bold_style_custom(
-                                  'Quest',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_quest',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   16.0,
                                 )
                               : text_regular_style_custom(
-                                  'Quest',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_quest',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   14.0,
                                 ),
@@ -2968,12 +3157,22 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           child:
                               (strUserClickedWhichTabProfile == 'tab_mission')
                                   ? text_bold_style_custom(
-                                      'Mission',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        //
+                                        'dashboard_mission',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       16.0,
                                     )
                                   : text_regular_style_custom(
-                                      'Mission',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        //
+                                        'dashboard_mission',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -5221,13 +5420,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       print('=====> POST : QUEST LIST');
     }
 
-    str_show_ui = 'quest';
-
-    str_tab_press = 'quest';
-
-    str_main_loader = 'quest_loader_start';
-
-    setState(() {});
+    setState(() {
+      str_show_ui = 'quest';
+      str_tab_press = 'quest';
+      str_main_loader = 'quest_loader_start';
+    });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -5287,14 +5484,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (kDebugMode) {
       print('=====> POST : QUEST LIST');
     }
-
-    str_show_ui = 'quest';
-
-    str_tab_press = 'quest';
-
-    str_main_loader = 'quest_loader_start';
-
-    setState(() {});
+    setState(() {
+      str_show_ui = 'quest';
+      str_tab_press = 'quest';
+      str_main_loader = 'quest_loader_start';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -5355,12 +5549,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       print('=====> POST : MISSION LIST');
     }
 
-    str_show_ui = 'mission';
-
-    str_tab_press = 'mission';
-
-    str_main_loader = 'mission_loader_start';
-    setState(() {});
+    setState(() {
+      str_show_ui = 'mission';
+      str_tab_press = 'mission';
+      str_main_loader = 'mission_loader_start';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -5422,12 +5615,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
       print('=====> POST : MISSION LIST');
     }
 
-    str_show_ui = 'mission';
-
-    str_tab_press = 'mission';
-
-    str_main_loader = 'mission_loader_start';
-    setState(() {});
+    setState(() {
+      str_show_ui = 'mission';
+      str_tab_press = 'mission';
+      str_main_loader = 'mission_loader_start';
+    });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -6184,19 +6376,39 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   int.parse(strTotalThisGoalTaskCount)) *
               100;
 
-          int i = calculate.toInt();
+          if (calculate.isNaN || calculate.isInfinite) {
+            // default value
+            print('set up zero');
+            //
+            strTotalTaskCompletepercentage = '0'.toString();
+            sliderValue = '0';
+            sliderTotalvalue = '0';
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            //
 
-          strTotalTaskCompletepercentage = i.toString();
-          // slider
-          sliderValue = strTotalThisGoalTaskComplete;
-          sliderTotalvalue = strTotalThisGoalTaskCount;
-          _currentSliderValue = double.parse(sliderValue.toString());
-          sliderMaxValue = double.parse(sliderTotalvalue.toString());
-          // total task count
-          var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
-              int.parse(strTotalThisGoalTaskComplete);
-          str_task_count = totalTaskCount.toString();
-          str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+            // total task count
+            var totalTaskCount = int.parse(
+                    get_data['data']['totalTask'].toString()) -
+                int.parse(get_data['data']['totalTaskCompleted'].toString());
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed =
+                get_data['data']['totalTaskCompleted'].toString();
+          } else {
+            int i = calculate.toInt();
+
+            strTotalTaskCompletepercentage = i.toString();
+            // slider
+            sliderValue = strTotalThisGoalTaskComplete;
+            sliderTotalvalue = strTotalThisGoalTaskCount;
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            // total task count
+            var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
+                int.parse(strTotalThisGoalTaskComplete);
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+          }
         });
       } else {
         print(
@@ -6261,22 +6473,41 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           var calculate = (int.parse(strTotalThisGoalTaskComplete) /
                   int.parse(strTotalThisGoalTaskCount)) *
               100;
+          if (calculate.isNaN || calculate.isInfinite) {
+            // default value
+            print('set up zero');
+            //
+            strTotalTaskCompletepercentage = '0'.toString();
+            sliderValue = '0';
+            sliderTotalvalue = '0';
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            //
 
-          int i = calculate.toInt();
+            // total task count
+            var totalTaskCount = int.parse(
+                    get_data['data']['totalTask'].toString()) -
+                int.parse(get_data['data']['totalTaskCompleted'].toString());
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed =
+                get_data['data']['totalTaskCompleted'].toString();
+          } else {
+            int i = calculate.toInt();
 
-          strTotalTaskCompletepercentage = i.toString();
-          //
-          // slider
-          sliderValue = strTotalThisGoalTaskComplete;
-          sliderTotalvalue = strTotalThisGoalTaskCount;
-          _currentSliderValue = double.parse(sliderValue.toString());
-          sliderMaxValue = double.parse(sliderTotalvalue.toString());
-          //
-          // total task count
-          var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
-              int.parse(strTotalThisGoalTaskComplete);
-          str_task_count = totalTaskCount.toString();
-          str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+            strTotalTaskCompletepercentage = i.toString();
+            //
+            // slider
+            sliderValue = strTotalThisGoalTaskComplete;
+            sliderTotalvalue = strTotalThisGoalTaskCount;
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            //
+            // total task count
+            var totalTaskCount = int.parse(strTotalThisGoalTaskCount) -
+                int.parse(strTotalThisGoalTaskComplete);
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed = strTotalThisGoalTaskComplete.toString();
+          }
         });
       } else {
         print(
@@ -6371,6 +6602,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
+        print('====== one =====');
         str_sub_goal_count = get_data['data']['totalSubGoal'].toString();
         // str_task_count = get_data['data']['totalTask'].toString();
         str_quest_count = get_data['data']['totalQuest'].toString();
@@ -6380,32 +6612,63 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             get_data['data']['totalTaskCompleted'].toString();
         str_professtional_id = get_data['data']['goalId'].toString();
         //
+
         setState(() {
           strTotalThisGoalTaskCount =
               get_data['data']['totalThisGoalTask'].toString();
           strTotalThisGoalTaskComplete =
               get_data['data']['totalThisGoalTaskCompleted'].toString();
-
-          var calculate = (int.parse(strTotalThisGoalTaskComplete) /
-                  int.parse(strTotalThisGoalTaskCount)) *
+          print('====== two =====');
+          var calculate = (int.parse(strTotalThisGoalTaskComplete.toString()) /
+                  int.parse(strTotalThisGoalTaskCount.toString())) *
               100;
-
-          int i = calculate.toInt();
-
-          strTotalTaskCompletepercentage = i.toString();
-          // slider
-          sliderValue = strTotalThisGoalTaskComplete;
-          sliderTotalvalue = strTotalThisGoalTaskCount;
-          _currentSliderValue = double.parse(sliderValue.toString());
-          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          print('====== three =====');
+          print(calculate);
+          // print(calculate.runtimeType);
+          // convert to string
+          // var convert_to_string = calculate.toString();
+          // print(convert_to_string);
           //
-          // total task count
-          var totalTaskCount =
-              int.parse(get_data['data']['totalTask'].toString()) -
-                  int.parse(get_data['data']['totalTaskCompleted'].toString());
-          str_task_count = totalTaskCount.toString();
-          str_task_count_completed =
-              get_data['data']['totalTaskCompleted'].toString();
+          print('====== four =====');
+
+          if (calculate.isNaN || calculate.isInfinite) {
+            // default value
+            print('set up zero');
+            //
+            strTotalTaskCompletepercentage = '0'.toString();
+            sliderValue = '0';
+            sliderTotalvalue = '0';
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            //
+
+            // total task count
+            var totalTaskCount = int.parse(
+                    get_data['data']['totalTask'].toString()) -
+                int.parse(get_data['data']['totalTaskCompleted'].toString());
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed =
+                get_data['data']['totalTaskCompleted'].toString();
+          } else {
+            // your logic
+            int i = calculate.toInt();
+
+            strTotalTaskCompletepercentage = i.toString();
+            // slider
+            sliderValue = strTotalThisGoalTaskComplete;
+            sliderTotalvalue = strTotalThisGoalTaskCount;
+            _currentSliderValue = double.parse(sliderValue.toString());
+            sliderMaxValue = double.parse(sliderTotalvalue.toString());
+            //
+
+            // total task count
+            var totalTaskCount = int.parse(
+                    get_data['data']['totalTask'].toString()) -
+                int.parse(get_data['data']['totalTaskCompleted'].toString());
+            str_task_count = totalTaskCount.toString();
+            str_task_count_completed =
+                get_data['data']['totalTaskCompleted'].toString();
+          }
         });
       } else {
         print(

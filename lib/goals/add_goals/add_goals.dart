@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, unused_element
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'dart:convert';
@@ -7,10 +8,12 @@ import 'dart:convert';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/goals/add_goals/add_modal/add_modal.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AddGoals extends StatefulWidget {
   const AddGoals({super.key});
@@ -20,6 +23,9 @@ class AddGoals extends StatefulWidget {
 }
 
 class _AddGoalsState extends State<AddGoals> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var arr_get_category_list = [];
   //
@@ -49,8 +55,18 @@ class _AddGoalsState extends State<AddGoals> {
   // MODAL
   final create_goal_service = CreateGoalModals();
   //
+  var strGoalFor = '';
+  var strGoalCategory = '';
+  var strGoalNameOfGoal = '';
+  var strGoalDeadline = '';
+  var strGoalAboutYourGoal = '';
+  var strSaveAndContinue = '';
+  //
   @override
   void initState() {
+    //
+    funcSelectLanguage();
+    //
     cont_goal_for = TextEditingController();
     cont_name_of_goal = TextEditingController();
     cont_deadline = TextEditingController();
@@ -75,6 +91,40 @@ class _AddGoalsState extends State<AddGoals> {
     cont_about.dispose();
     cont_category.dispose();
     super.dispose();
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    //
+    funcSetConvertor();
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
+
+  funcSetConvertor() {
+    if (strUserSelectLanguage == 'en') {
+      //
+      strGoalFor = create_goal_goal_for_en;
+      strGoalCategory = create_goal_category_en;
+      strGoalNameOfGoal = create_goal_name_of_goal_en;
+      strGoalDeadline = create_goal_deadline_en;
+      strGoalAboutYourGoal = create_goal_about_your_goal_en;
+      strSaveAndContinue = str_save_and_continue_en;
+    } else {
+      //
+      strGoalFor = create_goal_goal_for_sp;
+      strGoalCategory = create_goal_category_sp;
+      strGoalNameOfGoal = create_goal_name_of_goal_sp;
+      strGoalDeadline = create_goal_deadline_sp;
+      strGoalAboutYourGoal = create_goal_about_your_goal_sp;
+      strSaveAndContinue = str_save_and_continue_sp;
+    }
+    setState(() {});
   }
 
 // get category list
@@ -135,14 +185,23 @@ class _AddGoalsState extends State<AddGoals> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: navigation_color,
-          title: Text(
-            ///
-            navigation_title_create_goal,
-
-            ///
-            style: TextStyle(
-              fontFamily: font_style_name,
-              fontSize: 18.0,
+          title: text_bold_style_custom(
+            //
+            languageTextConverter.funcConvertLanguage(
+              //
+              'create_a_goal',
+              strUserSelectLanguage,
+            ),
+            Colors.white,
+            16.0,
+          ),
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.chevron_left,
+              color: Colors.white,
             ),
           ),
         ),
@@ -164,12 +223,12 @@ class _AddGoalsState extends State<AddGoals> {
                   },
                   controller: cont_goal_for,
                   //keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(
+                  decoration: InputDecoration(
+                    suffixIcon: const Icon(
                       Icons.arrow_drop_down,
                     ),
-                    border: OutlineInputBorder(),
-                    labelText: 'Goal for ( creator authority )',
+                    border: const OutlineInputBorder(),
+                    hintText: strGoalFor,
                   ),
                   onChanged: (value) {},
                 ),
@@ -184,12 +243,12 @@ class _AddGoalsState extends State<AddGoals> {
                   },
                   controller: cont_category,
                   //keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    suffixIcon: Icon(
+                  decoration: InputDecoration(
+                    suffixIcon: const Icon(
                       Icons.arrow_drop_down,
                     ),
-                    border: OutlineInputBorder(),
-                    labelText: 'Category',
+                    border: const OutlineInputBorder(),
+                    hintText: strGoalCategory,
                   ),
                 ),
               ),
@@ -200,9 +259,9 @@ class _AddGoalsState extends State<AddGoals> {
                 child: TextFormField(
                   controller: cont_name_of_goal,
                   // keyboardType: TextInputType.de,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Name of Goal',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: strGoalNameOfGoal,
                   ),
                 ),
               ),
@@ -214,9 +273,9 @@ class _AddGoalsState extends State<AddGoals> {
                   controller: cont_deadline,
                   readOnly: true, // when true user cannot edit text
                   keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Deadline',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: strGoalDeadline,
                   ),
                   onTap: () async {
                     DateTime? pickedDate = await showDatePicker(
@@ -226,17 +285,23 @@ class _AddGoalsState extends State<AddGoals> {
                         lastDate: DateTime(2101));
 
                     if (pickedDate != null) {
-                      print(pickedDate);
+                      if (kDebugMode) {
+                        print(pickedDate);
+                      }
                       String formattedDate =
                           DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(formattedDate);
+                      if (kDebugMode) {
+                        print(formattedDate);
+                      }
 
                       setState(() {
                         cont_deadline.text =
                             formattedDate; //set foratted date to TextField value.
                       });
                     } else {
-                      print("Date is not selected");
+                      if (kDebugMode) {
+                        print("Date is not selected");
+                      }
                     }
                   },
                 ),
@@ -287,10 +352,9 @@ class _AddGoalsState extends State<AddGoals> {
                 ),
                 child: TextFormField(
                   controller: cont_about,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: 'About your goal',
-                    labelText: 'About your goal',
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    hintText: strGoalAboutYourGoal,
                   ),
                   maxLines: 3,
                 ),
@@ -328,14 +392,11 @@ class _AddGoalsState extends State<AddGoals> {
                   height: 60,
                   width: MediaQuery.of(context).size.width,
                   child: Center(
-                    child: Text(
-                      'Save and Continue',
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: text_bold_style_custom(
+                      //
+                      strSaveAndContinue,
+                      Colors.white,
+                      16.0,
                     ),
                   ),
                 ),
@@ -410,12 +471,15 @@ class _AddGoalsState extends State<AddGoals> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            'Alert',
-            style: TextStyle(
-              fontFamily: font_style_name,
-              fontSize: 16.0,
+          title: text_bold_style_custom(
+            //
+            languageTextConverter.funcConvertLanguage(
+              //
+              'alert_alert',
+              strUserSelectLanguage,
             ),
+            Colors.black,
+            12.0,
           ),
           content: SingleChildScrollView(
             child: ListBody(
@@ -432,7 +496,16 @@ class _AddGoalsState extends State<AddGoals> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Dismiss'),
+              child: text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'alert_dismiss',
+                  strUserSelectLanguage,
+                ),
+                Colors.purple,
+                12.0,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -452,12 +525,15 @@ class _AddGoalsState extends State<AddGoals> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(
-            'Please select Goal for ( creator authority )',
-            style: TextStyle(
-              fontFamily: font_style_name,
-              fontSize: 16.0,
+          title: text_bold_style_custom(
+            //
+            languageTextConverter.funcConvertLanguage(
+              //
+              'alert_please_select_goal',
+              strUserSelectLanguage,
             ),
+            Colors.black,
+            12.0,
           ),
           content: SingleChildScrollView(
             child: ListBody(
@@ -545,7 +621,16 @@ class _AddGoalsState extends State<AddGoals> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Dismiss'),
+              child: text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'alert_dismiss',
+                  strUserSelectLanguage,
+                ),
+                Colors.purple,
+                12.0,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -620,7 +705,16 @@ class _AddGoalsState extends State<AddGoals> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Dismiss'),
+              child: text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'alert_dismiss',
+                  strUserSelectLanguage,
+                ),
+                Colors.purple,
+                12.0,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

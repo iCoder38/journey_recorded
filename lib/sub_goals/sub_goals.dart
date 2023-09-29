@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:journey_recorded/single_classes/single_class.dart';
@@ -26,6 +27,10 @@ class SubGoalsScreen extends StatefulWidget {
 
 class _SubGoalsScreenState extends State<SubGoalsScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
+
   var str_sub_goal_loader = '0';
   var arr_sub_goals = [];
   //
@@ -49,6 +54,9 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
   void initState() {
     super.initState();
 
+    //
+    funcSelectLanguage();
+    //
     arr_filter_search_data = [
       {
         'id': '',
@@ -83,6 +91,17 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
     }
   }
 
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
   // get sub goals
   get_sub_goals_list_WB(
     String parent_goal_id,
@@ -141,7 +160,12 @@ class _SubGoalsScreenState extends State<SubGoalsScreen> {
       appBar: AppBar(
         title: text_bold_style_custom(
           //
-          'Sub - Goals', Colors.white, 16.0,
+          languageTextConverter.funcConvertLanguage(
+            'dashboard_goal',
+            strUserSelectLanguage,
+          ),
+          Colors.white,
+          16.0,
         ),
         leading: IconButton(
           onPressed: () {

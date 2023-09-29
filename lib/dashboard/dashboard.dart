@@ -47,7 +47,7 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-//
+  //
   var strUserSelectLanguage = 'en';
   final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
@@ -381,7 +381,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         appBar: AppBar(
           backgroundColor: navigation_color,
           title: text_bold_style_custom(
-            'Home',
+            //
+            languageTextConverter.funcConvertLanguage(
+              'dashboard_navigation_title',
+              strUserSelectLanguage,
+            ),
             Colors.white,
             16.0,
           ),

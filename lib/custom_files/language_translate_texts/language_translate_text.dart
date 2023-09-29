@@ -2,9 +2,60 @@
 // /***************************************************************************/
 // /**************************** CLASS ****************************************/
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 var class_name_selected_language = 'Please select language';
+// /***************************************************************************/
+// /**************************** COMMON ***************************************/
+var str_category_name_en = 'Categories';
+var str_category_name_sp = 'Categorías';
+// filter
+var str_filter_name_en = 'Filters';
+var str_filter_name_sp = 'Filtros';
+// filter
+var str_save_and_continue_en = 'Filters';
+var str_save_and_continue_sp = 'Guardar y continuar';
+// dismiss
+var str_dismiss_en = 'Dismiss';
+var str_dismiss_sp = 'Despedir';
+// alert
+var str_alert_en = 'Alert';
+var str_alert_sp = 'Alerta';
+// /***************************************************************************/
+// /**************************** ALERT ****************************************/
+var select_language_alert_text = 'Selected language Alert';
+var select_language_alert_en = 'Selected language : English';
+var select_language_alert_sp = 'Idioma seleccionado : Español';
+//
+var alert_goal_not_added_yet_en = 'Goals not added yet';
+var alert_goal_not_added_yet_sp = 'Metas aún no agregadas';
+//
+var alert_please_wait_en = 'please wait...';
+var alert_please_wait_sp = 'espere por favor';
+// mission not added yet
+var alert_mission_not_added_yet_en = 'Mission not added yet';
+var alert_mission_not_added_yet_sp = 'Misión aún no agregadas';
+// sub goal not added yet
+var alert_sub_goal_not_added_yet_en = 'Sub - Goal not added yet';
+var alert_sub_goal_not_added_yet_sp = 'Sub - Meta aún no agregadas';
+// mission not added yet
+var alert_quest_not_added_yet_en = 'Quest not added yet';
+var alert_quest_not_added_yet_sp = 'Búsqueda aún no agregadas';
+// task not added yet
+var alert_task_not_added_yet_en = 'Task not added yet';
+var alert_task_not_added_yet_sp = 'Tarea aún no agregadas';
+// task not complete yet
+var alert_task_not_completed_yet_en = 'Task not Completed yet';
+var alert_task_not_completed_yet_sp = 'Tarea aún no completada';
+// Notes not added yet
+var alert_notes_not_added_yet_en = 'Notes not added yet';
+var alert_notes_not_added_yet_sp = 'Notas aún no agregadas';
+// quotes not added yet
+var alert_quotes_not_added_yet_en = 'Quotes not added yet';
+var alert_quotes_not_added_yet_sp = 'Citas aún no agregadas';
+// rewards not added yet
+var alert_reward_not_added_yet_en = 'Reward not added yet';
+var alert_reward_not_added_yet_sp = 'Premio aún no agregadas';
 // /***************************************************************************/
 // /**************************** MENU BAR *************************************/
 var menu_bar_dashboard_en = 'Dashboard';
@@ -35,13 +86,15 @@ var menu_bar_logout_en = 'Logout';
 var menu_bar_logout_sp = 'Cerrar sesión';
 // /***************************************************************************/
 // /**************************** HOME *****************************************/
+var dashboard_navigation_title_en = 'Home';
+var dashboard_navigation_title_sp = 'Hogar';
 // goals
 var dashboard_goal_en = 'Goals';
-var dashboard_goal_sp = 'Objetivos';
+var dashboard_goal_sp = 'Metas';
 // subgoals
 var dashboard_sub_goals_en = 'Sub - Goals';
 var dashboard_sub_goals_sp = 'Sub-Goles';
-// lquest
+// quest
 var dashboard_quest_en = 'Quest';
 var dashboard_quest_sp = 'Búsqueda';
 // mission
@@ -87,10 +140,57 @@ var dashboard_actions_sp = 'Peticiones';
 var dashboard_guilds_en = 'Guilds';
 var dashboard_guilds_sp = 'Gremios';
 // /***************************************************************************/
-// /**************************** ALERT ****************************************/
-var select_language_alert_text = 'Selected language Alert';
-var select_language_alert_en = 'Selected language : English';
-var select_language_alert_sp = 'Idioma seleccionado : Español';
+// /**************************** CREATE GOAL **********************************/
+var create_goal_navigation_bar_en = 'Create a Goal';
+var create_goal_navigation_bar_sp = 'Crear una meta';
+
+var please_select_goal_for_en = 'Please select Goal for ( creator authority )';
+var please_select_goal_for_sp =
+    'Seleccione Objetivo para (autoridad del creador)';
+
+var create_goal_goal_for_en = 'Goal For ( createor authority )';
+var create_goal_goal_for_sp = 'Objetivo para (autoridad del creador)';
+
+var create_goal_category_en = 'Category';
+var create_goal_category_sp = 'Categoría';
+
+var create_goal_name_of_goal_en = 'Name of Goal';
+var create_goal_name_of_goal_sp = 'Nombre del objetivo';
+
+var create_goal_deadline_en = 'Deadline';
+var create_goal_deadline_sp = 'Fecha límite';
+
+var create_goal_about_your_goal_en = 'About your goal';
+var create_goal_about_your_goal_sp = 'Sobre tu objetivo';
+// /***************************************************************************/
+// /**************************** MAIN DETAILS *********************************/
+
+// info
+var main_details_info_en = 'Info';
+var main_details_info_sp = 'Información';
+// note
+var main_details_note_en = 'Notes';
+var main_details_note_sp = 'Notas';
+// quotes
+var main_details_quotes_en = 'Quotes';
+var main_details_quotes_sp = 'Citas';
+// team
+var main_details_team_en = 'Team';
+var main_details_team_sp = 'Equipo';
+// reward
+var main_details_reward_en = 'Reward';
+var main_details_reward_sp = 'Premio';
+// link
+var main_details_link_en = 'Link';
+var main_details_link_sp = 'Enlace';
+// sub-goal
+// quest
+// mission
+// task
+// complete
+var main_details_complete_en = 'Complete';
+var main_details_complete_sp = 'Completo';
+
 // /***************************************************************************/
 // /**************************** SELECT LANGUAGE ******************************/
 var select_language_text = 'Please select language';
@@ -119,14 +219,9 @@ class ConvertLanguage {
     String selectedLanguage,
   ) {
     //
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // if (kDebugMode) {
-    //   print('USER SELECTED ====>${prefs.getString('selected_language')}');
-    // }
-    //
-
     if (kDebugMode) {
-      // print('USER SELECTED ====>$selectedLanguage}');
+      // print('class ====>$viewClass}');
+      // print('language ====>$selectedLanguage}');
     }
     if (viewClass == class_name_selected_language) {
       if (selectedLanguage == 'en') {
@@ -204,7 +299,14 @@ class ConvertLanguage {
     ///
     /// DASHBOARD
     ///
-    else if (viewClass == 'dashboard_goal') {
+
+    else if (viewClass == 'dashboard_navigation_title') {
+      if (selectedLanguage == 'en') {
+        return dashboard_navigation_title_en;
+      } else {
+        return dashboard_navigation_title_sp;
+      }
+    } else if (viewClass == 'dashboard_goal') {
       if (selectedLanguage == 'en') {
         return dashboard_goal_en;
       } else {
@@ -268,13 +370,13 @@ class ConvertLanguage {
       if (selectedLanguage == 'en') {
         return dashboard_friends_en;
       } else {
-        return dashboard_friends_en;
+        return dashboard_friends_sp;
       }
     } else if (viewClass == 'dashboard_requests') {
       if (selectedLanguage == 'en') {
         return dashboard_requests_en;
       } else {
-        return dashboard_requests_en;
+        return dashboard_requests_sp;
       }
     } else if (viewClass == 'dashboard_notes') {
       if (selectedLanguage == 'en') {
@@ -305,6 +407,99 @@ class ConvertLanguage {
         return dashboard_guilds_en;
       } else {
         return dashboard_guilds_sp;
+      }
+    }
+
+    ///
+    /// COMMON
+    ///
+    else if (viewClass == 'common_categories') {
+      if (selectedLanguage == 'en') {
+        return str_category_name_en;
+      } else {
+        return str_category_name_sp;
+      }
+    } else if (viewClass == 'common_filters') {
+      if (selectedLanguage == 'en') {
+        return str_filter_name_en;
+      } else {
+        return str_filter_name_sp;
+      }
+    } else if (viewClass == 'alert_dismiss') {
+      if (selectedLanguage == 'en') {
+        return str_dismiss_en;
+      } else {
+        return str_dismiss_sp;
+      }
+    } else if (viewClass == 'alert_alert') {
+      if (selectedLanguage == 'en') {
+        return str_alert_en;
+      } else {
+        return str_alert_sp;
+      }
+    }
+
+    ///
+    /// CREATE A GOAL
+    ///
+    else if (viewClass == 'create_a_goal') {
+      if (selectedLanguage == 'en') {
+        return create_goal_navigation_bar_en;
+      } else {
+        return create_goal_navigation_bar_sp;
+      }
+    } else if (viewClass == 'alert_please_select_goal') {
+      if (selectedLanguage == 'en') {
+        return please_select_goal_for_en;
+      } else {
+        return please_select_goal_for_sp;
+      }
+    }
+
+    ///
+    /// main info
+    ///
+    else if (viewClass == 'details_info') {
+      if (selectedLanguage == 'en') {
+        return main_details_info_en;
+      } else {
+        return main_details_info_sp;
+      }
+    } else if (viewClass == 'details_notes') {
+      if (selectedLanguage == 'en') {
+        return main_details_note_en;
+      } else {
+        return main_details_note_sp;
+      }
+    } else if (viewClass == 'details_quotes') {
+      if (selectedLanguage == 'en') {
+        return main_details_quotes_en;
+      } else {
+        return main_details_quotes_sp;
+      }
+    } else if (viewClass == 'details_team') {
+      if (selectedLanguage == 'en') {
+        return main_details_team_en;
+      } else {
+        return main_details_team_sp;
+      }
+    } else if (viewClass == 'details_reward') {
+      if (selectedLanguage == 'en') {
+        return main_details_reward_en;
+      } else {
+        return main_details_reward_sp;
+      }
+    } else if (viewClass == 'details_link') {
+      if (selectedLanguage == 'en') {
+        return main_details_link_en;
+      } else {
+        return main_details_link_sp;
+      }
+    } else if (viewClass == 'details_complete') {
+      if (selectedLanguage == 'en') {
+        return main_details_complete_en;
+      } else {
+        return main_details_complete_sp;
       }
     }
   }
