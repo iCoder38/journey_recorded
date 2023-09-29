@@ -1018,13 +1018,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
               const SizedBox(
                 width: 10,
               ),
-              Text(
-                'Quest'.toUpperCase(),
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
+              text_bold_style_custom(
+                //
+                languageTextConverter.funcConvertLanguage(
+                  //
+                  'dashboard_quest',
+                  strUserSelectLanguage,
                 ),
+                Colors.white,
+                16.0,
               ),
               const Spacer(),
               Text(
@@ -3231,12 +3233,20 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           padding: const EdgeInsets.all(8.0),
                           child: (strUserClickedWhichTabProfile == 'tab_task')
                               ? text_bold_style_custom(
-                                  'Task',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_task',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   16.0,
                                 )
                               : text_regular_style_custom(
-                                  'Task',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_task',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   14.0,
                                 ),
@@ -3301,12 +3311,20 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           child:
                               (strUserClickedWhichTabProfile == 'tab_complete')
                                   ? text_bold_style_custom(
-                                      'Complete',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'details_complete',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       16.0,
                                     )
                                   : text_regular_style_custom(
-                                      'Complete',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'details_complete',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -3399,12 +3417,20 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           padding: const EdgeInsets.all(8.0),
                           child: (strUserClickedWhichTabProfile == 'tab_task')
                               ? text_bold_style_custom(
-                                  'Task',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_task',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   16.0,
                                 )
                               : text_regular_style_custom(
-                                  'Task',
+                                  //
+                                  languageTextConverter.funcConvertLanguage(
+                                    'dashboard_task',
+                                    strUserSelectLanguage,
+                                  ),
                                   Colors.white,
                                   14.0,
                                 ),
@@ -3474,12 +3500,20 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                           child:
                               (strUserClickedWhichTabProfile == 'tab_complete')
                                   ? text_bold_style_custom(
-                                      'Complete',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'details_complete',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       16.0,
                                     )
                                   : text_regular_style_custom(
-                                      'Complete',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'details_complete',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -3757,15 +3791,23 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: (strCompleteClick == '0')
-                            ? text_regular_style_custom(
-                                'Complete',
-                                Colors.white,
-                                14.0,
-                              )
-                            : text_bold_style_custom(
-                                'Complete',
+                            ? text_bold_style_custom(
+                                //
+                                languageTextConverter.funcConvertLanguage(
+                                  'details_complete',
+                                  strUserSelectLanguage,
+                                ),
                                 Colors.white,
                                 16.0,
+                              )
+                            : text_regular_style_custom(
+                                //
+                                languageTextConverter.funcConvertLanguage(
+                                  'details_complete',
+                                  strUserSelectLanguage,
+                                ),
+                                Colors.white,
+                                14.0,
                               ),
                       ),
                       Padding(

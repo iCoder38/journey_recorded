@@ -139,6 +139,7 @@ var dashboard_actions_sp = 'Peticiones';
 // guilds
 var dashboard_guilds_en = 'Guilds';
 var dashboard_guilds_sp = 'Gremios';
+
 // /***************************************************************************/
 // /**************************** CREATE GOAL **********************************/
 var create_goal_navigation_bar_en = 'Create a Goal';
