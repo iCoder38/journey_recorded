@@ -1378,17 +1378,23 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           arr_check_list.add(i);
         }
 
-        strIsAllTaskCompleteStatus = '1';
-        for (int i = 0; i < arr_check_list.length; i++) {
+        if (arr_check_list.isEmpty) {
           //
-          if (arr_check_list[i]['completeStatus'].toString() == '0') {
-            strIsAllTaskCompleteStatus = '0';
+          strIsAllTaskCompleteStatus = '0';
+        } else {
+          strIsAllTaskCompleteStatus = '1';
+
+          for (int i = 0; i < arr_check_list.length; i++) {
+            //
+            if (arr_check_list[i]['completeStatus'].toString() == '0') {
+              strIsAllTaskCompleteStatus = '0';
+            }
           }
+          //
+          print('all check list status');
+          print(strIsAllTaskCompleteStatus);
+          //
         }
-        //
-        print('all check list status');
-        print(strIsAllTaskCompleteStatus);
-        //
         setState(() {
           str_main_loader = 'checklist_loader_stop';
         });

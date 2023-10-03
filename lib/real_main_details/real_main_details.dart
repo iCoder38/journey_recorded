@@ -158,6 +158,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   late TabController _tabController;
   //
   //
+  var strTaskCompleteProfile = '';
   var strQuestsClick = '0';
   var strMissionsClick = '0';
   var strTasksClick = '0';
@@ -1496,21 +1497,24 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   if (kDebugMode) {
                     print('fd 2');
                     print(arr_task_list[i]);
+                    print(strCompleteClick);
                   }
 
                   func_push_to_task(
-                    context,
-                    arr_task_list[i]['name'].toString(),
-                    arr_task_list[i]['experiencePoint'].toString(),
-                    arr_task_list[i]['experiencePointDeduct'].toString(),
-                    '\$',
-                    arr_task_list[i]['taskId'].toString(),
-                    arr_task_list[i]['reminderWarning'].toString(),
-                    arr_task_list[i]['addreminder'].toString(),
-                    arr_task_list[i]['description'].toString(),
-                    arr_task_list[i]['due_date'].toString(),
-                    arr_task_list[i]['rewardType'].toString(),
-                  );
+                      context,
+                      arr_task_list[i]['name'].toString(),
+                      arr_task_list[i]['experiencePoint'].toString(),
+                      arr_task_list[i]['experiencePointDeduct'].toString(),
+                      '\$',
+                      arr_task_list[i]['taskId'].toString(),
+                      arr_task_list[i]['reminderWarning'].toString(),
+                      arr_task_list[i]['addreminder'].toString(),
+                      arr_task_list[i]['description'].toString(),
+                      arr_task_list[i]['due_date'].toString(),
+                      arr_task_list[i]['rewardType'].toString(),
+                      'yes');
+
+                  /**/
                 },
                 child: Row(
                   children: [
@@ -1530,40 +1534,102 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 40,
-                          color: Colors.transparent,
-                          child: Center(
-                            child: Container(
-                              height: 40,
-                              width: 100,
-                              decoration: const BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                    25.0,
-                                  ),
+                    if (arr_task_list[i]['completeDate'].toString() != '') ...[
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Container(
+                            height: 40,
+                            width: 140,
+                            decoration: const BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(
+                                  12.0,
                                 ),
                               ),
-                              child: Center(
-                                child: text_regular_style_custom(
-                                  //
-                                  parse_days_left.func_difference_between_date(
-                                    //
-                                    arr_task_list[i]['due_date'].toString(),
-                                  ),
-                                  Colors.black,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Align(
+                                child: text_bold_style_custom(
+                                  'Completed',
+                                  Colors.white,
                                   12.0,
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    )
+                      )
+                    ] else ...[
+                      (func_difference_between_date(
+                                  arr_task_list[i]['due_date'].toString()) ==
+                              'overdue')
+                          ? Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Container(
+                                  height: 40,
+                                  width: 120,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        12.0,
+                                      ),
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Align(
+                                      child: text_bold_style_custom(
+                                        'overdue',
+                                        Colors.white,
+                                        16.0,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 40,
+                                  color: Colors.transparent,
+                                  child: Center(
+                                    child: Container(
+                                      height: 40,
+                                      width: 100,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.orange,
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(
+                                            25.0,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: text_regular_style_custom(
+                                          //
+                                          parse_days_left
+                                              .func_difference_between_date(
+                                            //
+                                            arr_task_list[i]['due_date']
+                                                .toString(),
+                                          ),
+                                          Colors.black,
+                                          12.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                    ]
                   ],
                 ),
                 /*child: Row(
@@ -2094,137 +2160,121 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           //
           header_UI(context),
           //
-          for (var i = 0; i < 1; i++) ...[
-            ExpansionTile(
-              title: Text(
-                //
-                '${'send a teammate request'.toString().toUpperCase()} ($str_send_teammate_count)',
-                //
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 18.0,
-                ),
-              ),
-              // subtitle: Text('Trailing expansion arrow icon'),
 
-              children: <Widget>[
-                for (var j = 0; j < arr_send_teammate_request.length; j++) ...[
-                  ListTile(
-                    leading: Container(
-                      width: 80,
-                      height: 80,
-                      color: Colors.yellow,
-                      child: Image.network(
-                        arr_send_teammate_request[j]['From_profile_picture']
-                            .toString(),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    title: Text(
-                      //
+          ExpansionTile(
+            title: text_regular_style_custom(
+              '${'send a teammate request'.toString()} ($str_send_teammate_count)',
+              Colors.black,
+              16.0,
+            ),
+            // subtitle: Text('Trailing expansion arrow icon'),
 
-                      arr_send_teammate_request[j]['To_userName'].toString(),
-                      //
-                      style: TextStyle(
-                          fontFamily: font_style_name,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black),
-                    ),
-                    subtitle: Text(
-                      'skills : ${arr_send_teammate_request[j]['skill']}\nTask name : ${arr_send_teammate_request[j]['taskName']}',
-                    ),
-                    trailing: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 40,
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(
-                            255,
-                            255,
-                            255,
-                            1,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            20.0,
-                          ),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '\$500',
-                            style: TextStyle(
-                              fontFamily: font_style_name,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
+            children: <Widget>[
+              for (var i = 0; i < arr_send_teammate_request.length; i++) ...[
+                ListTile(
+                  leading: Container(
+                    width: 60,
+                    height: 60,
+                    color: Colors.transparent,
+                    child: (arr_send_teammate_request[i]['To_profile_picture']
+                                .toString() ==
+                            '')
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            child: Image.network(
+                              arr_send_teammate_request[i]['To_profile_picture']
+                                  .toString(),
+                              fit: BoxFit.cover,
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    isThreeLine: true,
                   ),
-                ]
-              ],
-            ),
-          ],
-          for (var i = 0; i < 1; i++) ...[
-            ExpansionTile(
-              title: Text(
-                //
-
-                '${'approve teammate'.toString().toUpperCase()} ($str_approved_teammate_count)',
-                //
-                style: TextStyle(
-                  fontFamily: font_style_name,
-                  fontSize: 18.0,
+                  title: text_bold_style_custom(
+                    arr_send_teammate_request[i]['To_userName'].toString(),
+                    Colors.black,
+                    16.0,
+                  ),
+                  subtitle: Text(
+                    'skills : ${arr_send_teammate_request[i]['skill']}\nTask name : ${arr_send_teammate_request[i]['taskName']}',
+                  ),
+                  isThreeLine: true,
                 ),
-              ),
-              // subtitle: Text('Trailing expansion arrow icon'),
+              ]
+            ],
+          ),
 
-              children: <Widget>[
-                for (var j = 0; j < arr_approve_teammate.length; j++) ...[
-                  ListTile(
-                    leading: Container(
+          ExpansionTile(
+            title: text_regular_style_custom(
+              '${'Approve Teammate'.toString()} (${arr_approve_teammate.length})',
+              Colors.black,
+              16.0,
+            ),
+            children: <Widget>[
+              for (var j = 0; j < arr_approve_teammate.length; j++) ...[
+                ListTile(
+                  leading: Container(
+                    width: 60,
+                    height: 60,
+                    color: Colors.transparent,
+                    child: (arr_approve_teammate[j]['To_profile_picture']
+                                .toString() ==
+                            '')
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              12.0,
+                            ),
+                            child: Image.network(
+                              arr_approve_teammate[j]['To_profile_picture']
+                                  .toString(),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  ),
+                  title: text_bold_style_custom(
+                    //
+                    arr_approve_teammate[j]['To_userName'].toString(),
+                    Colors.black,
+                    16.0,
+                  ),
+                  subtitle: Text(
+                    'skills : ${arr_send_teammate_request[j]['skill']}\nTask name : ${arr_send_teammate_request[j]['taskName']}',
+                  ),
+                  trailing: InkWell(
+                    onTap: () {},
+                    child: Container(
+                      height: 40,
                       width: 80,
-                      height: 80,
-                      color: Colors.yellow,
-                      child: Image.network(
-                        arr_approve_teammate[j]['From_profile_picture']
-                            .toString(),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    title: Text(
-                      //
-
-                      arr_approve_teammate[j]['To_userName'].toString(),
-                      //
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      'skills : ${arr_send_teammate_request[j]['skill']}\nTask name : ${arr_send_teammate_request[j]['taskName']}',
-                    ),
-                    trailing: InkWell(
-                      onTap: () {},
-                      child: Container(
-                        height: 40,
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(
-                            255,
-                            255,
-                            255,
-                            1,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            20.0,
-                          ),
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(
+                          255,
+                          255,
+                          255,
+                          1,
                         ),
-                        /*child: Center(
+                        borderRadius: BorderRadius.circular(
+                          20.0,
+                        ),
+                      ),
+                      /*child: Center(
                                   child: Text(
                                     '\$500',
                                     style: TextStyle(
@@ -2235,14 +2285,13 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                     ),
                                   ),
                                 ),*/
-                      ),
                     ),
-                    isThreeLine: true,
                   ),
-                ]
-              ],
-            ),
-          ]
+                  isThreeLine: true,
+                ),
+              ]
+            ],
+          ),
         ],
       ),
     );
@@ -3293,6 +3342,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     //
                     print('user clicked goal complete');
                     //
+
                     strUserClickedWhichTabProfile = 'tab_complete';
                     (widget.strFromViewDetails == 'yes')
                         ? funcTaskCompletedWithoutUserIdWB()
@@ -4160,10 +4210,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
   func_team_list_WB() async {
-    print('=====> POST : TEAM LIST');
+    print('=====> POST : TEAM LIST 1');
 
-    str_main_loader = 'team_loader_start';
-    setState(() {});
+    setState(() {
+      str_main_loader = 'team_loader_start';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // print(prefs.getInt('userId').toString());
@@ -4200,7 +4251,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         }
 
         for (var i = 0; i < get_data['acceptData'].length; i++) {
-          arr_approve_teammate.add(get_data['data'][i]);
+          arr_approve_teammate.add(get_data['acceptData'][i]);
         }
 
         print('count start');
@@ -4222,10 +4273,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
   funcTeamWBfromShopDetails() async {
-    print('=====> POST : TEAM LIST');
+    print('=====> POST : TEAM LIST 2');
 
-    str_main_loader = 'team_loader_start';
-    setState(() {});
+    setState(() {
+      str_main_loader = 'team_loader_start';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // print(prefs.getInt('userId').toString());
@@ -4353,15 +4405,15 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
   funcTaskCompletedWithUserIdWB() async {
     if (kDebugMode) {
-      print('=====> POST : TASKS LIST 1.0');
+      print('=====> POST : COMPLETED TASK LIST 1.0');
     }
 
-    str_show_ui = 'tasks';
-
-    str_tab_press = 'tasks';
-
-    str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    setState(() {
+      str_show_ui = 'tasks';
+      str_tab_press = 'tasks';
+      str_main_loader = 'tasks_loader_start';
+      strTaskCompleteProfile = 'no';
+    });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -4438,7 +4490,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     str_tab_press = 'tasks';
 
     str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    setState(() {
+      strTaskCompleteProfile = 'no';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -4515,7 +4569,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     str_tab_press = 'tasks';
 
     str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    setState(() {
+      strTaskCompleteProfile = 'yes';
+    });
 
     // SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -4590,7 +4646,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     str_tab_press = 'tasks';
 
     str_main_loader = 'tasks_loader_start';
-    setState(() {});
+    setState(() {
+      strTaskCompleteProfile = 'yes';
+    });
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -6762,6 +6820,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     String str_get_task_details,
     String str_get_due_date,
     String strRwardType,
+    String profileAccessStatus,
   ) async {
     final result = await Navigator.push(
       context,
@@ -6776,7 +6835,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
           str_add_reminder: str_get_add_warning.toString(),
           str_task_details: str_get_task_details.toString(),
           str_due_date: str_get_due_date.toString(),
-          str_reward_type: strRwardType, str_profile_access: 'yes',
+          str_reward_type: strRwardType,
+          str_profile_access: strTaskCompleteProfile.toString(),
 
           //
         ),
