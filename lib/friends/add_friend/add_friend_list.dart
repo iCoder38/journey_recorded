@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/my_friend_profile/my_friend_profile.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -138,72 +139,85 @@ class _AddFriendListScreenState extends State<AddFriendListScreen> {
               )
             else
               for (int i = 0; i < arr_friends.length; i++) ...[
-                Container(
-                  height: 100,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.transparent,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SizedBox(
-                        width: 80,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12.0),
-                          child:
-                              (arr_friends[i]['profile_picture'].toString() ==
-                                      '')
-                                  ? Image.asset('assets/images/logo.png')
-                                  : FadeInImage.assetNetwork(
-                                      placeholder: 'assets/images/loader.gif',
-                                      image: arr_friends[i]['profile_picture']
-                                          .toString(),
-                                    ),
+                GestureDetector(
+                  onTap: () {
+                    //
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MyFriendProfileScreen(
+                          str_user_id: arr_friends[i]['userId'].toString(),
                         ),
                       ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: Text(
-                          //
-                          '${arr_friends[i]['fullName'].toString()}\n${arr_friends[i]['email'].toString()}',
-                          //
-                          style: TextStyle(
-                            fontFamily: font_style_name,
-                            fontSize: 16.0,
+                    );
+                  },
+                  child: Container(
+                    height: 100,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.transparent,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          width: 80,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12.0),
+                            child:
+                                (arr_friends[i]['profile_picture'].toString() ==
+                                        '')
+                                    ? Image.asset('assets/images/logo.png')
+                                    : FadeInImage.assetNetwork(
+                                        placeholder: 'assets/images/loader.gif',
+                                        image: arr_friends[i]['profile_picture']
+                                            .toString(),
+                                      ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      Container(
-                        height: 40,
-                        width: 40,
-                        decoration: BoxDecoration(
-                            color: Colors.greenAccent,
-                            borderRadius: BorderRadius.circular(
-                              20.0,
-                            )),
-                        child: IconButton(
-                          onPressed: () {
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Expanded(
+                          child: Text(
                             //
-                            send_friend_request_WB(
-                              arr_friends[i]['userId'].toString(),
-                            );
+                            '${arr_friends[i]['fullName'].toString()}\n${arr_friends[i]['email'].toString()}',
                             //
-                          },
-                          icon: const Icon(
-                            Icons.add,
+                            style: TextStyle(
+                              fontFamily: font_style_name,
+                              fontSize: 16.0,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Container(
+                          height: 40,
+                          width: 40,
+                          decoration: BoxDecoration(
+                              color: Colors.greenAccent,
+                              borderRadius: BorderRadius.circular(
+                                20.0,
+                              )),
+                          child: IconButton(
+                            onPressed: () {
+                              //
+                              send_friend_request_WB(
+                                arr_friends[i]['userId'].toString(),
+                              );
+                              //
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 24,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Container(

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:journey_recorded/write_review_shop/write_review_shop.dart';
 import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -88,6 +89,14 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
       print('=================');
       print('=================');
     }
+    setState(() {
+      strSpecialClick = '1';
+      strServiceClick = '0';
+      strItemsClick = '0';
+      strContactInfoClick = '0';
+      strEmplyeeClick = '0';
+      strReviewClick = '0';
+    });
     funcSpecialListWB('Special');
     super.initState();
   }
@@ -105,7 +114,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 Icons.chevron_left,
                 color: Colors.white,
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop('submit_review'),
             ),
             backgroundColor: navigation_color,
             title: text_bold_style_custom(
@@ -147,7 +156,13 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   if (arrOutGame.isEmpty)
                     ...[]
                   else ...[
-                    tabbar_CONTACT_INFO_ui(),
+                    (strLoader == '0')
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.purple,
+                            ),
+                          )
+                        : tabbar_CONTACT_INFO_ui(),
                   ],
 
                   //
@@ -205,97 +220,130 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                               Colors.black,
                               16.0,
                             ),
-                            subtitle: Row(
+                            subtitle: Column(
                               children: [
-                                if (arrOutGame[i]['star'].toString() ==
-                                    '0') ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                ] else if (arrOutGame[i]['star'].toString() ==
-                                    '2') ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                ] else if (arrOutGame[i]['star'].toString() ==
-                                    '3') ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                ] else if (arrOutGame[i]['star'].toString() ==
-                                    '4') ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                ] else if (arrOutGame[i]['star'].toString() ==
-                                    '5') ...[
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  const Icon(
-                                    Icons.star,
-                                    color: Colors.orange,
-                                    size: 16.0,
-                                  ),
-                                  //
+                                Row(
+                                  children: [
+                                    if (arrOutGame[i]['star'].toString() ==
+                                        '0') ...[
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                    ] else if (arrOutGame[i]['star']
+                                            .toString() ==
+                                        '2') ...[
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                    ] else if (arrOutGame[i]['star']
+                                            .toString() ==
+                                        '3') ...[
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                    ] else if (arrOutGame[i]['star']
+                                            .toString() ==
+                                        '4') ...[
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                    ] else if (arrOutGame[i]['star']
+                                            .toString() ==
+                                        '5') ...[
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      const Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 16.0,
+                                      ),
+                                      //
 
-                                  //
-                                ]
+                                      //
+                                    ]
+                                  ],
+                                ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: ReadMoreText(
+                                    arrOutGame[i]['message'].toString(),
+                                    trimLines: 2,
+                                    colorClickableText: Colors.pink,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 14.0,
+                                      color: Colors.black,
+                                    ),
+                                    trimMode: TrimMode.Line,
+                                    trimCollapsedText: 'Show more',
+                                    trimExpandedText: '...Show less',
+                                    lessStyle: GoogleFonts.montserrat(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                    moreStyle: GoogleFonts.montserrat(
+                                      fontSize: 14.0,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -1337,29 +1385,41 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: Container(
-              margin: const EdgeInsets.only(
-                left: 20.0,
-              ),
-              width: 120,
-              height: 30,
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(
-                  250,
-                  50,
-                  64,
-                  1,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WriteReviewShopScreen(
+                      ReviewTo: widget.getFullData['userId'].toString(),
+                    ),
+                  ),
+                );
+              },
+              child: Container(
+                margin: const EdgeInsets.only(
+                  left: 20.0,
                 ),
-                borderRadius: BorderRadius.circular(
-                  12.0,
+                width: 120,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: const Color.fromRGBO(
+                    250,
+                    50,
+                    64,
+                    1,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    12.0,
+                  ),
                 ),
-              ),
-              child: Center(
-                child: text_bold_style_custom(
-                  //
-                  'Rate : ${widget.getFullData['AVGRating'].toString()}',
-                  Colors.white,
-                  14.0,
+                child: Center(
+                  child: text_bold_style_custom(
+                    //
+                    'Rate : ${widget.getFullData['AVGRating'].toString()}',
+                    Colors.white,
+                    14.0,
+                  ),
                 ),
               ),
             ),

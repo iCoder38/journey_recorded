@@ -33,12 +33,20 @@ class _GameScreenState extends State<GameScreen> {
   var arr_product_list = [];
   var arrOutGameList = [];
   //
-
+  late final TextEditingController contSearchHere;
   //
   @override
   void initState() {
-    super.initState();
+    contSearchHere = TextEditingController();
     actionList();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    contSearchHere.dispose();
+
+    super.dispose();
   }
 
   // action list
@@ -207,7 +215,9 @@ class _GameScreenState extends State<GameScreen> {
     if (kDebugMode) {
       print('=====> POST : BUSINESS LIST');
     }
-
+    setState(() {
+      str_main_loader = '1';
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final resposne = await http.post(
@@ -244,7 +254,65 @@ class _GameScreenState extends State<GameScreen> {
         }
         //
         setState(() {
-          str_main_loader = '2';
+          str_main_loader = '0';
+        });
+        //
+      } else {
+        if (kDebugMode) {
+          print(
+            '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+          );
+        }
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  // business list
+  business_list_search_WB(textIs) async {
+    if (kDebugMode) {
+      print('=====> POST : BUSINESS LIST AFTER SEARCH');
+    }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'businesslist',
+          'userId': prefs.getInt('userId').toString(),
+          'pageNo': '1',
+          'keyword': textIs.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arrOutGameList.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arrOutGameList.add(i);
+          //
+        }
+        //
+        setState(() {
+          str_main_loader = '0';
         });
         //
       } else {
@@ -405,105 +473,122 @@ class _GameScreenState extends State<GameScreen> {
   SingleChildScrollView tabbar_OUT_GAMES_ui(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
-      child: Column(
-        children: [
-          Container(
-            height: 60,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-              color: Colors.amber,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 5,
-                  blurRadius: 7,
-                  offset: const Offset(
-                    0,
-                    3,
-                  ), // changes position of shadow
-                ),
-              ],
-            ),
-          ),
-          //
-          for (int i = 0; i < arrOutGameList.length; i++) ...[
-            const SizedBox(
-              height: 20,
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ShopClickDetailsScreen(getFullData: arrOutGameList[i]),
+      child: (str_main_loader == '1')
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : Column(
+              children: [
+                Container(
+                  height: 60,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 7,
+                        offset: const Offset(
+                          0,
+                          3,
+                        ), // changes position of shadow
+                      ),
+                    ],
                   ),
-                );
-              },
-              //
-              // https://demo4.evirtualservices.net/journey/img/uploads/1674210674image_picker_A2D06B8E-5731-4C64-B8B3-5E0C83B5FF7A-33908-0000007423B30F37.jpg
-              //
-              child: Container(
-                margin: const EdgeInsets.only(
-                  left: 20.0,
-                  right: 20.0,
-                ),
-                height: 100,
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(
-                    233,
-                    233,
-                    233,
-                    1,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    12.0,
+                  child: Container(
+                    margin: const EdgeInsets.all(
+                      10.0,
+                    ),
+                    child: TextField(
+                      controller: contSearchHere,
+                      textInputAction: TextInputAction.go,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Search here...',
+                      ),
+                      onSubmitted: (value) {
+                        //
+                        business_list_search_WB(value);
+                      },
+                    ),
                   ),
                 ),
-                child: Row(
-                  children: <Widget>[
-                    (arrOutGameList[i]['profile_picture'].toString() == '')
-                        ? Container(
-                            margin: const EdgeInsets.all(
-                              10.0,
-                            ),
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(
-                                0,
-                              ),
-                            ),
-                            child: Image.asset(
-                              'assets/images/logo.png',
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : Container(
-                            margin: const EdgeInsets.all(
-                              10.0,
-                            ),
-                            height: 80,
-                            width: 80,
-                            decoration: BoxDecoration(
-                              color: Colors.amber,
-                              borderRadius: BorderRadius.circular(
-                                14.0,
-                              ),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                12.0,
-                              ),
-                              child: Image.network(
-                                arrOutGameList[i]['profile_picture'].toString(),
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                    /*Container(
+                //
+                for (int i = 0; i < arrOutGameList.length; i++) ...[
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      push_to_Add_mission(context, i);
+                    },
+                    //
+                    // https://demo4.evirtualservices.net/journey/img/uploads/1674210674image_picker_A2D06B8E-5731-4C64-B8B3-5E0C83B5FF7A-33908-0000007423B30F37.jpg
+                    //
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                        left: 20.0,
+                        right: 20.0,
+                      ),
+                      height: 100,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        color: const Color.fromRGBO(
+                          233,
+                          233,
+                          233,
+                          1,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          12.0,
+                        ),
+                      ),
+                      child: Row(
+                        children: <Widget>[
+                          (arrOutGameList[i]['profile_picture'].toString() ==
+                                  '')
+                              ? Container(
+                                  margin: const EdgeInsets.all(
+                                    10.0,
+                                  ),
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(
+                                      0,
+                                    ),
+                                  ),
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    fit: BoxFit.cover,
+                                  ),
+                                )
+                              : Container(
+                                  margin: const EdgeInsets.all(
+                                    10.0,
+                                  ),
+                                  height: 80,
+                                  width: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber,
+                                    borderRadius: BorderRadius.circular(
+                                      14.0,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(
+                                      12.0,
+                                    ),
+                                    child: Image.network(
+                                      arrOutGameList[i]['profile_picture']
+                                          .toString(),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                          /*Container(
                       margin: const EdgeInsets.only(
                         left: 20.0,
                       ),
@@ -529,89 +614,90 @@ class _GameScreenState extends State<GameScreen> {
                                   ),
                       ),*/
                     ),*/
-                    Expanded(
-                      child: Container(
-                        margin: const EdgeInsets.only(
-                          left: 0.0,
-                          right: 20.0,
-                        ),
-                        height: 90,
-                        width: 90,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(
-                            12.0,
-                          ),
-                        ),
-                        child: Column(
-                          children: <Widget>[
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: text_bold_style_custom(
-                                  //
-                                  arrOutGameList[i]['businessName'].toString(),
-                                  Colors.black,
-                                  18.0,
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 0.0,
+                                right: 20.0,
+                              ),
+                              height: 90,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(
+                                  12.0,
                                 ),
                               ),
-                            ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.phone,
-                                    color: Colors.black,
-                                    size: 18.0,
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: text_bold_style_custom(
+                                        //
+                                        arrOutGameList[i]['businessName']
+                                            .toString(),
+                                        Colors.black,
+                                        18.0,
+                                      ),
+                                    ),
                                   ),
-                                  //
-                                  const SizedBox(
-                                    width: 8.0,
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.phone,
+                                          color: Colors.black,
+                                          size: 18.0,
+                                        ),
+                                        //
+                                        const SizedBox(
+                                          width: 8.0,
+                                        ),
+                                        //
+                                        text_regular_style_custom(
+                                          //
+                                          arrOutGameList[i]['contactNumber']
+                                              .toString(),
+                                          Colors.black,
+                                          14.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  //
-                                  text_regular_style_custom(
-                                    //
-                                    arrOutGameList[i]['contactNumber']
-                                        .toString(),
-                                    Colors.black,
-                                    14.0,
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.pin_drop,
+                                          color: Colors.black,
+                                          size: 18.0,
+                                        ), //
+                                        const SizedBox(
+                                          width: 8.0,
+                                        ),
+                                        //
+                                        text_regular_style_custom(
+                                          //
+                                          arrOutGameList[i]['businessAddress']
+                                              .toString(),
+                                          Colors.black,
+                                          14.0,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  const Icon(
-                                    Icons.pin_drop,
-                                    color: Colors.black,
-                                    size: 18.0,
-                                  ), //
-                                  const SizedBox(
-                                    width: 8.0,
-                                  ),
-                                  //
-                                  text_regular_style_custom(
-                                    //
-                                    arrOutGameList[i]['businessAddress']
-                                        .toString(),
-                                    Colors.black,
-                                    14.0,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                ]
+              ],
             ),
-          ]
-        ],
-      ),
     );
   }
 
@@ -1798,5 +1884,25 @@ class _GameScreenState extends State<GameScreen> {
         ],
       ),
     );
+    //
+  }
+
+  Future<void> push_to_Add_mission(BuildContext context, i) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ShopClickDetailsScreen(getFullData: arrOutGameList[i]),
+      ),
+    );
+
+    // ignore: prefer_interpolation_to_compose_strings
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
+
+    if (!mounted) return;
+
+    business_list_WB();
   }
 }
