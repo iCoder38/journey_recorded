@@ -3,7 +3,9 @@ import 'dart:convert';
 
 // import 'package:flutter/foundation.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:readmore/readmore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
@@ -27,6 +29,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
   var strItemsClick = '0';
   var strContactInfoClick = '0';
   var strEmplyeeClick = '0';
+  var strReviewClick = '0';
   //
   var dictProfileData;
   //
@@ -105,114 +108,250 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               onPressed: () => Navigator.of(context).pop(),
             ),
             backgroundColor: navigation_color,
-            title: Text(
-              ///
-              navigation_title_nevada_insurance,
-
-              ///
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
-              ),
+            title: text_bold_style_custom(
+              'Business',
+              Colors.white,
+              16.0,
             ),
           ),
-          body: Column(
-            children: [
-              //
-              header_UI(context),
-              //
-              tabsUI(context),
-              //
-              if (strSpecialClick == '1') ...[
+          body: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              children: [
                 //
+                header_UI(context),
+                //
+                tabsUI(context),
+                //
+                if (strSpecialClick == '1') ...[
+                  //
 
-                (strLoader == '0')
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.purple,
-                        ),
-                      )
-                    : tabbar_SPECIAL_ui(),
-              ] else if (strServiceClick == '1') ...[
-                //
-                (strLoader == '0')
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.purple,
-                        ),
-                      )
-                    : tabbar_SERVICES_ui(context),
-              ] else if (strItemsClick == '1') ...[
-                //
-                if (arrOutGame.isEmpty)
-                  ...[]
-                else ...[
-                  tabbar_CONTACT_INFO_ui(),
-                ],
+                  (strLoader == '0')
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.purple,
+                          ),
+                        )
+                      : tabbar_SPECIAL_ui(),
+                ] else if (strServiceClick == '1') ...[
+                  //
+                  (strLoader == '0')
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.purple,
+                          ),
+                        )
+                      : tabbar_SERVICES_ui(context),
+                ] else if (strItemsClick == '1') ...[
+                  //
+                  if (arrOutGame.isEmpty)
+                    ...[]
+                  else ...[
+                    tabbar_CONTACT_INFO_ui(),
+                  ],
 
-                //
-                Container(
-                  margin: const EdgeInsets.only(
-                    left: 20.0,
-                    right: 20.0,
+                  //
+                  Container(
+                    margin: const EdgeInsets.only(
+                      left: 20.0,
+                      right: 20.0,
+                    ),
+                    height: 0.2,
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.grey,
                   ),
-                  height: 0.2,
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey,
-                ),
-                //
-              ] else if (strContactInfoClick == '1') ...[
-                //
-                //
-                tabbar_all_contact_info_ui(context),
-              ] else if (strEmplyeeClick == '1') ...[
-                //
-
-                (strLoader == '0')
-                    ? const Column(
-                        children: [
-                          SizedBox(
-                            height: 40,
-                          ),
-                          Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.brown,
-                            ),
-                          ),
-                        ],
-                      )
-                    : SingleChildScrollView(
-                        scrollDirection: Axis.vertical,
-                        child: Column(
-                          children: [
-                            for (var j = 0; j < arrOutGame.length; j++) ...[
-                              ListTile(
-                                leading: SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: Image.asset(
-                                    'assets/images/logo.png',
-                                  ),
-                                ),
-                                title: text_bold_style_custom(
-                                  //
-                                  arrOutGame[j]['From_userName'],
-                                  Colors.black,
-                                  14.0,
-                                ),
-                                subtitle: text_regular_style_custom(
-                                  //
-                                  arrOutGame[j]['From_userAddress'],
-                                  Colors.black,
-                                  12.0,
+                  //
+                ] else if (strContactInfoClick == '1') ...[
+                  //
+                  //
+                  tabbar_all_contact_info_ui(context),
+                ] else if (strReviewClick == '1') ...[
+                  //
+                  //
+                  for (int i = 0; i < arrOutGame.length; i++) ...[
+                    Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ListTile(
+                            leading: Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: Colors.amber,
+                                borderRadius: BorderRadius.circular(
+                                  30.0,
                                 ),
                               ),
-                            ]
-                          ],
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                  30.0,
+                                ),
+                                child: Image.network(
+                                  arrOutGame[i]['profile_picture'].toString(),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            trailing: text_regular_style_custom(
+                              //
+                              arrOutGame[i]['created'].toString(),
+                              Colors.black,
+                              10.0,
+                            ),
+                            title: text_bold_style_custom(
+                              //
+                              arrOutGame[i]['userName'].toString(),
+                              Colors.black,
+                              16.0,
+                            ),
+                            subtitle: Row(
+                              children: [
+                                if (arrOutGame[i]['star'].toString() ==
+                                    '0') ...[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                ] else if (arrOutGame[i]['star'].toString() ==
+                                    '2') ...[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                ] else if (arrOutGame[i]['star'].toString() ==
+                                    '3') ...[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                ] else if (arrOutGame[i]['star'].toString() ==
+                                    '4') ...[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                ] else if (arrOutGame[i]['star'].toString() ==
+                                    '5') ...[
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  const Icon(
+                                    Icons.star,
+                                    color: Colors.orange,
+                                    size: 16.0,
+                                  ),
+                                  //
+
+                                  //
+                                ]
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-              ]
-            ],
+                      ],
+                    ),
+                  ]
+                ] else if (strEmplyeeClick == '1') ...[
+                  //
+
+                  (strLoader == '0')
+                      ? const Column(
+                          children: [
+                            SizedBox(
+                              height: 40,
+                            ),
+                            Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.brown,
+                              ),
+                            ),
+                          ],
+                        )
+                      : SingleChildScrollView(
+                          scrollDirection: Axis.vertical,
+                          child: Column(
+                            children: [
+                              for (var j = 0; j < arrOutGame.length; j++) ...[
+                                ListTile(
+                                  leading: SizedBox(
+                                    height: 50,
+                                    width: 50,
+                                    child: Image.asset(
+                                      'assets/images/logo.png',
+                                    ),
+                                  ),
+                                  title: text_bold_style_custom(
+                                    //
+                                    arrOutGame[j]['From_userName'],
+                                    Colors.black,
+                                    14.0,
+                                  ),
+                                  subtitle: text_regular_style_custom(
+                                    //
+                                    arrOutGame[j]['From_userAddress'],
+                                    Colors.black,
+                                    12.0,
+                                  ),
+                                ),
+                              ]
+                            ],
+                          ),
+                        ),
+                ]
+              ],
+            ),
           ),
         ),
       ),
@@ -239,7 +378,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  text_regular_style_custom(
+                  text_bold_style_custom(
                     'Phone : ',
                     Colors.black,
                     14.0,
@@ -254,7 +393,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                           //
                           dictProfileData['businessPhone'].toString(),
                           Colors.black,
-                          14.0,
+                          12.0,
                         ),
                 ],
               ),
@@ -271,7 +410,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  text_regular_style_custom(
+                  text_bold_style_custom(
                     'FAX : ',
                     Colors.black,
                     14.0,
@@ -286,7 +425,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                           //
                           dictProfileData['businessFax'].toString(),
                           Colors.black,
-                          14.0,
+                          12.0,
                         ),
                 ],
               ),
@@ -303,7 +442,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  text_regular_style_custom(
+                  text_bold_style_custom(
                     'E-mail Address : ',
                     Colors.black,
                     14.0,
@@ -318,7 +457,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                           //
                           dictProfileData['businessEmail'].toString(),
                           Colors.black,
-                          14.0,
+                          12.0,
                         ),
                 ],
               ),
@@ -335,7 +474,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  text_regular_style_custom(
+                  text_bold_style_custom(
                     'Web Address : ',
                     Colors.black,
                     14.0,
@@ -350,7 +489,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                           //
                           dictProfileData['businessWebSite'].toString(),
                           Colors.black,
-                          14.0,
+                          12.0,
                         ),
                 ],
               ),
@@ -367,7 +506,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  text_regular_style_custom(
+                  text_bold_style_custom(
                     'Address : ',
                     Colors.black,
                     14.0,
@@ -475,6 +614,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   strItemsClick = '0';
                   strContactInfoClick = '0';
                   strEmplyeeClick = '0';
+                  strReviewClick = '0';
                 });
                 //
                 funcSpecialListWB('Special');
@@ -517,7 +657,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 setState(() {
                   strServiceClick = '1';
                   strSpecialClick = '0';
-
+                  strReviewClick = '0';
                   strItemsClick = '0';
                   strContactInfoClick = '0';
                   strEmplyeeClick = '0';
@@ -564,7 +704,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   strItemsClick = '1';
                   strSpecialClick = '0';
                   strServiceClick = '0';
-
+                  strReviewClick = '0';
                   strContactInfoClick = '0';
                   strEmplyeeClick = '0';
                 });
@@ -611,7 +751,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   strSpecialClick = '0';
                   strServiceClick = '0';
                   strItemsClick = '0';
-
+                  strReviewClick = '0';
                   strEmplyeeClick = '0';
                 });
                 //
@@ -658,6 +798,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   strItemsClick = '0';
                   strContactInfoClick = '0';
                   strEmplyeeClick = '1';
+                  strReviewClick = '0';
                 });
                 //
                 funcEmployeeWB();
@@ -683,9 +824,52 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 ),
               ),
             ),
-
+            Container(
+              margin: const EdgeInsets.only(
+                top: 8.0,
+                bottom: 8.0,
+              ),
+              height: 60,
+              width: 0.6,
+              color: Colors.white,
+            ),
             /************************************/
             /************************************/
+            GestureDetector(
+              onTap: () {
+                //
+                setState(() {
+                  strSpecialClick = '0';
+                  strServiceClick = '0';
+                  strItemsClick = '0';
+                  strContactInfoClick = '0';
+                  strEmplyeeClick = '0';
+                  strReviewClick = '1';
+                });
+                //
+                reviewListWB();
+              },
+              child: Container(
+                height: 60,
+                color: Colors.transparent,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Center(
+                    child: (strReviewClick == '0')
+                        ? text_regular_style_custom(
+                            'Reviews',
+                            Colors.white,
+                            16.0,
+                          )
+                        : text_bold_style_custom(
+                            'Reviews',
+                            Colors.white,
+                            18.0,
+                          ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -1158,7 +1342,7 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                 left: 20.0,
               ),
               width: 120,
-              height: 50,
+              height: 30,
               decoration: BoxDecoration(
                 color: const Color.fromRGBO(
                   250,
@@ -1167,17 +1351,15 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
                   1,
                 ),
                 borderRadius: BorderRadius.circular(
-                  25.0,
+                  12.0,
                 ),
               ),
               child: Center(
-                child: Text(
-                  'Rate : 0',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: font_style_name,
-                    fontSize: 16.0,
-                  ),
+                child: text_bold_style_custom(
+                  //
+                  'Rate : ${widget.getFullData['AVGRating'].toString()}',
+                  Colors.white,
+                  14.0,
                 ),
               ),
             ),
@@ -1402,6 +1584,68 @@ class _ShopClickDetailsScreenState extends State<ShopClickDetailsScreen> {
           'action': 'invitelist',
           'userId': widget.getFullData['userId'].toString(),
           'status': '1'
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    if (kDebugMode) {
+      print(get_data);
+    }
+
+    if (resposne.statusCode == 200) {
+      //
+      arrOutGame.clear();
+      //
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        for (Map i in get_data['data']) {
+          //
+          arrOutGame.add(i);
+          //
+        }
+        //
+
+        setState(() {
+          strLoader = '1';
+        });
+        //
+        // Navigator.pop(context);
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+    }
+  }
+
+  //
+  // action list
+  reviewListWB() async {
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (kDebugMode) {
+      print('POST ====> REVIEWS');
+    }
+
+    setState(() {
+      strLoader = '0';
+    });
+
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'reviewlist',
+          'userId': widget.getFullData['userId'].toString(),
+          'pageNo': '1'
         },
       ),
     );
