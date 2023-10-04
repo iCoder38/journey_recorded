@@ -1610,7 +1610,8 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       arr_task_list[i]['description'].toString(),
                       arr_task_list[i]['due_date'].toString(),
                       arr_task_list[i]['rewardType'].toString(),
-                      'yes');
+                      'yes',
+                      arr_task_list[i]);
 
                   /**/
                 },
@@ -7034,37 +7035,38 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   }
 
   Future<void> func_push_to_task(
-    BuildContext context,
-    String str_get_task_name,
-    String str_get_experince,
-    String str_get_deduct_experince,
-    String str_get_price,
-    String str_get_professional_id,
-    String str_get_reminder_warning,
-    String str_get_add_warning,
-    String str_get_task_details,
-    String str_get_due_date,
-    String strRwardType,
-    String profileAccessStatus,
-  ) async {
+      BuildContext context,
+      String str_get_task_name,
+      String str_get_experince,
+      String str_get_deduct_experince,
+      String str_get_price,
+      String str_get_professional_id,
+      String str_get_reminder_warning,
+      String str_get_add_warning,
+      String str_get_task_details,
+      String str_get_due_date,
+      String strRwardType,
+      String profileAccessStatus,
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => TaskDetailsScreen(
-          str_task_name: str_get_task_name.toString(),
-          str_experince: str_get_experince.toString(),
-          str_deduct_experince: str_get_deduct_experince.toString(),
-          str_price: str_get_price.toString(),
-          str_professional_id: str_get_professional_id.toString(),
-          str_reminder_warning: str_get_reminder_warning.toString(),
-          str_add_reminder: str_get_add_warning.toString(),
-          str_task_details: str_get_task_details.toString(),
-          str_due_date: str_get_due_date.toString(),
-          str_reward_type: strRwardType,
-          str_profile_access: strTaskCompleteProfile.toString(),
+            str_task_name: str_get_task_name.toString(),
+            str_experince: str_get_experince.toString(),
+            str_deduct_experince: str_get_deduct_experince.toString(),
+            str_price: str_get_price.toString(),
+            str_professional_id: str_get_professional_id.toString(),
+            str_reminder_warning: str_get_reminder_warning.toString(),
+            str_add_reminder: str_get_add_warning.toString(),
+            str_task_details: str_get_task_details.toString(),
+            str_due_date: str_get_due_date.toString(),
+            str_reward_type: strRwardType,
+            str_profile_access: strTaskCompleteProfile.toString(),
+            dictTaskFullDetails: data
 
-          //
-        ),
+            //
+            ),
       ),
     );
 

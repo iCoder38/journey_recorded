@@ -425,14 +425,14 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                             .showSnackBar(snackdemo);
                                         //
                                       } else {
-                                        // print(arr_habits_list[i]);
+                                        //
                                         updateOnePercentage(
                                           arr_habits_list[i]['habitId']
                                               .toString(),
                                           sumBoth.toString(),
                                         );
+                                        //
                                       }
-                                      /**/
                                     },
                                     child: Container(
                                       height: 40,

@@ -344,18 +344,18 @@ class _TaskScreenState extends State<TaskScreen> {
                     onTap: () {
                       //
                       func_push_to_task(
-                        context,
-                        arr_task_list[i]['name'].toString(),
-                        arr_task_list[i]['experiencePoint'].toString(),
-                        arr_task_list[i]['experiencePointDeduct'].toString(),
-                        '\$',
-                        arr_task_list[i]['taskId'].toString(),
-                        arr_task_list[i]['reminderWarning'].toString(),
-                        arr_task_list[i]['addreminder'].toString(),
-                        arr_task_list[i]['description'].toString(),
-                        arr_task_list[i]['due_date'].toString(),
-                        arr_task_list[i]['rewardType'].toString(),
-                      );
+                          context,
+                          arr_task_list[i]['name'].toString(),
+                          arr_task_list[i]['experiencePoint'].toString(),
+                          arr_task_list[i]['experiencePointDeduct'].toString(),
+                          '\$',
+                          arr_task_list[i]['taskId'].toString(),
+                          arr_task_list[i]['reminderWarning'].toString(),
+                          arr_task_list[i]['addreminder'].toString(),
+                          arr_task_list[i]['description'].toString(),
+                          arr_task_list[i]['due_date'].toString(),
+                          arr_task_list[i]['rewardType'].toString(),
+                          arr_task_list[i]);
                     },
                     child: ListTile(
                       title: text_bold_style_custom(
@@ -605,18 +605,18 @@ class _TaskScreenState extends State<TaskScreen> {
                 }
 
                 func_push_to_task(
-                  context,
-                  arr_task_list[i]['name'].toString(),
-                  arr_task_list[i]['experiencePoint'].toString(),
-                  arr_task_list[i]['experiencePointDeduct'].toString(),
-                  '\$',
-                  arr_task_list[i]['taskId'].toString(),
-                  arr_task_list[i]['reminderWarning'].toString(),
-                  arr_task_list[i]['addreminder'].toString(),
-                  arr_task_list[i]['description'].toString(),
-                  arr_task_list[i]['due_date'].toString(),
-                  arr_task_list[i]['rewardType'].toString(),
-                );
+                    context,
+                    arr_task_list[i]['name'].toString(),
+                    arr_task_list[i]['experiencePoint'].toString(),
+                    arr_task_list[i]['experiencePointDeduct'].toString(),
+                    '\$',
+                    arr_task_list[i]['taskId'].toString(),
+                    arr_task_list[i]['reminderWarning'].toString(),
+                    arr_task_list[i]['addreminder'].toString(),
+                    arr_task_list[i]['description'].toString(),
+                    arr_task_list[i]['due_date'].toString(),
+                    arr_task_list[i]['rewardType'].toString(),
+                    arr_task_list[i]);
               },
               child: Container(
                 height: 80,
@@ -1008,34 +1008,36 @@ class _TaskScreenState extends State<TaskScreen> {
   }
 
   Future<void> func_push_to_task(
-    BuildContext context,
-    String str_get_task_name,
-    String str_get_experince,
-    String str_get_deduct_experince,
-    String str_get_price,
-    String str_get_professional_id,
-    String str_get_reminder_warning,
-    String str_get_add_warning,
-    String str_get_task_details,
-    String str_get_due_date,
-    String strRewardType,
-  ) async {
+      BuildContext context,
+      String str_get_task_name,
+      String str_get_experince,
+      String str_get_deduct_experince,
+      String str_get_price,
+      String str_get_professional_id,
+      String str_get_reminder_warning,
+      String str_get_add_warning,
+      String str_get_task_details,
+      String str_get_due_date,
+      String strRewardType,
+      data) async {
     final result = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => TaskDetailsScreen(
-          str_task_name: str_get_task_name.toString(),
-          str_experince: str_get_experince.toString(),
-          str_deduct_experince: str_get_deduct_experince.toString(),
-          str_price: str_get_price.toString(),
-          str_professional_id: str_get_professional_id.toString(),
-          str_reminder_warning: str_get_reminder_warning.toString(),
-          str_add_reminder: str_get_add_warning.toString(),
-          str_task_details: str_get_task_details.toString(),
-          str_due_date: str_get_due_date.toString(),
-          str_reward_type: strRewardType, str_profile_access: 'yes',
-          //
-        ),
+            str_task_name: str_get_task_name.toString(),
+            str_experince: str_get_experince.toString(),
+            str_deduct_experince: str_get_deduct_experince.toString(),
+            str_price: str_get_price.toString(),
+            str_professional_id: str_get_professional_id.toString(),
+            str_reminder_warning: str_get_reminder_warning.toString(),
+            str_add_reminder: str_get_add_warning.toString(),
+            str_task_details: str_get_task_details.toString(),
+            str_due_date: str_get_due_date.toString(),
+            str_reward_type: strRewardType,
+            str_profile_access: 'yes',
+            dictTaskFullDetails: data
+            //
+            ),
       ),
     );
 

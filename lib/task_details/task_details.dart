@@ -228,7 +228,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             tab_1_info_UI(context),
 
             // tab 2
-            (widget.dictTaskFullDetails != null)
+            (widget.dictTaskFullDetails['rewardType'] == 'Items')
                 ? Column(
                     children: [
                       //
@@ -966,6 +966,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         //
         task_header_UI(context),
         //
+
         Container(
           margin: const EdgeInsets.all(12),
           // height: 200 - 70,

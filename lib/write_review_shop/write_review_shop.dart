@@ -429,7 +429,7 @@ class _WriteReviewShopScreenState extends State<WriteReviewShopScreen> {
           GestureDetector(
             onTap: () {
               //
-              sendReviewWB();
+              funcValidationBeforeSendingReview();
             },
             child: Container(
               margin: const EdgeInsets.all(
@@ -480,6 +480,26 @@ class _WriteReviewShopScreenState extends State<WriteReviewShopScreen> {
         ],
       ),
     );
+  }
+
+  funcValidationBeforeSendingReview() {
+    //  str_star_rating
+    if (str_star_rating == '5') {
+      sendReviewWB();
+    } else {
+      // error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          closeIconColor: Colors.amber,
+          content: text_regular_style_custom(
+            'Please write some review',
+            Colors.white,
+            14.0,
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   //
