@@ -513,15 +513,6 @@ class _EditProfileScreenState extends State<EditProfileScreen>
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      /*[action] => editprofile
-    [userId] => 52
-    [fullName] => business org
-    [contactNumber] => 5623421521
-    [address] => ok
-    [career] => business
-    [favroite_quote] => new
-    [deviceToken] => fUl6_jHbQUGWMgTJgGznwk:APA91bEwI1HTLa-CvGdkEFBfP7zjX_01gmqPwu-4Q8-rBTJD5iNP99h0sC3j8yUO0V532jScfeOygocq2AICYiGDZGSo5XJXP2n9zGxTh8inRXkCELqP4nRX3G2HfCgSaTdJh1kFmWYU
-    [device] => Android*/
       body: jsonEncode(
         <String, String>{
           'action': 'editprofile',

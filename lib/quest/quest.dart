@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:journey_recorded/mission/add_mission/add_mission.dart';
 import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,6 +40,7 @@ class _QuestScreenState extends State<QuestScreen> {
   var custom_filter_data = [];
   var arr_filter_search_data = [];
   //
+  var professionIdForAddMission = '';
   @override
   void initState() {
     super.initState();
@@ -66,10 +68,13 @@ class _QuestScreenState extends State<QuestScreen> {
     print('=====> POST : QUEST LIST');
 
     //
-    str_mission_loader = '0';
-    setState(() {});
+
+    setState(() {
+      str_mission_loader = '0';
+    });
     //
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    professionIdForAddMission = prefs.getInt('userId').toString();
 
     final resposne = await http.post(
       Uri.parse(
@@ -131,6 +136,18 @@ class _QuestScreenState extends State<QuestScreen> {
             color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              //
+              add_quest(context);
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+        ],
         backgroundColor: navigation_color,
       ),
       /*AppBar(
@@ -682,26 +699,13 @@ class _QuestScreenState extends State<QuestScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   // width: MediaQuery.of(context).size.width,
 
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     // color: Colors.orange,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        60.0,
-                      ),
-                      bottomLeft: Radius.circular(
-                        10.0,
-                      ),
-                      bottomRight: Radius.circular(
-                        60.0,
-                      ),
-                      topRight: Radius.circular(
-                        10.0,
-                      ),
-                    ),
-                    gradient: LinearGradient(
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
                       colors: [
                         Color.fromRGBO(250, 220, 10, 1),
                         Color.fromRGBO(252, 215, 10, 1),
@@ -713,13 +717,10 @@ class _QuestScreenState extends State<QuestScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Categories'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: text_bold_style_custom(
+                      'Categories',
+                      Colors.black,
+                      16.0,
                     ),
                   ),
                 ),
@@ -748,26 +749,13 @@ class _QuestScreenState extends State<QuestScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   // width: MediaQuery.of(context).size.width,
 
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     // color: Colors.orange,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        60.0,
-                      ),
-                      bottomLeft: Radius.circular(
-                        10.0,
-                      ),
-                      bottomRight: Radius.circular(
-                        60.0,
-                      ),
-                      topRight: Radius.circular(
-                        10.0,
-                      ),
-                    ),
-                    gradient: LinearGradient(
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
                       colors: [
                         Color.fromRGBO(250, 220, 10, 1),
                         Color.fromRGBO(252, 215, 10, 1),
@@ -779,13 +767,10 @@ class _QuestScreenState extends State<QuestScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Filters'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: text_bold_style_custom(
+                      'Filters',
+                      Colors.black,
+                      16.0,
                     ),
                   ),
                 ),
@@ -832,17 +817,10 @@ class _QuestScreenState extends State<QuestScreen> {
       ),
     );
 
-    print('result =====> ' + result);
+    print('result 1 =====> ' + result);
 
     if (!mounted) return;
-
-    /*ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('$result')));*/
-
-    // get_mission_list_WB();
-
-    // setState(() {});
+    get_quest_list_WB();
   }
 
   //
@@ -902,6 +880,34 @@ class _QuestScreenState extends State<QuestScreen> {
     } else {
       // return postList;
     }
+  }
+
+  Future<void> add_quest(
+    BuildContext context,
+  ) async {
+    // print('push to mission');
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddMissionScreen(
+          str_category_id: ''.toString(),
+          str_goal_id: professionIdForAddMission.toString(),
+          str_edit_status: '0',
+          str_deadline: ''.toString(),
+          str_mission_text: '',
+          str_mission_id: ''.toString(),
+          str_navigation_title: 'Add Quest',
+        ),
+      ),
+    );
+
+    print('result quest =====> ' + result);
+
+    if (!mounted) return;
+
+    get_quest_list_WB();
+
+    // setState(() {});
   }
 
   //

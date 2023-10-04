@@ -41,6 +41,7 @@ class _GrindScreenState extends State<GrindScreen> {
   //
   var str_priority_count = '';
   var str_priority_loader = '';
+  var str_none_loader = '0';
   //
   var strPriorityCount = [
     '1',
@@ -106,7 +107,9 @@ class _GrindScreenState extends State<GrindScreen> {
         } else {
           strGrindLoader = '3';
         }
-        setState(() {});
+        setState(() {
+          str_none_loader = '0';
+        });
         //
       } else {
         print(
@@ -319,6 +322,9 @@ class _GrindScreenState extends State<GrindScreen> {
                                   child: GestureDetector(
                                     onTap: () {
                                       //
+                                      setState(() {
+                                        str_none_loader = '1';
+                                      });
                                       get_category_list_WB();
                                     },
                                     child: Container(
@@ -329,11 +335,15 @@ class _GrindScreenState extends State<GrindScreen> {
                                         ),
                                       ),
                                       child: Center(
-                                        child: text_regular_style_custom(
-                                          'None',
-                                          Colors.white,
-                                          14.0,
-                                        ),
+                                        child: (str_none_loader == '1')
+                                            ? const CircularProgressIndicator(
+                                                color: Colors.white,
+                                              )
+                                            : text_regular_style_custom(
+                                                'None',
+                                                Colors.white,
+                                                14.0,
+                                              ),
                                       ),
                                     ),
                                   ),

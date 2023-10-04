@@ -27,6 +27,9 @@ var select_language_alert_text = 'Selected language Alert';
 var select_language_alert_en = 'Selected language : English';
 var select_language_alert_sp = 'Idioma seleccionado : Español';
 //
+var profile_update_successfully_en = 'Profile updated Successfully';
+var profile_update_successfully_sp = 'Perfil actualizado con éxito';
+//
 var alert_goal_not_added_yet_en = 'Goals not added yet';
 var alert_goal_not_added_yet_sp = 'Metas aún no agregadas';
 //
@@ -235,6 +238,12 @@ class ConvertLanguage {
         return select_language_alert_en;
       } else {
         return select_language_alert_sp;
+      }
+    } else if (viewClass == 'alert_profile_update_successfully') {
+      if (selectedLanguage == 'en') {
+        return profile_update_successfully_en;
+      } else {
+        return profile_update_successfully_sp;
       }
     }
 

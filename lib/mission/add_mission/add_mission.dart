@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously
+// ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables, avoid_print
 
 import 'package:intl/intl.dart';
 
@@ -20,7 +20,8 @@ class AddMissionScreen extends StatefulWidget {
       required this.str_mission_text,
       required this.str_deadline,
       required this.str_mission_id,
-      required this.str_navigation_title});
+      required this.str_navigation_title,
+      this.getFullData});
 
   final String str_navigation_title;
   final String str_mission_text;
@@ -29,6 +30,7 @@ class AddMissionScreen extends StatefulWidget {
   final String str_category_id;
   final String str_goal_id;
   final String str_mission_id;
+  final getFullData;
 
   @override
   State<AddMissionScreen> createState() => _AddMissionScreenState();
@@ -56,6 +58,16 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
     cont_add_mission_text.text = widget.str_mission_text.toString();
     cont_deadline.text = widget.str_deadline.toString();
 
+    print(widget.getFullData);
+    print(widget.str_navigation_title);
+    //
+    if (widget.str_edit_status == '1') {
+      str_category_id = widget.getFullData['categoryId'].toString();
+      cont_add_category.text = widget.getFullData['categoryName'].toString();
+      cont_add_name.text = widget.getFullData['name'].toString();
+    }
+
+    //
     get_category_list_WB();
   }
 
@@ -113,7 +125,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
             Icons.chevron_left,
             color: Colors.white,
           ),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop('sub_goal'),
         ),
       ),
       body: SingleChildScrollView(
@@ -133,7 +145,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                 controller: cont_add_category,
                 readOnly: true,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  // border: OutlineInputBorder(),
                   hintText: 'category...',
                   labelText: 'Category',
                 ),
@@ -156,7 +168,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                 controller: cont_add_name,
                 readOnly: false,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  // border: OutlineInputBorder(),
                   hintText: 'name...',
                   labelText: 'Name',
                 ),
@@ -177,7 +189,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                 controller: cont_deadline,
                 readOnly: true,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  // border: OutlineInputBorder(),
                   hintText: 'deadline',
                   labelText: 'deadline',
                 ),
@@ -221,7 +233,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
               child: TextFormField(
                 controller: cont_add_mission_text,
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  // border: OutlineInputBorder(),
                   hintText: 'Text',
                   labelText: 'Text',
                 ),
@@ -246,7 +258,7 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                                 'addquest')
                             .then((value) {
                             print('do something');
-                            Navigator.pop(context);
+                            Navigator.pop(context, 'sub_goal');
                           })
                     : (widget.str_edit_status == '1')
                         ? edit_mission_WB()
@@ -301,15 +313,25 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                       )
                     : Center(
                         child: (widget.str_edit_status == '1')
-                            ? Text(
-                                'Edit Mission',
-                                style: TextStyle(
-                                  fontFamily: font_style_name,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                ),
-                              )
+                            ? (widget.str_navigation_title == 'Add Quest')
+                                ? Text(
+                                    'Edit Quest',
+                                    style: TextStyle(
+                                      fontFamily: font_style_name,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    'Edit Mission',
+                                    style: TextStyle(
+                                      fontFamily: font_style_name,
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  )
                             : Text(
                                 'Add',
                                 style: TextStyle(
@@ -331,31 +353,104 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
 //
 
   edit_mission_WB() async {
-    print('=====> POST : EDIT MISSION');
+    print('=====> POST : EDIT QUEST / MISSION');
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // print(prefs.getInt('userId').toString());
-    final resposne = await http.post(
-      Uri.parse(
-        application_base_url,
-      ),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(
-        <String, String>{
-          'action': (widget.str_navigation_title == 'Add Quest')
-              ? 'addquest'
-              : 'addmission',
-          'userId': prefs.getInt('userId').toString(),
-          'missionId': widget.str_mission_id.toString(),
-          'goalId': widget.str_goal_id.toString(),
-          'categoryId': widget.str_category_id.toString(),
-          'description': cont_add_mission_text.text.toString(),
-          'deadline': cont_deadline.text.toString(),
-        },
-      ),
-    );
+    //
+    var resposne;
+
+    if (widget.str_navigation_title == 'Add Quest') {
+      // edit
+      if (widget.str_edit_status == '1') {
+        resposne = await http.post(
+          Uri.parse(
+            application_base_url,
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, String>{
+              'action': 'addquest',
+              'userId': prefs.getInt('userId').toString(),
+              'questId': widget.getFullData['questId'].toString(),
+              'profesionalId': widget.str_goal_id.toString(),
+              'profesionalType': 'Goal',
+              'categoryId': widget.str_category_id.toString(),
+              'description': cont_add_mission_text.text.toString(),
+              'deadline': cont_deadline.text.toString(),
+              'name': cont_add_name.text.toString(),
+            },
+          ),
+        );
+      } else {
+        resposne = await http.post(
+          Uri.parse(
+            application_base_url,
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, String>{
+              'action': 'addquest',
+              'userId': prefs.getInt('userId').toString(),
+              'profesionalId': widget.str_goal_id.toString(),
+              'profesionalType': 'Goal',
+              'categoryId': widget.str_category_id.toString(),
+              'description': cont_add_mission_text.text.toString(),
+              'deadline': cont_deadline.text.toString(),
+              'name': cont_add_name.text.toString(),
+            },
+          ),
+        );
+      }
+    } else {
+      if (widget.str_edit_status == '1') {
+        resposne = await http.post(
+          Uri.parse(
+            application_base_url,
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, String>{
+              'action': 'addmission',
+              'userId': prefs.getInt('userId').toString(),
+              'missionId': widget.str_mission_id.toString(),
+              'profesionalId': widget.str_goal_id.toString(),
+              'profesionalType': 'Goal',
+              'categoryId': widget.str_category_id.toString(),
+              'description': cont_add_mission_text.text.toString(),
+              'deadline': cont_deadline.text.toString(),
+              'name': cont_add_name.text.toString(),
+            },
+          ),
+        );
+      } else {
+        resposne = await http.post(
+          Uri.parse(
+            application_base_url,
+          ),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(
+            <String, String>{
+              'action': 'addmission',
+              'userId': prefs.getInt('userId').toString(),
+              'profesionalId': widget.str_goal_id.toString(),
+              'profesionalType': 'Goal',
+              'categoryId': widget.str_category_id.toString(),
+              'description': cont_add_mission_text.text.toString(),
+              'deadline': cont_deadline.text.toString(),
+              'name': cont_add_name.text.toString(),
+            },
+          ),
+        );
+      }
+    }
 
     // convert data to dict
     var get_data = jsonDecode(resposne.body);

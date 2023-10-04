@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 
@@ -10,6 +10,7 @@ import 'package:journey_recorded/Utils.dart';
 
 // import 'package:cached_network_image/cached_network_image.dart';
 import 'package:journey_recorded/friends/add_friend/add_friend_list.dart';
+import 'package:journey_recorded/my_friend_profile/my_friend_profile.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -128,11 +129,44 @@ class _FriendsScreenState extends State<FriendsScreen> {
               for (int i = 0; i < arr_friends.length; i++) ...[
                 if (str_login_user_id == arr_friends[i]['userTo'].toString())
                   //
-                  show_FROM_data(context, i)
+                  GestureDetector(
+                    onTap: () {
+                      //
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyFriendProfileScreen(
+                            str_user_id:
+                                arr_friends[i]['From_userId'].toString(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: show_FROM_data(
+                      context,
+                      i,
+                    ),
+                  )
                 //
                 else
                   //
-                  show_TO_data(context, i),
+                  GestureDetector(
+                    onTap: () {
+                      //
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MyFriendProfileScreen(
+                            str_user_id: arr_friends[i]['To_userId'].toString(),
+                          ),
+                        ),
+                      );
+                    },
+                    child: show_TO_data(
+                      context,
+                      i,
+                    ),
+                  ),
                 //
                 Container(
                   height: 1,
@@ -465,8 +499,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
   ) async {
     print('=====> POST : FRIENDS LIST');
 
-    str_friends_loader = '0';
-    setState(() {});
+    setState(() {
+      str_friends_loader = '0';
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     str_login_user_id = prefs.getInt('userId').toString();
 

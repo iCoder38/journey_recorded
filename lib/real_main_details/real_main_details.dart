@@ -414,6 +414,11 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                     ? const SizedBox()
                     //
                     : appBarActionForMissionUI(context)
+              ] else if (widget.str_tray_value == 'quest') ...[
+                (widget.strFromViewDetails == 'yes')
+                    ? const SizedBox()
+                    //
+                    : appBarQuestEdit(context)
               ]
             ],
           ),
@@ -734,13 +739,14 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                 context,
                 MaterialPageRoute(
                   builder: (context) => AddMissionScreen(
-                    str_category_id: widget.str_category_id.toString(),
-                    str_goal_id: widget.str_get_goal_id.toString(),
+                    str_category_id: widget.fullData['categoryId'].toString(),
+                    str_goal_id: widget.fullData['profesionalId'].toString(),
                     str_edit_status: '1',
-                    str_deadline: widget.str_due_date.toString(),
-                    str_mission_text: widget.str_get_about_goal,
-                    str_mission_id: widget.str_goal_cat_id.toString(),
+                    str_deadline: widget.fullData['deadline'].toString(),
+                    str_mission_text: widget.fullData['description'],
+                    str_mission_id: widget.fullData['missionId'].toString(),
                     str_navigation_title: 'Add Mission',
+                    getFullData: widget.fullData,
                   ),
                 ),
               );
@@ -753,6 +759,98 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
         ),
       ],
     );
+  }
+
+// /***************************************************************************/
+// /**************** APP BAR ACTION FOR QUEST UI ****************************/
+// /***************************************************************************/
+  Row appBarQuestEdit(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              // delete
+              print(widget.fullData);
+
+              deleteQuestpopUp(
+                'Alert',
+                widget.fullData['questId'].toString(),
+              );
+            },
+            icon: const Icon(
+              Icons.delete_forever,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.only(
+            right: 20.0,
+          ),
+          height: 40,
+          width: 40,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(
+              20.0,
+            ),
+          ),
+          child: IconButton(
+            onPressed: () {
+              //
+              push_to_edit_mission(context);
+            },
+            icon: const Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> push_to_edit_mission(BuildContext context) async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddMissionScreen(
+          str_category_id: widget.fullData['categoryId'].toString(),
+          str_goal_id: widget.fullData['profesionalId'].toString(),
+          str_edit_status: '1',
+          str_deadline: widget.fullData['deadline'].toString(),
+          str_mission_text: widget.fullData['description'],
+          str_mission_id: widget.fullData['missionId'].toString(),
+          str_navigation_title: 'Add Quest',
+          getFullData: widget.fullData,
+        ),
+      ),
+    );
+
+    // ignore: prefer_interpolation_to_compose_strings
+    if (kDebugMode) {
+      print('result =====> ' + result);
+    }
+
+// back_after_add_sub_goal
+
+    if (!mounted) return;
+
+    // if (result == 'add_mission_successfully') {
+    setState(() {});
+    // }
   }
 
   Column tab_6_link_UI(BuildContext context) {
@@ -4804,9 +4902,9 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
     if (!mounted) return;
 
-    if (result == 'add_mission_successfully') {
-      setState(() {});
-    }
+    // if (result == 'add_mission_successfully') {
+    setState(() {});
+    // }
   }
 
   Future<void> push_to_add_sub_goal(BuildContext context) async {
@@ -5887,6 +5985,87 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     );
   }
 
+// delete goal
+  // ALERT
+  Future<void> deleteQuestpopUp(
+    String str_title,
+    String questIdIs,
+  ) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            str_title.toString(),
+            style: TextStyle(
+              fontFamily: font_style_name,
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () {
+                    print(' delete goal');
+
+                    Navigator.pop(context);
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: ' Are you sure you want to delete this quest ?',
+                          style: TextStyle(
+                            fontFamily: font_style_name,
+                            fontSize: 16.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Dismiss'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text(
+                'yes, delete',
+                style: TextStyle(
+                  fontFamily: font_style_name,
+                  fontSize: 18.0,
+                  color: Colors.red,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+                delete_quest_wb(
+                  questIdIs,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   delete_main_goal(
     String str_goal_id,
   ) async {
@@ -5966,7 +6145,53 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     if (resposne.statusCode == 200) {
       if (get_data['status'].toString().toLowerCase() == 'success') {
         //
+        Navigator.pop(context, 'sub_goal');
+        //
+      } else {
+        print(
+          '====> SOMETHING WENT WRONG IN "addcart" WEBSERVICE. PLEASE CONTACT ADMIN',
+        );
+      }
+    } else {
+      // return postList;
+      print('something went wrong');
+    }
+  }
+
+  delete_quest_wb(
+    String str_quest_id,
+  ) async {
+    print('=====> POST : DELETE QUEST');
+
+    startLoadingUI(context, 'deleting...');
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // print(prefs.getInt('userId').toString());
+    final resposne = await http.post(
+      Uri.parse(
+        application_base_url,
+      ),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'action': 'questdelete',
+          'userId': prefs.getInt('userId').toString(),
+          'questId': str_quest_id.toString(),
+        },
+      ),
+    );
+
+    // convert data to dict
+    var get_data = jsonDecode(resposne.body);
+    print(get_data);
+
+    if (resposne.statusCode == 200) {
+      if (get_data['status'].toString().toLowerCase() == 'success') {
+        //
         Navigator.pop(context);
+        Navigator.pop(context, 'sub_goal');
         //
       } else {
         print(

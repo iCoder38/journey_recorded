@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, avoid_print
 
 import 'dart:convert';
 import 'dart:math';
@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:journey_recorded/mission/add_mission/add_mission.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,7 @@ class _MissionScreenState extends State<MissionScreen> {
   var custom_filter_data = [];
   var arr_filter_search_data = [];
   //
+  var professionIdForAddMission = '';
   @override
   void initState() {
     super.initState();
@@ -69,12 +71,13 @@ class _MissionScreenState extends State<MissionScreen> {
     if (kDebugMode) {
       print('=====> POST : MISSION LIST');
     }
-
     //
-    str_mission_loader = '0';
-    setState(() {});
+    setState(() {
+      str_mission_loader = '0';
+    });
     //
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    professionIdForAddMission = prefs.getInt('userId').toString();
 
     final resposne = await http.post(
       Uri.parse(
@@ -142,6 +145,18 @@ class _MissionScreenState extends State<MissionScreen> {
           ),
         ),
         backgroundColor: navigation_color,
+        actions: [
+          IconButton(
+            onPressed: () {
+              //
+              add_mission(context);
+            },
+            icon: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -207,60 +222,6 @@ class _MissionScreenState extends State<MissionScreen> {
                           arr_mission_list[index]['image'].toString(),
                           // new
                           arr_mission_list[index]);
-
-                      /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RealMainDetailsScreen(
-                            str_navigation_title: 'Mission',
-                            str_category_name: arr_mission_list[index]
-                                    ['categoryName']
-                                .toString(),
-                            str_name: arr_mission_list[index]['description']
-                                .toString(),
-                            str_due_date:
-                                arr_mission_list[index]['deadline'].toString(),
-                            str_get_about_goal:
-                                arr_mission_list[index]['aboutGoal'].toString(),
-                            str_get_goal_id:
-                                arr_mission_list[index]['missionId'].toString(),
-                            str_category_id: arr_mission_list[index]
-                                    ['categoryId']
-                                .toString(),
-                            str_professional_type: 'Mission',
-                            str_tray_value: 'mission',
-                            str_parent_name: arr_mission_list[index]
-                                    ['parentName']
-                                .toString(),
-                          ),
-                        ),
-                      );*/
-                      /*Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MissionDetailsScreen(
-                            str_get_mission_id:
-                                arr_mission_list[index]['missionId'].toString(),
-                            str_get_mission_goal_id:
-                                arr_mission_list[index]['goalId'].toString(),
-                            str_get_mission_category_id: arr_mission_list[index]
-                                    ['categoryId']
-                                .toString(),
-                            str_get_mission_description: arr_mission_list[index]
-                                    ['description']
-                                .toString(),
-                            str_get_mission_category_name:
-                                arr_mission_list[index]['categoryName']
-                                    .toString(),
-                            str_get_mission_goal_name:
-                                arr_mission_list[index]['goalName'].toString(),
-                            str_get_mission_user_name:
-                                arr_mission_list[index]['userName'].toString(),
-                            str_deadline:
-                                arr_mission_list[index]['deadline'].toString(),
-                          ),
-                        ),
-                      );*/
                     },
                     child: Container(
                       margin: const EdgeInsets.only(
@@ -433,6 +394,37 @@ class _MissionScreenState extends State<MissionScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> add_mission(
+    BuildContext context,
+  ) async {
+    // print('push to mission');
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddMissionScreen(
+          str_category_id: ''.toString(),
+          str_goal_id: professionIdForAddMission.toString(),
+          str_edit_status: '0',
+          str_deadline: ''.toString(),
+          str_mission_text: '',
+          str_mission_id: ''.toString(),
+          str_navigation_title: 'Add Mission',
+        ),
+      ),
+    );
+
+    print('result =====> ' + result);
+
+    if (!mounted) return;
+    /*ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$result')));*/
+
+    get_mission_list_WB();
+
+    // setState(() {});
   }
 
   Future<void> push_to_mission_details(
@@ -880,26 +872,13 @@ class _MissionScreenState extends State<MissionScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   // width: MediaQuery.of(context).size.width,
 
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     // color: Colors.orange,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        60.0,
-                      ),
-                      bottomLeft: Radius.circular(
-                        10.0,
-                      ),
-                      bottomRight: Radius.circular(
-                        60.0,
-                      ),
-                      topRight: Radius.circular(
-                        10.0,
-                      ),
-                    ),
-                    gradient: LinearGradient(
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
                       colors: [
                         Color.fromRGBO(250, 220, 10, 1),
                         Color.fromRGBO(252, 215, 10, 1),
@@ -911,13 +890,10 @@ class _MissionScreenState extends State<MissionScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Categories'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: text_bold_style_custom(
+                      'Categories',
+                      Colors.black,
+                      16.0,
                     ),
                   ),
                 ),
@@ -946,26 +922,13 @@ class _MissionScreenState extends State<MissionScreen> {
                   // func_manage_filter_section_here();
                 },
                 child: Container(
-                  height: 60,
+                  height: 50,
                   // width: MediaQuery.of(context).size.width,
 
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     // color: Colors.orange,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(
-                        60.0,
-                      ),
-                      bottomLeft: Radius.circular(
-                        10.0,
-                      ),
-                      bottomRight: Radius.circular(
-                        60.0,
-                      ),
-                      topRight: Radius.circular(
-                        10.0,
-                      ),
-                    ),
-                    gradient: LinearGradient(
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
                       colors: [
                         Color.fromRGBO(250, 220, 10, 1),
                         Color.fromRGBO(252, 215, 10, 1),
@@ -977,13 +940,10 @@ class _MissionScreenState extends State<MissionScreen> {
                     ),
                   ),
                   child: Center(
-                    child: Text(
-                      'Filters'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: font_style_name,
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: text_bold_style_custom(
+                      'Filters',
+                      Colors.black,
+                      16.0,
                     ),
                   ),
                 ),
@@ -1010,37 +970,13 @@ class _MissionScreenState extends State<MissionScreen> {
               InkWell(
                 onTap: () {
                   //
-                  // print('object');
-
-                  /*str_category_search_name =
-                      arr_filter_search_data[i]['name'].toString();
-                  setState(() {});
-
-                  str_category_id = arr_filter_search_data[i]['id'].toString();
-                  searched_get_goals_list_WB(
-                    arr_filter_search_data[i]['id'].toString(),
-                  );*/
-
-                  str_filter_id = arr_filter_search_data[i]['id'].toString();
-                  str_filter_search_name =
-                      arr_filter_search_data[i]['name'].toString();
-                  str_filter_search = '0';
-                  setState(() {});
-
-                  // searched_via_filters_WB(
-                  // arr_filter_search_data[i]['id'].toString());
-
-                  // setState(() {
-                  //   str_category_search = '0';
-                  // });
-
+                  setState(() {
+                    str_filter_id = arr_filter_search_data[i]['id'].toString();
+                    str_filter_search_name =
+                        arr_filter_search_data[i]['name'].toString();
+                    str_filter_search = '0';
+                  });
                   func_manage_filter_section_here();
-
-                  print('category id is ====> $str_category_id');
-                  print('category id is ====> $str_category_search_name');
-
-                  print(arr_filter_search_data[i]['id'].toString());
-                  print('filter id is ====> $str_filter_search_name');
                   //
                 },
                 child: (str_filter_search_name ==
@@ -1261,20 +1197,20 @@ class _MissionScreenState extends State<MissionScreen> {
 
   // manage filter
   func_manage_filter_section_here() {
-    print('===============> DISHANT RAJPUT');
-    print('category id is ====> $str_category_id');
-    print('category id is ====> $str_category_search_name');
+    // print('===============> DISHANT RAJPUT');
+    // print('category id is ====> $str_category_id');
+    // print('category id is ====> $str_category_search_name');
 
-    print(str_filter_id.toString());
-    print('filter id is ====> $str_filter_search_name');
-    print('===============>');
+    // print(str_filter_id.toString());
+    // print('filter id is ====> $str_filter_search_name');
+    // print('===============>');
 
     if (str_filter_search_name.toString() == 'Overdue' ||
         str_filter_search_name.toString() == 'Last 30 days') {
-      print('with overdue');
+      // print('with overdue');
       seach_with_overdue_WB();
     } else {
-      print('without overdue');
+      // print('without overdue');
       seach_without_overdue_WB();
     }
 

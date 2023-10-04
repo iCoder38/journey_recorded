@@ -51,6 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var strUserSelectLanguage = 'en';
   final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
+
   var strLoginUserName = '';
   var strCurrentLabel = '';
   var strLoginUserImage = '';
@@ -179,10 +180,27 @@ class _DashboardScreenState extends State<DashboardScreen> {
           sliderValue = get_data['data']['T_G_H_current_level'].toString();
           sliderTotalvalue = get_data['data']['currentLabel_value'].toString();
           //
+
+          if (get_data['data']['language'].toString() == '') {
+            //
+            strUserSelectLanguage = 'en';
+          } else if (get_data['data']['language'].toString() == 'en') {
+            //
+            strUserSelectLanguage = 'en';
+          } else if (get_data['data']['language'] == null) {
+            //
+            strUserSelectLanguage = 'en';
+          } else {
+            //
+            strUserSelectLanguage = 'sp';
+          }
+          //
           if (kDebugMode) {
-            print('===========> one <============');
-            print(sliderValue);
-            print(sliderTotalvalue);
+            print('===========> JOURNEY LANGUAGE <============');
+            print(strUserSelectLanguage);
+            print('===========================================');
+            // print(sliderValue);
+            // print(sliderTotalvalue);
           }
 
           if (double.parse(sliderTotalvalue.toString()) == 0 ||

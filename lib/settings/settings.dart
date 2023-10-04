@@ -62,6 +62,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Colors.black,
                     14.0,
                   ),
+                  leading: Container(
+                    height: 34,
+                    width: 34,
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/ic_block_profile.png',
+                    ),
+                  ),
                   trailing: (strProfilePicture == '0')
                       ? Container(
                           height: 30,
@@ -119,6 +127,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Colors.black,
                     14.0,
                   ),
+                  leading: Container(
+                    height: 34,
+                    width: 34,
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/ic_block_mail.png',
+                    ),
+                  ),
                   trailing: (strEmailAddress == '0')
                       ? Container(
                           height: 30,
@@ -175,6 +191,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Colors.black,
                     14.0,
                   ),
+                  leading: Container(
+                    height: 34,
+                    width: 34,
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/ic_block_call.png',
+                    ),
+                  ),
                   trailing: (strPhoneNumber == '0')
                       ? Container(
                           height: 30,
@@ -230,6 +254,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     'Skills',
                     Colors.black,
                     14.0,
+                  ),
+                  leading: Container(
+                    height: 34,
+                    width: 34,
+                    color: Colors.transparent,
+                    child: Image.asset(
+                      'assets/images/ic_block_skill.png',
+                    ),
                   ),
                   trailing: (strSkills == '0')
                       ? Container(
