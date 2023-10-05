@@ -1,11 +1,13 @@
 // ignore_for_file: non_constant_identifier_names, use_build_context_synchronously, prefer_typing_uninitialized_variables, avoid_print
 
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/mission/add_mission/add_mission_modal.dart';
 
 import 'package:http/http.dart' as http;
@@ -38,6 +40,9 @@ class AddMissionScreen extends StatefulWidget {
 
 class _AddMissionScreenState extends State<AddMissionScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var loader = '0';
   var str_category_id = 'n.a.';
   var arr_get_category_list = [];
@@ -49,12 +54,21 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
   TextEditingController cont_deadline = TextEditingController();
   //
   AddMissionModal add_mission_service = AddMissionModal();
-  //
+  // language
+  var str_category_text = '';
+  var str_name_text = '';
+  var str_deadline_text = '';
+  var str_text_text = '';
+  var str_add_text = '';
+  var str_edit_text = '';
 
   @override
   void initState() {
     super.initState();
 
+    //
+    funcSelectLanguage();
+    //
     cont_add_mission_text.text = widget.str_mission_text.toString();
     cont_deadline.text = widget.str_deadline.toString();
 
@@ -69,6 +83,48 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
 
     //
     get_category_list_WB();
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+
+    funcSetConvertor();
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  /*
+      var category_add_en = 'Add';
+    var category_add_sp = 'Agregar';
+
+    var category_edit_en = 'Edit';
+    var category_edit_sp = 'Editar';
+ */
+  funcSetConvertor() {
+    if (strUserSelectLanguage == 'en') {
+      //
+      str_category_text = category_name_en;
+      str_name_text = mission_name_en;
+      str_deadline_text = category_deadline_en;
+      str_text_text = category_text_en;
+      str_add_text = category_add_en;
+      str_edit_text = category_edit_en;
+      //
+    } else {
+      //
+      str_category_text = category_name_sp;
+      str_name_text = mission_name_sp;
+      str_deadline_text = category_deadline_sp;
+      str_text_text = category_text_sp;
+      str_add_text = category_add_sp;
+      str_edit_text = category_edit_sp;
+      //
+    }
+    setState(() {});
   }
 
   // get category list
@@ -144,10 +200,9 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
               child: TextFormField(
                 controller: cont_add_category,
                 readOnly: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   // border: OutlineInputBorder(),
-                  hintText: 'category...',
-                  labelText: 'Category',
+                  hintText: str_category_text,
                 ),
                 maxLines: 1,
                 onTap: () {
@@ -167,10 +222,10 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
               child: TextFormField(
                 controller: cont_add_name,
                 readOnly: false,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   // border: OutlineInputBorder(),
-                  hintText: 'name...',
-                  labelText: 'Name',
+
+                  labelText: str_name_text,
                 ),
                 maxLines: 1,
                 onTap: () {},
@@ -188,10 +243,9 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
               child: TextFormField(
                 controller: cont_deadline,
                 readOnly: true,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   // border: OutlineInputBorder(),
-                  hintText: 'deadline',
-                  labelText: 'deadline',
+                  hintText: str_deadline_text,
                 ),
                 maxLines: 1,
                 onTap: () async {
@@ -232,10 +286,9 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
               color: Colors.transparent,
               child: TextFormField(
                 controller: cont_add_mission_text,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   // border: OutlineInputBorder(),
-                  hintText: 'Text',
-                  labelText: 'Text',
+                  hintText: str_deadline_text,
                 ),
                 maxLines: 5,
               ),
@@ -333,7 +386,8 @@ class _AddMissionScreenState extends State<AddMissionScreen> {
                                     ),
                                   )
                             : Text(
-                                'Add',
+                                //
+                                str_add_text,
                                 style: TextStyle(
                                   fontFamily: font_style_name,
                                   fontSize: 18.0,

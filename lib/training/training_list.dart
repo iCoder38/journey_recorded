@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/custom_files/popup/popup.dart';
 import 'package:journey_recorded/goals/add_notes_in_goal/add_notes_in_goal.dart';
 import 'package:journey_recorded/goals/edit_notes_in_goal/edit_notes_in_goal.dart';
@@ -41,6 +42,9 @@ class TrainingListScreen extends StatefulWidget {
 
 class _TrainingListScreenState extends State<TrainingListScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var str_main_loader = '0';
   var str_UI_show = 'n.a.';
   var str_bottom_bar_color = '0';
@@ -49,7 +53,7 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
   // routine
   var arr_routine_list = [];
 
-// check list
+  // check list
   var arr_check_list = [];
 
   // notes
@@ -86,6 +90,8 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     super.initState();
     // var string = widget.str_date;
 
+    funcSelectLanguage();
+    //
     if (kDebugMode) {
       print('Skill id =====>  ${widget.str_skill_id}');
       print('Training id =====>  ${widget.str_training_id}');
@@ -100,6 +106,19 @@ class _TrainingListScreenState extends State<TrainingListScreen> {
     //
     funcValidationBeforeFetchTrainingList();
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /***************************************************************************/
 
   funcValidationBeforeFetchTrainingList() {
     if (widget.strUserIdEnabled == 'yes') {

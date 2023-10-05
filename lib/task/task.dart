@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:journey_recorded/task/create_task/create_task.dart';
 import 'package:journey_recorded/task/task_header_ui.dart';
@@ -24,6 +25,9 @@ class TaskScreen extends StatefulWidget {
 
 class _TaskScreenState extends State<TaskScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var str_main_loader = '0';
   var arr_task_list = [];
 
@@ -39,8 +43,22 @@ class _TaskScreenState extends State<TaskScreen> {
   void initState() {
     super.initState();
 
+    //
+    funcSelectLanguage();
+    //
     get_category_list_WB();
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+// /********** LANGUAGE SELECTED **********************************************/
 
   get_category_list_WB() async {
     if (kDebugMode) {
@@ -329,10 +347,17 @@ class _TaskScreenState extends State<TaskScreen> {
               task_header_UI(context),
               //
               if (str_main_loader == 'tasks_loader_start')
-                const CustomeLoaderPopUp(
-                  str_custom_loader: 'please wait...',
-                  str_status: '3',
-                )
+                if (strUserSelectLanguage == 'en') ...[
+                  CustomeLoaderPopUp(
+                    str_custom_loader: alert_please_wait_en,
+                    str_status: '3',
+                  ),
+                ] else ...[
+                  CustomeLoaderPopUp(
+                    str_custom_loader: alert_please_wait_sp,
+                    str_status: '3',
+                  ),
+                ]
               else if (str_main_loader == 'tasks_data_empty')
                 const CustomeLoaderPopUp(
                   str_custom_loader: 'Task not Added yet.',
@@ -819,7 +844,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       ),
                       child: Align(
                         child: text_regular_style_custom(
-                          'All',
+                          //
+                          languageTextConverter.funcConvertLanguage(
+                            'all_tasks_all',
+                            strUserSelectLanguage,
+                          ),
                           Colors.black,
                           14.0,
                         ),
@@ -850,7 +879,11 @@ class _TaskScreenState extends State<TaskScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Align(
                             child: text_regular_style_custom(
-                              'Category',
+                              //
+                              languageTextConverter.funcConvertLanguage(
+                                'all_tasks_category',
+                                strUserSelectLanguage,
+                              ),
                               Colors.black,
                               14.0,
                             ),
@@ -883,7 +916,11 @@ class _TaskScreenState extends State<TaskScreen> {
                           padding: const EdgeInsets.all(8.0),
                           child: Align(
                             child: text_regular_style_custom(
-                              'Actions',
+                              //
+                              languageTextConverter.funcConvertLanguage(
+                                'all_tasks_actions',
+                                strUserSelectLanguage,
+                              ),
                               Colors.black,
                               14.0,
                             ),
@@ -911,7 +948,11 @@ class _TaskScreenState extends State<TaskScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: text_regular_style_custom(
-                          'Filter',
+                          //
+                          languageTextConverter.funcConvertLanguage(
+                            'all_tasks_filters',
+                            strUserSelectLanguage,
+                          ),
                           Colors.black,
                           14.0,
                         ),

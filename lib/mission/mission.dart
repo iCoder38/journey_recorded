@@ -6,6 +6,7 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/mission/add_mission/add_mission.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -23,11 +24,14 @@ class MissionScreen extends StatefulWidget {
 
 class _MissionScreenState extends State<MissionScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var arr_mission_list = [];
 
   var str_mission_loader = '0';
 
-//
+  //
   var str_category_id = '';
   var arr_get_category_list = [];
   var arr_goal_list = [];
@@ -891,9 +895,13 @@ class _MissionScreenState extends State<MissionScreen> {
                   ),
                   child: Center(
                     child: text_bold_style_custom(
-                      'Categories',
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_categories',
+                        strUserSelectLanguage,
+                      ),
                       Colors.black,
-                      16.0,
+                      14.0,
                     ),
                   ),
                 ),
@@ -941,9 +949,13 @@ class _MissionScreenState extends State<MissionScreen> {
                   ),
                   child: Center(
                     child: text_bold_style_custom(
-                      'Filters',
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_filters',
+                        strUserSelectLanguage,
+                      ),
                       Colors.black,
-                      16.0,
+                      14.0,
                     ),
                   ),
                 ),

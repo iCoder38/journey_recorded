@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/mission/add_mission/add_mission.dart';
 import 'package:journey_recorded/real_main_details/real_main_details.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
@@ -22,6 +24,9 @@ class QuestScreen extends StatefulWidget {
 }
 
 class _QuestScreenState extends State<QuestScreen> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var str_mission_loader = '0';
   var arr_quest_list = [];
@@ -60,8 +65,20 @@ class _QuestScreenState extends State<QuestScreen> {
       },
     ];
 
+    funcSelectLanguage();
     get_quest_list_WB();
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+// /********** LANGUAGE SELECTED **********************************************/
 
   // get mission details
   get_quest_list_WB() async {
@@ -718,9 +735,13 @@ class _QuestScreenState extends State<QuestScreen> {
                   ),
                   child: Center(
                     child: text_bold_style_custom(
-                      'Categories',
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_categories',
+                        strUserSelectLanguage,
+                      ),
                       Colors.black,
-                      16.0,
+                      14.0,
                     ),
                   ),
                 ),
@@ -768,9 +789,13 @@ class _QuestScreenState extends State<QuestScreen> {
                   ),
                   child: Center(
                     child: text_bold_style_custom(
-                      'Filters',
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_filters',
+                        strUserSelectLanguage,
+                      ),
                       Colors.black,
-                      16.0,
+                      14.0,
                     ),
                   ),
                 ),

@@ -13,7 +13,7 @@ var str_category_name_sp = 'Categorías';
 var str_filter_name_en = 'Filters';
 var str_filter_name_sp = 'Filtros';
 // filter
-var str_save_and_continue_en = 'Filters';
+var str_save_and_continue_en = 'Save and Continue';
 var str_save_and_continue_sp = 'Guardar y continuar';
 // dismiss
 var str_dismiss_en = 'Dismiss';
@@ -29,6 +29,9 @@ var select_language_alert_sp = 'Idioma seleccionado : Español';
 //
 var profile_update_successfully_en = 'Profile updated Successfully';
 var profile_update_successfully_sp = 'Perfil actualizado con éxito';
+// please enter some data
+var alert_text_field_enter_some_data_en = 'Please enter some value';
+var alert_text_field_enter_some_data_sp = 'Por favor ingresa algún valor';
 //
 var alert_goal_not_added_yet_en = 'Goals not added yet';
 var alert_goal_not_added_yet_sp = 'Metas aún no agregadas';
@@ -59,6 +62,9 @@ var alert_quotes_not_added_yet_sp = 'Citas aún no agregadas';
 // rewards not added yet
 var alert_reward_not_added_yet_en = 'Reward not added yet';
 var alert_reward_not_added_yet_sp = 'Premio aún no agregadas';
+// training not added yet
+var alert_training_not_added_yet_en = 'Training not added yet';
+var alert_training_not_added_yet_sp = 'Capacitación aún no agregadas';
 // /***************************************************************************/
 // /**************************** MENU BAR *************************************/
 var menu_bar_dashboard_en = 'Dashboard';
@@ -169,6 +175,32 @@ var create_goal_about_your_goal_sp = 'Sobre tu objetivo';
 // /***************************************************************************/
 // /**************************** MAIN DETAILS *********************************/
 
+// /***************************************************************************/
+// /**************************** ADD MISSION *********************************/
+var category_name_en = 'Category';
+var category_name_sp = 'Categoría';
+
+var mission_name_en = 'Name';
+var mission_name_sp = 'Nombre';
+
+var category_deadline_en = 'Deadline';
+var category_deadline_sp = 'Fecha límite';
+
+var category_text_en = 'Text';
+var category_text_sp = 'Texto';
+
+var category_add_en = 'Add';
+var category_add_sp = 'Agregar';
+
+var category_edit_en = 'Edit';
+var category_edit_sp = 'Editar';
+
+///
+///
+///
+///
+///
+///
 // info
 var main_details_info_en = 'Info';
 var main_details_info_sp = 'Información';
@@ -196,10 +228,72 @@ var main_details_complete_en = 'Complete';
 var main_details_complete_sp = 'Completo';
 
 // /***************************************************************************/
+// /**************************** GRIND ****************************************/
+var grind_navigation_title_en = 'Grind';
+var grind_navigation_title_sp = 'Muele';
+
+var grind_priority_en = 'Priority';
+var grind_priority_sp = 'Priority';
+
+var grind_skills_en = 'Skills';
+var grind_skills_sp = 'habilidades';
+
+var grind_none_en = 'None';
+var grind_none_sp = 'Ninguno';
+
+// /***************************************************************************/
+// /**************************** ADD / CREATE GRIND ***************************/
+var grind_navigation_en = 'Create Grind';
+var grind_navigation_sp = 'Crear rutina';
+
+var grind_name_en = 'Name';
+var grind_name_sp = 'Nombre';
+
+var grind_category_name_en = 'Category';
+var grind_category_name_sp = 'Categoría';
+
+var grind_time_to_en = 'Time to complete the activity ( in min )';
+var grind_time_to_sp = 'Tiempo para completar la actividad (en min)';
+
+var grind_no_of_time_en = 'No. of time to complete';
+var grind_no_of_time_sp = 'No. de tiempo para completar';
+
+var grind_select_priority_en = 'Select Priority';
+var grind_select_priority_sp = 'Seleccionar prioridad';
+
+var grind_related_skill_en = 'Related Skill';
+var grind_related_skill_sp = 'Habilidad relacionada';
+
+var grind_related_habit_en = 'Related habit';
+var grind_related_habit_sp = 'Hábito relacionado';
+
+var grind_select_class_en = 'Select Class';
+var grind_select_class_sp = 'Seleccionar clase';
+
+var grind_description_en = 'Description';
+var grind_description_sp = 'Descripción';
+
+var grind_expect_en = 'Expect';
+var grind_expect_sp = 'Esperar';
+
+// /***************************************************************************/
 // /**************************** SELECT LANGUAGE ******************************/
 var select_language_text = 'Please select language';
 var select_language_en = 'Please select language';
 var select_language_sp = 'Por favor seleccione idioma';
+// /***************************************************************************/
+// /**************************** ALL TASK SCREEN ******************************/
+var all_task_en = 'All';
+var all_task_sp = 'Toda';
+
+var all_task_category_en = 'Category';
+var all_task_category_sp = 'Categoría';
+
+var all_task_actions_en = 'Action';
+var all_task_actions_sp = 'Acción';
+
+var all_task_filters_en = 'Filter';
+var all_task_filters_sp = 'Filtrar';
 // /***************************************************************************/
 // /**************************** HABITS ***************************************/
 ////////////////////////////////////////////////////////////////////////////////
@@ -512,5 +606,69 @@ class ConvertLanguage {
         return main_details_complete_sp;
       }
     }
+    //
+    // all tasks
+    else if (viewClass == 'all_tasks_all') {
+      if (selectedLanguage == 'en') {
+        return all_task_en;
+      } else {
+        return all_task_sp;
+      }
+    } else if (viewClass == 'all_tasks_category') {
+      if (selectedLanguage == 'en') {
+        return all_task_category_en;
+      } else {
+        return all_task_category_sp;
+      }
+    } else if (viewClass == 'all_tasks_actions') {
+      if (selectedLanguage == 'en') {
+        return all_task_actions_en;
+      } else {
+        return all_task_actions_sp;
+      }
+    } else if (viewClass == 'all_tasks_filters') {
+      if (selectedLanguage == 'en') {
+        return all_task_filters_en;
+      } else {
+        return all_task_filters_sp;
+      }
+    }
+    //
+    // grinds
+    else if (viewClass == 'grind_category') {
+      if (selectedLanguage == 'en') {
+        return grind_category_name_en;
+      } else {
+        return grind_category_name_sp;
+      }
+    } else if (viewClass == 'grind_priority') {
+      if (selectedLanguage == 'en') {
+        return grind_priority_en;
+      } else {
+        return grind_priority_sp;
+      }
+    } else if (viewClass == 'grind_skills') {
+      if (selectedLanguage == 'en') {
+        return grind_skills_en;
+      } else {
+        return grind_skills_sp;
+      }
+    } else if (viewClass == 'grind_none') {
+      if (selectedLanguage == 'en') {
+        return grind_none_en;
+      } else {
+        return grind_none_sp;
+      }
+    }
   }
+  /*
+  var grind_priority_en = 'Priority';
+var grind_priority_sp = 'Priority';
+
+var grind_skills_en = 'Skills';
+var grind_skills_sp = 'habilidades';
+
+var grind_none_en = 'None';
+var grind_none_sp = 'Ninguno';
+ */
 }

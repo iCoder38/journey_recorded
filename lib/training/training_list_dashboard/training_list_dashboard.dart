@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
 import 'package:journey_recorded/training/training_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,20 +23,60 @@ class TrainingListFromDashboard extends StatefulWidget {
 
 class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var str_main_loader = '0';
   var loaderAlertMessage = 'qw';
 
   var arr_training_list = [];
 
+  //
+
+  var lc_training_text = '';
+  var lc_training_not_added_yet = '';
+  //
   @override
   void initState() {
     super.initState();
 
     //
+    funcSelectLanguage();
     get_goals_list_WB();
     //
   }
 
+// /********** LANGUAGE SELECTED **********************************************/
+
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+
+    funcLanguageConverter();
+  }
+
+// /***************************************************************************/
+
+  //
+  funcLanguageConverter() {
+    //
+    if (strUserSelectLanguage == 'en') {
+      //
+      lc_training_text = 'Training';
+      lc_training_not_added_yet = alert_training_not_added_yet_en;
+      //
+    } else {
+      //
+      lc_training_text = 'Capacitación';
+      lc_training_not_added_yet = alert_training_not_added_yet_sp;
+    }
+    setState(() {});
+  }
+
+  //
   get_goals_list_WB() async {
     if (kDebugMode) {
       print('=====> POST : SKILL => TRAINING LIST 1.0');
@@ -109,7 +150,8 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
     return Scaffold(
       appBar: AppBar(
         title: text_bold_style_custom(
-          'Trainings',
+          //
+          lc_training_text,
           Colors.white,
           16.0,
         ),
@@ -128,12 +170,12 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
       ),
       body: (str_main_loader == '0')
           ? (loaderAlertMessage == '2')
-              ? const CustomeLoaderPopUp(
-                  str_custom_loader: 'Training not added yet.',
+              ? CustomeLoaderPopUp(
+                  str_custom_loader: lc_training_not_added_yet,
                   str_status: '4',
                 )
-              : const CustomeLoaderPopUp(
-                  str_custom_loader: 'Please wait...',
+              : CustomeLoaderPopUp(
+                  str_custom_loader: alert_please_wait_sp,
                   str_status: '0',
                 )
           : Column(

@@ -23,6 +23,9 @@ class HabitsScreen extends StatefulWidget {
 
 class _HabitsScreenState extends State<HabitsScreen> {
   //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
+  //
   var str_loader_habit = '0';
   var arr_habits_list = [];
   //
@@ -30,9 +33,22 @@ class _HabitsScreenState extends State<HabitsScreen> {
   void initState() {
     super.initState();
 
-    //
+    funcSelectLanguage();
+
     get_habits_list_WB();
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
 
   // get cart
   get_habits_list_WB() async {
@@ -230,7 +246,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                   ),
                                   child: Center(
                                     child: text_regular_style_custom(
-                                      'Category',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'grind_category',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -247,7 +267,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                   ),
                                   child: Center(
                                     child: text_regular_style_custom(
-                                      'Priority',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'grind_priority',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -270,7 +294,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                   ),
                                   child: Center(
                                     child: text_regular_style_custom(
-                                      'Skills',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'grind_skills',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),
@@ -287,7 +315,11 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                   ),
                                   child: Center(
                                     child: text_regular_style_custom(
-                                      'None',
+                                      //
+                                      languageTextConverter.funcConvertLanguage(
+                                        'grind_none',
+                                        strUserSelectLanguage,
+                                      ),
                                       Colors.white,
                                       14.0,
                                     ),

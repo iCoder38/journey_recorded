@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/grind/create_grind/create_grind.dart';
 import 'package:journey_recorded/grind/grind_details/grind_details.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
@@ -20,6 +21,9 @@ class GrindScreen extends StatefulWidget {
 }
 
 class _GrindScreenState extends State<GrindScreen> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var strCategory = '';
   var strSkills = '';
@@ -60,9 +64,22 @@ class _GrindScreenState extends State<GrindScreen> {
   void initState() {
     super.initState();
     //
+    funcSelectLanguage();
     get_category_list_WB();
     //
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
 
   getGrindWB() async {
     if (kDebugMode) {
@@ -132,11 +149,19 @@ class _GrindScreenState extends State<GrindScreen> {
     //
     return Scaffold(
       appBar: AppBar(
-        title: text_bold_style_custom(
-          'Grinds',
-          Colors.white,
-          16.0,
-        ),
+        title: (strUserSelectLanguage == 'en')
+            ? text_bold_style_custom(
+                //
+                grind_navigation_en,
+                Colors.white,
+                16.0,
+              )
+            : text_bold_style_custom(
+                //
+                grind_navigation_sp,
+                Colors.white,
+                16.0,
+              ),
         leading: IconButton(
           icon: const Icon(
             Icons.chevron_left,
@@ -250,7 +275,12 @@ class _GrindScreenState extends State<GrindScreen> {
                                       ),
                                       child: Center(
                                         child: text_regular_style_custom(
-                                          'Category',
+                                          //
+                                          languageTextConverter
+                                              .funcConvertLanguage(
+                                            'grind_category',
+                                            strUserSelectLanguage,
+                                          ),
                                           Colors.white,
                                           14.0,
                                         ),
@@ -277,7 +307,12 @@ class _GrindScreenState extends State<GrindScreen> {
                                                 color: Colors.white,
                                               )
                                             : text_regular_style_custom(
-                                                'Priority',
+                                                //
+                                                languageTextConverter
+                                                    .funcConvertLanguage(
+                                                  'grind_priority',
+                                                  strUserSelectLanguage,
+                                                ),
                                                 Colors.white,
                                                 14.0,
                                               ),
@@ -310,7 +345,12 @@ class _GrindScreenState extends State<GrindScreen> {
                                                 color: Colors.white,
                                               )
                                             : text_regular_style_custom(
-                                                'Skills',
+                                                //
+                                                languageTextConverter
+                                                    .funcConvertLanguage(
+                                                  'grind_skills',
+                                                  strUserSelectLanguage,
+                                                ),
                                                 Colors.white,
                                                 14.0,
                                               ),
@@ -340,7 +380,12 @@ class _GrindScreenState extends State<GrindScreen> {
                                                 color: Colors.white,
                                               )
                                             : text_regular_style_custom(
-                                                'None',
+                                                //
+                                                languageTextConverter
+                                                    .funcConvertLanguage(
+                                                  'grind_none',
+                                                  strUserSelectLanguage,
+                                                ),
                                                 Colors.white,
                                                 14.0,
                                               ),
@@ -457,10 +502,19 @@ class _GrindScreenState extends State<GrindScreen> {
                       color: Colors.transparent,
                       // width: MediaQuery.of(context).size.width,
                       // height: 60.0,
-                      child: text_with_bold_style_black(
-                        //
-                        'Grinds',
-                      ),
+                      child: (strUserSelectLanguage == 'en')
+                          ? text_bold_style_custom(
+                              //
+                              grind_navigation_en,
+                              Colors.black,
+                              16.0,
+                            )
+                          : text_bold_style_custom(
+                              //
+                              grind_navigation_sp,
+                              Colors.black,
+                              16.0,
+                            ),
                     ),
                     //
                     const Spacer(),
@@ -485,9 +539,19 @@ class _GrindScreenState extends State<GrindScreen> {
                             ),
                           ),
                           //
-                          text_with_regular_style(
-                            'Expect',
-                          )
+                          (strUserSelectLanguage == 'en')
+                              ? text_bold_style_custom(
+                                  //
+                                  grind_expect_en,
+                                  Colors.black,
+                                  16.0,
+                                )
+                              : text_bold_style_custom(
+                                  //
+                                  grind_expect_sp,
+                                  Colors.black,
+                                  16.0,
+                                ),
                         ],
                       ),
                     ),
@@ -874,12 +938,15 @@ class _GrindScreenState extends State<GrindScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text(
-              'Dismiss',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
+            child: text_bold_style_custom(
+              //
+              languageTextConverter.funcConvertLanguage(
+                //
+                'alert_dismiss',
+                strUserSelectLanguage,
               ),
+              Colors.purple,
+              12.0,
             ),
           ),
         ],
@@ -1005,9 +1072,13 @@ class _GrindScreenState extends State<GrindScreen> {
       context: context,
       builder: (BuildContext context) => CupertinoActionSheet(
         title: text_bold_style_custom(
-          'Skills',
+          //
+          languageTextConverter.funcConvertLanguage(
+            'grind_skills',
+            strUserSelectLanguage,
+          ),
           Colors.black,
-          16.0,
+          12.0,
         ),
         // message: const Text(''),
         actions: <CupertinoActionSheetAction>[
@@ -1052,12 +1123,15 @@ class _GrindScreenState extends State<GrindScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text(
-              'Dismiss',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
+            child: text_bold_style_custom(
+              //
+              languageTextConverter.funcConvertLanguage(
+                //
+                'alert_dismiss',
+                strUserSelectLanguage,
               ),
+              Colors.purple,
+              12.0,
             ),
           ),
         ],
@@ -1098,12 +1172,15 @@ class _GrindScreenState extends State<GrindScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text(
-              'Dismiss',
-              style: TextStyle(
-                fontFamily: font_style_name,
-                fontSize: 18.0,
+            child: text_bold_style_custom(
+              //
+              languageTextConverter.funcConvertLanguage(
+                //
+                'alert_dismiss',
+                strUserSelectLanguage,
               ),
+              Colors.purple,
+              12.0,
             ),
           ),
         ],

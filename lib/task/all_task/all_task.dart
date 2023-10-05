@@ -1,9 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:journey_recorded/task/all_task/all_task_UI.dart';
 import 'package:journey_recorded/task/rewards/rewards.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AllTaskScreen extends StatefulWidget {
   const AllTaskScreen({super.key});
@@ -13,6 +16,9 @@ class AllTaskScreen extends StatefulWidget {
 }
 
 class _AllTaskScreenState extends State<AllTaskScreen> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var arr_notes = [];
   var custom_dict = [
@@ -28,14 +34,55 @@ class _AllTaskScreenState extends State<AllTaskScreen> {
   ];
   var arr_demo = ['qwerty', 'qwerty', 'qwerty'];
   //
+  /*
+   else if (viewClass == 'all_tasks_all') {
+      if (selectedLanguage == 'en') {
+        return all_task_en;
+      } else {
+        return all_task_sp;
+      }
+    } else if (viewClass == 'all_tasks_category') {
+      if (selectedLanguage == 'en') {
+        return all_task_category_en;
+      } else {
+        return all_task_category_sp;
+      }
+    } else if (viewClass == 'all_tasks_actions') {
+      if (selectedLanguage == 'en') {
+        return all_task_actions_en;
+      } else {
+        return all_task_actions_sp;
+      }
+    } else if (viewClass == 'all_tasks_filters') {
+      if (selectedLanguage == 'en') {
+        return all_task_filters_en;
+      } else {
+        return all_task_filters_sp;
+      }
+    }
+     */
   @override
   void initState() {
-    // TODO: implement initState
+    //
+    funcSelectLanguage();
+    //
     super.initState();
     // arr_notes.add(custom_dict);
-    print(custom_dict.length);
-    print(custom_dict);
+    // print(custom_dict.length);
+    // print(custom_dict);
   }
+
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    setState(() {});
+  }
+
+// /********** LANGUAGE SELECTED **********************************************/
 
   @override
   Widget build(BuildContext context) {

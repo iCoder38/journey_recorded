@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:journey_recorded/Utils.dart';
 import 'package:journey_recorded/custom_files/app_bar/app_bar.dart';
+import 'package:journey_recorded/custom_files/language_translate_texts/language_translate_text.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateGrindScreen extends StatefulWidget {
@@ -18,6 +19,9 @@ class CreateGrindScreen extends StatefulWidget {
 }
 
 class _CreateGrindScreenState extends State<CreateGrindScreen> {
+  //
+  var strUserSelectLanguage = 'en';
+  final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
   var strSkillId = '0';
   var strHabitId = '0';
@@ -44,6 +48,17 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
   late final TextEditingController contSelectClass;
   late final TextEditingController contGrindDescription;
   //
+  var lc_name = '';
+  var lc_category = '';
+  var lc_time_to_complete = '';
+  var lc_no_of_time = '';
+  var lc_select_priority = '';
+  var lc_related_skill = '';
+  var lc_related_habits = '';
+  var lc_select_class = '';
+  var lc_description = '';
+  var lc_enter_some_value = '';
+
   @override
   void initState() {
     contGrindName = TextEditingController();
@@ -56,12 +71,59 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
     contSelectClass = TextEditingController();
     contGrindDescription = TextEditingController();
 
+    funcSelectLanguage();
     super.initState();
 
     //
     getCategoryList();
   }
 
+// /********** LANGUAGE SELECTED **********************************************/
+  funcSelectLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    if (kDebugMode) {
+      print('user already selected ====> $strUserSelectLanguage');
+    }
+    funcConvertLanguageSystem();
+  }
+// /********** LANGUAGE SELECTED **********************************************/
+
+  funcConvertLanguageSystem() {
+    //
+
+    if (strUserSelectLanguage == 'en') {
+      //
+      lc_name = grind_name_en;
+      lc_category = grind_category_name_en;
+      lc_time_to_complete = grind_time_to_en;
+      lc_no_of_time = grind_no_of_time_en;
+      lc_select_priority = grind_select_priority_en;
+      lc_related_skill = grind_related_skill_en;
+      lc_related_habits = grind_related_habit_en;
+      lc_select_class = grind_select_class_en;
+      lc_description = grind_description_en;
+      lc_enter_some_value = alert_text_field_enter_some_data_en;
+      //
+    } else {
+      //
+      lc_name = grind_name_sp;
+      lc_category = grind_category_name_sp;
+      lc_time_to_complete = grind_time_to_sp;
+      lc_no_of_time = grind_no_of_time_sp;
+      lc_select_priority = grind_select_priority_sp;
+      lc_related_skill = grind_related_skill_sp;
+      lc_related_habits = grind_related_habit_sp;
+      lc_select_class = grind_select_class_sp;
+      lc_description = grind_description_sp;
+      lc_enter_some_value = alert_text_field_enter_some_data_sp;
+      //
+    }
+
+    setState(() {});
+  }
+
+//
   @override
   void dispose() {
     contGrindName.dispose();
@@ -123,11 +185,19 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: text_bold_style_custom(
-          'Create Grind',
-          Colors.white,
-          16.0,
-        ),
+        title: (strUserSelectLanguage == 'en')
+            ? text_bold_style_custom(
+                //
+                grind_navigation_en,
+                Colors.white,
+                16.0,
+              )
+            : text_bold_style_custom(
+                //
+                grind_navigation_sp,
+                Colors.white,
+                16.0,
+              ),
         leading: IconButton(
           icon: const Icon(
             Icons.chevron_left,
@@ -168,15 +238,15 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
                           controller: contGrindName,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Name',
+                            hintText: lc_name,
                           ),
 
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter grind name';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -205,12 +275,12 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         child: TextFormField(
                           readOnly: true,
                           controller: contGrindCategory,
-                          decoration: const InputDecoration(
-                            suffixIcon: Icon(
+                          decoration: InputDecoration(
+                            suffixIcon: const Icon(
                               Icons.arrow_drop_down,
                             ),
                             border: InputBorder.none,
-                            hintText: 'Category',
+                            hintText: lc_category,
                           ),
                           onTap: () {
                             category_list_POPUP('str_message');
@@ -218,7 +288,7 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please select category';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -247,14 +317,14 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         child: TextFormField(
                           keyboardType: TextInputType.number,
                           controller: contGrindTime,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Time to complete the activity (in min)',
+                            hintText: lc_time_to_complete,
                           ),
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter some data';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -282,14 +352,14 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
                           controller: contNoTimeComplete,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'No. of time to complete',
+                            hintText: lc_no_of_time,
                           ),
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter data';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -317,17 +387,17 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
                           controller: contGrindPriority,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Select Priority',
-                            suffixIcon: Icon(
+                            hintText: lc_select_priority,
+                            suffixIcon: const Icon(
                               Icons.arrow_drop_down,
                             ),
                           ),
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter priority';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -368,9 +438,9 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                           child: TextFormField(
                             readOnly: true,
                             controller: contGrindRelatedSkill,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Related skill',
+                              hintText: lc_related_skill,
                             ),
                             onTap: () {
                               //
@@ -418,9 +488,9 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                               child: TextFormField(
                                 readOnly: true,
                                 controller: contGrindRelatedHabit,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: 'Related habit',
+                                  hintText: lc_related_habits,
                                 ),
                                 onTap: () {
                                   //
@@ -463,17 +533,17 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         child: TextFormField(
                           readOnly: true,
                           controller: contSelectClass,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Select class',
-                            suffixIcon: Icon(
+                            hintText: lc_select_class,
+                            suffixIcon: const Icon(
                               Icons.arrow_drop_down,
                             ),
                           ),
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter select classs';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -509,14 +579,14 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                         padding: const EdgeInsets.all(6.0),
                         child: TextFormField(
                           controller: contGrindDescription,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             border: InputBorder.none,
-                            hintText: 'Description',
+                            hintText: lc_description,
                           ),
                           // validation
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter description';
+                              return lc_enter_some_value;
                             }
                             return null;
                           },
@@ -567,15 +637,19 @@ class _CreateGrindScreenState extends State<CreateGrindScreen> {
                               height: 60,
                               width: MediaQuery.of(context).size.width,
                               child: Center(
-                                child: Text(
-                                  'Save and Continue',
-                                  style: TextStyle(
-                                    fontFamily: font_style_name,
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                child: (strUserSelectLanguage == 'en')
+                                    ? text_bold_style_custom(
+                                        //
+                                        str_save_and_continue_en,
+                                        Colors.white,
+                                        16.0,
+                                      )
+                                    : text_bold_style_custom(
+                                        //
+                                        str_save_and_continue_sp,
+                                        Colors.white,
+                                        16.0,
+                                      ),
                               ),
                             ),
                           ),
