@@ -51,6 +51,8 @@ class TaskDetailsScreen extends StatefulWidget {
 class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   var hide_floating_button = '0';
   //
+  var str_this_task_is_for_me = '0';
+  //
   var str_main_loader = '0';
   var arr_agents = [];
   //
@@ -58,6 +60,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   //
   var arr_check_list = [];
   var strIsAllTaskCompleteStatus = '0';
+  //
+  var tabbarlength = 0;
   //
   AddNoteModal add_note_service = AddNoteModal();
   @override
@@ -75,13 +79,44 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         print('==========================================');
       }
     }
+    //
+    print(widget.dictTaskFullDetails['inviteTo']);
+    print(widget.dictTaskFullDetails['inviteFrom']);
+    print(widget.dictTaskFullDetails['Assigment']);
+
+    if (widget.dictTaskFullDetails['inviteFrom'] != null) {
+      //
+      print('from request');
+      if (widget.dictTaskFullDetails['inviteTo'].toString() ==
+          widget.dictTaskFullDetails['inviteFrom'].toString()) {
+        //
+        print('You assigned this task to yourself');
+        str_this_task_is_for_me = '1';
+        tabbarlength = 3;
+      } else {
+        tabbarlength = 6;
+      }
+    } else {
+      //
+      print('from goal');
+      if (widget.dictTaskFullDetails['Assigment'].toString() ==
+          widget.dictTaskFullDetails['userId'].toString()) {
+        //
+        print('You assigned this task to yourself');
+        str_this_task_is_for_me = '1';
+        tabbarlength = 3;
+      } else {
+        tabbarlength = 6;
+      }
+    }
+
     func_get_task_list_WB();
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 6,
+      length: tabbarlength,
       child: Scaffold(
         appBar: AppBar(
           title: text_bold_style_custom(
@@ -133,71 +168,116 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             indicatorColor: Colors.lime,
             isScrollable: true,
             tabs: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Info',
-                  Colors.white,
-                  16.0,
+              if (str_this_task_is_for_me == '1') ...[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Info',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Rewards',
-                  Colors.white,
-                  16.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Notes',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Reminders',
-                  Colors.white,
-                  16.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Checklist',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Agents',
-                  Colors.white,
-                  16.0,
+              ] else ...[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Info',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Notes',
-                  Colors.white,
-                  16.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Rewards',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: text_regular_style_custom(
-                  'Checklist',
-                  Colors.white,
-                  16.0,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Reminders',
+                    Colors.white,
+                    16.0,
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Agents',
+                    Colors.white,
+                    16.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Notes',
+                    Colors.white,
+                    16.0,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: text_regular_style_custom(
+                    'Checklist',
+                    Colors.white,
+                    16.0,
+                  ),
+                ),
+              ]
+
+              /**/
             ],
             onTap: (value) {
               if (kDebugMode) {
                 print(value);
               }
-              if (value == 4) {
-                //
+              if (str_this_task_is_for_me == '1') {
+                if (value == 1) {
+                  //
 
-                func_notes_WB();
-                // setState(() {});
-              } else if (value == 5) {
-                //
-                func_check_list_WB();
+                  func_notes_WB();
+                  // setState(() {});
+                } else if (value == 2) {
+                  //
+                  func_check_list_WB();
+                } else {
+                  hide_floating_button = '0';
+
+                  setState(() {});
+                }
               } else {
-                hide_floating_button = '0';
+                if (value == 4) {
+                  //
 
-                setState(() {});
+                  func_notes_WB();
+                  // setState(() {});
+                } else if (value == 5) {
+                  //
+                  func_check_list_WB();
+                } else {
+                  hide_floating_button = '0';
+
+                  setState(() {});
+                }
               }
             },
           ),
@@ -224,75 +304,91 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         body: TabBarView(
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            // tab 1
-            tab_1_info_UI(context),
+            if (str_this_task_is_for_me == '1') ...[
+              // tab 1
+              tab_1_info_UI(context),
+              // tab 5
+              (str_main_loader == 'notes_loader_start')
+                  ? const CustomeLoaderPopUp(
+                      str_custom_loader: 'please wait...',
+                      str_status: '3',
+                    )
+                  : tab_4_notes_UI(),
 
-            // tab 2
-            (widget.dictTaskFullDetails['rewardType'] == 'Items')
-                ? Column(
-                    children: [
-                      //
-                      task_header_UI(context),
-                      //
-                      const SizedBox(
-                        height: 40.0,
-                      ),
-                      text_bold_style_custom(
-                        'Rewards type ITEMS',
-                        Colors.black,
-                        18.0,
-                      ),
-                      //
-                      const SizedBox(
-                        height: 20.0,
-                      ),
+              // tab 5
+              tab_5_checklist_UI(context)
+            ] else ...[
+              // tab 1
+              tab_1_info_UI(context),
 
-                      Container(
-                        height: 40,
-                        width: MediaQuery.of(context).size.width,
-                        color: Colors.amber,
-                        child: Center(
-                          child: text_regular_style_custom(
-                            'Items',
-                            Colors.black,
-                            14.0,
+              // tab 2
+              (widget.dictTaskFullDetails['rewardType'] == 'Items')
+                  ? Column(
+                      children: [
+                        //
+                        task_header_UI(context),
+                        //
+                        const SizedBox(
+                          height: 40.0,
+                        ),
+                        text_bold_style_custom(
+                          'Rewards type ITEMS',
+                          Colors.black,
+                          18.0,
+                        ),
+                        //
+                        const SizedBox(
+                          height: 20.0,
+                        ),
+
+                        Container(
+                          height: 40,
+                          width: MediaQuery.of(context).size.width,
+                          color: Colors.amber,
+                          child: Center(
+                            child: text_regular_style_custom(
+                              'Items',
+                              Colors.black,
+                              14.0,
+                            ),
                           ),
                         ),
-                      ),
-                      //
-                      const SizedBox(
-                        height: 20.0,
-                      ),
-
-                      Container(
-                        height: 120,
-                        width: 120,
-                        color: Colors.amber,
-                        child: Image.network(
-                          widget.dictTaskFullDetails['rewardImage'].toString(),
-                          fit: BoxFit.cover,
+                        //
+                        const SizedBox(
+                          height: 20.0,
                         ),
-                      ),
-                    ],
-                  )
-                : tab_1_rewards_UI(context),
 
-            // tab 3 ( reminders )
-            tab_3_reminder_UI(context),
+                        Container(
+                          height: 120,
+                          width: 120,
+                          color: Colors.amber,
+                          child: Image.network(
+                            widget.dictTaskFullDetails['rewardImage']
+                                .toString(),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    )
+                  : tab_1_rewards_UI(context),
 
-            // tab 4 ( agent )
-            tab_2_agent_UI(),
+              // tab 3 ( reminders )
+              tab_3_reminder_UI(context),
 
-            // tab 5
-            (str_main_loader == 'notes_loader_start')
-                ? const CustomeLoaderPopUp(
-                    str_custom_loader: 'please wait...',
-                    str_status: '3',
-                  )
-                : tab_4_notes_UI(),
+              // tab 4 ( agent )
+              tab_2_agent_UI(),
 
-            // tab 5
-            tab_5_checklist_UI(context)
+              // tab 5
+              (str_main_loader == 'notes_loader_start')
+                  ? const CustomeLoaderPopUp(
+                      str_custom_loader: 'please wait...',
+                      str_status: '3',
+                    )
+                  : tab_4_notes_UI(),
+
+              // tab 5
+              tab_5_checklist_UI(context)
+            ]
           ],
         ),
       ),

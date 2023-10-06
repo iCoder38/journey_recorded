@@ -24,7 +24,7 @@ class CreateTaskValidation {
     String groupidSub,
     BuildContext context,
   ) {
-    if (str_task_name == '') {
+    /* if (str_task_name == '') {
       //
       _showMyDialog('Task name', context);
       //
@@ -68,36 +68,35 @@ class CreateTaskValidation {
       print('create task ');
       print(rewardType.toString());
       print(groupidMain.toString());
-      print(groupidSub.toString());
+      print(groupidSub.toString());*/
 
-      CreateTaskModal()
-          .create_task_WB(
-            str_task_name.toString(),
-            str_task_details.toString(),
-            str_due_date.toString(),
-            str_rewards.toString(),
-            str_deduct_rewards.toString(),
-            str_request.toString(),
-            str_skills.toString(),
-            '$str_add_reminder_date $str_add_reminder_time',
-            str_add_reminder_warning.toString(),
-            profesionalId.toString(),
-            profesionalType.toString(),
-            //
-            rewardType.toString(),
-            groupidMain.toString(),
-            groupidSub.toString(),
-          )
-          .then(
-            (value) => {
-              print('success 123'),
-              Navigator.pop(
-                context,
-                'back_from_add_task',
-              ),
-            },
-          );
-    }
+    CreateTaskModal()
+        .create_task_WB(
+          str_task_name.toString(),
+          str_task_details.toString(),
+          str_due_date.toString(),
+          str_rewards.toString(),
+          str_deduct_rewards.toString(),
+          str_request.toString(),
+          str_skills.toString(),
+          '$str_add_reminder_date $str_add_reminder_time',
+          str_add_reminder_warning.toString(),
+          profesionalId.toString(),
+          profesionalType.toString(),
+          //
+          rewardType.toString(),
+          groupidMain.toString(),
+          groupidSub.toString(),
+        )
+        .then(
+          (value) => {
+            print('success 123'),
+            Navigator.pop(
+              context,
+              'back_from_add_task',
+            ),
+          },
+        );
   }
 }
 

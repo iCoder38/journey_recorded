@@ -120,12 +120,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: text_bold_style_custom(
           'Create Task',
-          style: TextStyle(
-            fontFamily: font_style_name,
-            fontSize: 18.0,
-          ),
+          Colors.white,
+          16.0,
         ),
         backgroundColor: navigation_color,
         leading: IconButton(
@@ -204,146 +202,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   },
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  readOnly: true,
-                  controller: cont_rewards_type,
-                  decoration: const InputDecoration(
-                    // // border: OutlineInputBorder(),
-                    labelText: 'Select rewards type',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                  onTap: () {
-                    //
-                    openSelectRewardsType(context);
-                  },
-                ),
-              ),
-              (str_user_select_item == '1')
-                  ? GestureDetector(
-                      onTap: () {
-                        //
-                        showActionSheet_for_camera_gallery(context);
-                      },
-                      child: Column(
-                        children: [
-                          text_regular_style_custom(
-                            'Upload Reward Image',
-                            Colors.black,
-                            14.0,
-                          ),
-                          //
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          //
-                          (imageFile == null)
-                              ? Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 0.2,
-                                      color: Colors.black,
-                                    ),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                      12.0,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.asset(
-                                      'assets/images/logo.png',
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: 120,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      width: 0.2,
-                                      color: Colors.black,
-                                    ),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                      12.0,
-                                    ),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.file(
-                                      fit: BoxFit.cover,
-                                      imageFile!,
-                                      height: 150.0,
-                                      width: 100.0,
-                                    ),
-                                  ),
-                                ),
-                        ],
-                      ),
-                    )
-                  : Container(
-                      margin: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      child: TextFormField(
-                        controller: cont_rewards,
-                        decoration: const InputDecoration(
-                          // border: OutlineInputBorder(),
-                          labelText: 'Rewards',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter value';
-                          }
-                          return null;
-                        },
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-              (str_user_select_item == '1')
-                  ? const SizedBox()
-                  : Container(
-                      margin: const EdgeInsets.all(
-                        10.0,
-                      ),
-                      child: TextFormField(
-                        controller: cont_deduct_rewards,
-                        decoration: const InputDecoration(
-                          // border: OutlineInputBorder(),
-                          labelText: 'Deduct Rewards',
-                        ),
-                        keyboardType: TextInputType.number,
-                      ),
-                    ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  controller: cont_skills,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(),
-                    labelText: 'Skills',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+              //
               (str_user_select_which_profile == '1')
                   ? Container(
                       margin: const EdgeInsets.all(
@@ -393,81 +252,237 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         },
                       ),
                     ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  readOnly: true,
-                  controller: cont_reminder_date,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(),
-                    labelText: 'Reminder Date',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                  onTap: () async {
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
+              //
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: cont_rewards_type,
+                        decoration: const InputDecoration(
+                          // // border: OutlineInputBorder(),
+                          labelText: 'Select rewards type',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                        onTap: () {
+                          //
+                          openSelectRewardsType(context);
+                        },
+                      ),
+                    ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : (str_user_select_item == '1')
+                      ? GestureDetector(
+                          onTap: () {
+                            //
+                            showActionSheet_for_camera_gallery(context);
+                          },
+                          child: Column(
+                            children: [
+                              text_regular_style_custom(
+                                'Upload Reward Image',
+                                Colors.black,
+                                14.0,
+                              ),
+                              //
+                              const SizedBox(
+                                height: 8,
+                              ),
+                              //
+                              (imageFile == null)
+                                  ? Container(
+                                      height: 120,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 0.2,
+                                          color: Colors.black,
+                                        ),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                          12.0,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.asset(
+                                          'assets/images/logo.png',
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 120,
+                                      width: 120,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 0.2,
+                                          color: Colors.black,
+                                        ),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(
+                                          12.0,
+                                        ),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        child: Image.file(
+                                          fit: BoxFit.cover,
+                                          imageFile!,
+                                          height: 150.0,
+                                          width: 100.0,
+                                        ),
+                                      ),
+                                    ),
+                            ],
+                          ),
+                        )
+                      : Container(
+                          margin: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          child: TextFormField(
+                            controller: cont_rewards,
+                            decoration: const InputDecoration(
+                              // border: OutlineInputBorder(),
+                              labelText: 'Rewards',
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter value';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : (str_user_select_item == '1')
+                      ? const SizedBox()
+                      : Container(
+                          margin: const EdgeInsets.all(
+                            10.0,
+                          ),
+                          child: TextFormField(
+                            controller: cont_deduct_rewards,
+                            decoration: const InputDecoration(
+                              // border: OutlineInputBorder(),
+                              labelText: 'Deduct Rewards',
+                            ),
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        controller: cont_skills,
+                        decoration: const InputDecoration(
+                          // border: OutlineInputBorder(),
+                          labelText: 'Skills',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
 
-                    if (pickedDate != null) {
-                      print(pickedDate);
-                      String formattedDate =
-                          DateFormat('yyyy-MM-dd').format(pickedDate);
-                      print(formattedDate);
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: cont_reminder_date,
+                        decoration: const InputDecoration(
+                          // border: OutlineInputBorder(),
+                          labelText: 'Reminder Date',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                        onTap: () async {
+                          DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(2000),
+                            lastDate: DateTime(2101),
+                          );
 
-                      setState(() {
-                        cont_reminder_date.text = formattedDate;
-                      });
-                    } else {
-                      print("Date is not selected");
-                    }
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  readOnly: true,
-                  controller: cont_reminder_time,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(),
-                    labelText: 'Reminder Time',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                  onTap: () async {
-                    print('time');
-                    final TimeOfDay? newTime = await showTimePicker(
-                      context: context,
-                      initialTime: TimeOfDay.now(),
-                    );
-                    if (newTime != null) {
-                      setState(() {
-                        print(newTime.format(context));
+                          if (pickedDate != null) {
+                            print(pickedDate);
+                            String formattedDate =
+                                DateFormat('yyyy-MM-dd').format(pickedDate);
+                            print(formattedDate);
 
-                        // print(DateFormat.jm()
-                        // .format(DateTime.parse(newTime.format(context))));
-                        str_reminder_time = newTime.toString();
-                        cont_reminder_time.text = newTime.format(context);
-                      });
-                    }
-                  },
-                  /*TimeOfDay? pickedTime = await showTimePicker(
+                            setState(() {
+                              cont_reminder_date.text = formattedDate;
+                            });
+                          } else {
+                            print("Date is not selected");
+                          }
+                        },
+                      ),
+                    ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        readOnly: true,
+                        controller: cont_reminder_time,
+                        decoration: const InputDecoration(
+                          // border: OutlineInputBorder(),
+                          labelText: 'Reminder Time',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                        onTap: () async {
+                          print('time');
+                          final TimeOfDay? newTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (newTime != null) {
+                            setState(() {
+                              print(newTime.format(context));
+
+                              // print(DateFormat.jm()
+                              // .format(DateTime.parse(newTime.format(context))));
+                              str_reminder_time = newTime.toString();
+                              cont_reminder_time.text = newTime.format(context);
+                            });
+                          }
+                        },
+                        /*TimeOfDay? pickedTime = await showTimePicker(
                       initialTime: TimeOfDay.now(),
                       context: context,
                     );
@@ -490,45 +505,49 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     } else {
                       print("Time is not selected");
                     }*/
-                  // },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  controller: cont_reminder_warning,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(),
-                    labelText: 'Reminder Warning',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              Container(
-                margin: const EdgeInsets.all(
-                  10.0,
-                ),
-                child: TextFormField(
-                  controller: const_task_Details,
-                  decoration: const InputDecoration(
-                    // border: OutlineInputBorder(),
-                    labelText: 'Task Details',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter value';
-                    }
-                    return null;
-                  },
-                ),
-              ),
+                        // },
+                      ),
+                    ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        controller: cont_reminder_warning,
+                        decoration: const InputDecoration(
+                          // border: OutlineInputBorder(),
+                          labelText: 'Reminder Warning',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+              (str_user_select_which_profile == '1')
+                  ? const SizedBox()
+                  : Container(
+                      margin: const EdgeInsets.all(
+                        10.0,
+                      ),
+                      child: TextFormField(
+                        controller: const_task_Details,
+                        decoration: const InputDecoration(
+                          // border: OutlineInputBorder(),
+                          labelText: 'Task Details',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter value';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
               (str_create_task_loader == '0')
                   ? InkWell(
                       onTap: () {
