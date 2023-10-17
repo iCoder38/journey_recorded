@@ -920,7 +920,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   'dashboard_sub_goal',
                   strUserSelectLanguage,
                 ),
-                Colors.white,
+                Colors.black,
                 16.0,
               ),
               const Spacer(),
@@ -962,7 +962,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   'dashboard_quest',
                   strUserSelectLanguage,
                 ),
-                Colors.white,
+                Colors.black,
                 16.0,
               ),
               const Spacer(),
@@ -1004,7 +1004,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                   'dashboard_mission',
                   strUserSelectLanguage,
                 ),
-                Colors.white,
+                Colors.black,
                 16.0,
               ),
               const Spacer(),
@@ -1258,20 +1258,119 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                         color: Colors.transparent,
                         child: ListTile(
                           // iconColor: Colors.pink,
-                          leading: ClipRRect(
-                            borderRadius: BorderRadius.circular(12.0),
-                            child: FadeInImage.assetNetwork(
-                              placeholder: 'assets/images/loader.gif',
-                              image: arr_reward[index]['image'].toString(),
-                            ),
-                            //  Image.network(
-                            //   arr_reward[index]['image'].toString(),
-                            //   height: 100.0,
-                            //   width: 100.0,
-                            // ),
-                          ),
+                          leading: (arr_reward[index]['profile_picture']
+                                      .toString() ==
+                                  '')
+                              ? SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child:
+                                        Image.asset('assets/images/logo.png'),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: 40,
+                                  width: 40,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                    child: FadeInImage.assetNetwork(
+                                      placeholder: 'assets/images/loader.gif',
+                                      image: arr_reward[index]
+                                              ['profile_picture']
+                                          .toString(),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
 
                           title: RichText(
+                            text: TextSpan(
+                              text: arr_reward[index]['userName'].toString() +
+                                  ' will get ',
+                              style: TextStyle(
+                                fontFamily: font_style_name,
+                                fontSize: 16.0,
+                                color: Colors.black,
+                              ),
+                              children: <TextSpan>[
+                                if (arr_reward[index]['rewardType']
+                                        .toString() ==
+                                    'Cash') ...[
+                                  TextSpan(
+                                    text:
+                                        '\$${arr_reward[index]['experiencePoint']}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.pink,
+                                    ),
+                                  ),
+                                ] else if (arr_reward[index]['rewardType']
+                                        .toString() ==
+                                    'Items') ...[
+                                  const TextSpan(
+                                    text: 'Gift',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.pink,
+                                    ),
+                                  ),
+                                ] else if (arr_reward[index]['rewardType']
+                                        .toString() ==
+                                    'Experience') ...[
+                                  TextSpan(
+                                    text:
+                                        '${arr_reward[index]['experiencePoint']} Experience Point',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18.0,
+                                      color: Colors.pink,
+                                    ),
+                                  ),
+                                ],
+                                const TextSpan(
+                                  text: ' when completed ',
+                                  style: TextStyle(
+                                    // fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ), /*Expanded(
+                            child: Row(
+                              children: [
+                                text_bold_style_custom(
+                                  //
+                                  arr_reward[index]['userName'].toString(),
+                                  Colors.black,
+                                  14.0,
+                                ),
+                                text_regular_style_custom(
+                                  //
+                                  ' will get ',
+                                  Colors.black,
+                                  14.0,
+                                ),
+                                text_bold_style_custom(
+                                  //
+                                  arr_reward[index]['userName'].toString(),
+                                  Colors.black,
+                                  14.0,
+                                ),
+                                text_regular_style_custom(
+                                  //
+                                  ' will getwill getwill getwill getwill getwill get ',
+                                  Colors.black,
+                                  14.0,
+                                ),
+                              ],
+                            ),
+                          ),*/
+                          /*RichText(
                             text: TextSpan(
                               text: arr_reward[index]['reward_name'].toString(),
                               style: TextStyle(
@@ -1289,7 +1388,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                                 ),
                               ],
                             ),
-                          ),
+                          ),*/
                           // Text(
                           //   //
                           //   arr_reward[index]['reward_name'].toString(),

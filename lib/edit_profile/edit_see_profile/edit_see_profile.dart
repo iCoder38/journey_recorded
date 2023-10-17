@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names
 
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
@@ -99,6 +99,8 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
                 if (kDebugMode) {
                   print('scroll up');
                 }
+                //
+                arrCategoryList.clear();
               } else {
                 //
                 // if (strScrollOnlyOneTime == 'start_scrolling')
@@ -287,6 +289,12 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
                     ),
                   ),
                 ),
+              ] else if (strUserSelectProfile == '2') ...[
+                if (arrCategoryList.isNotEmpty) ...[
+                  for (int i = 0; i < arrCategoryList.length; i++) ...[
+                    affinity_UI(i),
+                  ]
+                ]
               ] else if (strUserSelectProfile == '3') ...[
                 if (arrCategoryList.isNotEmpty) ...[
                   notesUI(),
@@ -471,6 +479,184 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  ListTile affinity_UI(int i) {
+    return ListTile(
+      title: text_bold_style_custom(
+        //
+        arrCategoryList[i]['name'].toString(),
+        Colors.black,
+        14.0,
+      ),
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (arrCategoryList[i]['rewardType'].toString() == 'Items') ...[
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(
+                  12.0,
+                ),
+              ),
+              child: (arrCategoryList[i]['rewardImage'].toString() == '')
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        0,
+                      ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                      ),
+                    )
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        6,
+                      ),
+                      child: Image.network(
+                        //
+                        arrCategoryList[i]['rewardImage'].toString(),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+            ),
+          ] else ...[
+            const SizedBox(
+              height: 0,
+              width: 0,
+            ),
+          ]
+        ],
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (arrCategoryList[i]['taskCompleted'].toString() == '1') ...[
+            Container(
+              height: 40,
+              width: 128,
+              decoration: BoxDecoration(
+                color: Colors.orange,
+                borderRadius: BorderRadius.circular(
+                  12.0,
+                ),
+              ),
+              child: Center(
+                child: text_bold_style_custom(
+                  //
+                  'Items Progress',
+                  // 'Items Progress ${arrCategoryList[i]['experiencePoint']}',
+                  Colors.white,
+                  12.0,
+                ),
+              ),
+            ),
+          ] else if (arrCategoryList[i]['taskCompleted'].toString() == '3') ...[
+            Container(
+              height: 40,
+              width: 128,
+              decoration: BoxDecoration(
+                color: Colors.red[400],
+                borderRadius: BorderRadius.circular(
+                  12.0,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Experience') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Experience -${arrCategoryList[i]['experiencePointDeduct']}',
+
+                        Colors.white,
+                        12.0,
+                      ),
+                    ),
+                  ] else if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Items') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Items',
+
+                        Colors.white,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Cash') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Cash -${arrCategoryList[i]['experiencePointDeduct']}',
+
+                        Colors.white,
+                        14.0,
+                      ),
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ] else if (arrCategoryList[i]['taskCompleted'].toString() == '2') ...[
+            Container(
+              height: 40,
+              width: 128,
+              decoration: BoxDecoration(
+                color: Colors.green,
+                borderRadius: BorderRadius.circular(
+                  12.0,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Experience') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Experience +${arrCategoryList[i]['experiencePoint']}',
+
+                        Colors.white,
+                        12.0,
+                      ),
+                    ),
+                  ] else if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Items') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Items',
+
+                        Colors.white,
+                        14.0,
+                      ),
+                    ),
+                  ] else if (arrCategoryList[i]['rewardType'].toString() ==
+                      'Cash') ...[
+                    Center(
+                      child: text_bold_style_custom(
+                        //
+                        'Cash +${arrCategoryList[i]['experiencePoint']}',
+
+                        Colors.white,
+                        14.0,
+                      ),
+                    ),
+                  ]
+                ],
+              ),
+            ),
+          ]
+        ],
       ),
     );
   }
@@ -745,6 +931,7 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
                 //
                 setState(() {
                   strUserSelectProfile = '2';
+                  pageNumber = 1;
                 });
                 allApiWB();
                 arrCategoryList.clear();
@@ -1008,6 +1195,7 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
   allApiWB() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
+    //
     var response;
     // strUserSelectProfile
     if (strUserSelectProfile == '1') {
@@ -1040,11 +1228,11 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
           'Content-Type': 'application/json; charset=UTF-8',
         },
         body: jsonEncode(
-          <String, String>{
+          <String, dynamic>{
             'action': 'tasklist',
             'assignUserId': prefs.getInt('userId').toString(),
             'completed': '1,2,3'.toString(),
-            'pageNo': '1',
+            'pageNo': pageNumber,
           },
         ),
       );
@@ -1122,7 +1310,7 @@ class _EdtiSeeProfileScreenState extends State<EdtiSeeProfileScreen> {
           strContactInfoEMailAddress = getData['data']['email'].toString();
           strContactInfoPhone = getData['data']['contactNumber'].toString();
           strContactInfoAddress = getData['data']['address'].toString();
-          strContactInfoSkills = getData['data']['career'].toString();
+          strContactInfoSkills = getData['data']['favroite_quote'].toString();
           strContactInfoImage = getData['data']['image'].toString();
           //
           strContactInfoUpdateLoader = '1';
