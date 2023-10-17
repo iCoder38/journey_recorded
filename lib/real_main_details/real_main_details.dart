@@ -70,6 +70,8 @@ class RealMainDetailsScreen extends StatefulWidget {
 class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
     with SingleTickerProviderStateMixin {
   //
+  var str_percentage_bar = 0.0;
+  //
   var strUserSelectLanguage = 'en';
   final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
@@ -165,6 +167,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
   var strCompleteClick = '0';
   //
   //
+
   @override
   void initState() {
     super.initState();
@@ -214,7 +217,7 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
 
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
@@ -2785,95 +2788,168 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
                       const SizedBox(
                         height: 10.0,
                       ),
-                      Column(
-                        children: <Widget>[
-                          Container(
-                            height: 20,
-                            color: Colors.transparent,
-                            width: MediaQuery.of(context).size.width,
-                            child: Row(
+                      (strTotalTaskCompletepercentage == '')
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : Column(
                               children: <Widget>[
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                text_regular_style_custom(
-                                  //
-                                  languageTextConverter.funcConvertLanguage(
-                                    //
-                                    'details_complete',
-                                    strUserSelectLanguage,
+                                Container(
+                                  height: 20,
+                                  color: Colors.transparent,
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Row(
+                                    children: <Widget>[
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      text_regular_style_custom(
+                                        //
+                                        languageTextConverter
+                                            .funcConvertLanguage(
+                                          //
+                                          'details_complete',
+                                          strUserSelectLanguage,
+                                        ),
+                                        Colors.white,
+                                        14.0,
+                                      ),
+                                      const Spacer(),
+                                      // strTotalThisGoalTaskCount =
+                                      //     strTotalThisGoalTaskComplete =
+                                      Row(
+                                        children: [
+                                          // text_regular_style_custom(
+                                          //   //
+                                          //   str_task_count_completed.toString(),
+                                          //   Colors.white,
+                                          //   14.0,
+                                          // ),
+                                          //
+                                          // text_regular_style_custom(
+                                          //   //
+                                          //   ' / '.toString(),
+                                          //   Colors.white,
+                                          //   14.0,
+                                          // ),
+                                          //
+                                          // text_regular_style_custom(
+                                          //   //
+                                          //   strTotalThisGoalTaskCount
+                                          //       .toString(),
+                                          //   Colors.white,
+                                          //   14.0,
+                                          // ),
+                                          //
+                                          // text_regular_style_custom(
+                                          //   // 0%
+                                          //   ' '.toString(),
+                                          //   Colors.white,
+                                          //   14.0,
+                                          // ),
+                                          //
+                                          text_regular_style_custom(
+                                            '$strTotalTaskCompletepercentage %',
+                                            Colors.white,
+                                            14.0,
+                                          ),
+                                          //
+                                        ],
+                                      ),
+                                      //
+                                      const SizedBox(
+                                        width: 20.0,
+                                      ),
+                                      //
+                                    ],
                                   ),
-                                  Colors.white,
-                                  14.0,
                                 ),
-                                const Spacer(),
-                                // strTotalThisGoalTaskCount =
-                                //     strTotalThisGoalTaskComplete =
-                                Row(
-                                  children: [
-                                    text_regular_style_custom(
-                                      //
-                                      str_task_count_completed.toString(),
-                                      Colors.white,
-                                      14.0,
-                                    ),
-                                    //
-                                    text_regular_style_custom(
-                                      //
-                                      ' / '.toString(),
-                                      Colors.white,
-                                      14.0,
-                                    ),
-                                    //
-                                    text_regular_style_custom(
-                                      //
-                                      strTotalThisGoalTaskCount.toString(),
-                                      Colors.white,
-                                      14.0,
-                                    ),
-                                    //
-                                    text_regular_style_custom(
-                                      // 0%
-                                      ' '.toString(),
-                                      Colors.white,
-                                      14.0,
-                                    ),
-                                    //
-                                    text_regular_style_custom(
-                                      '( $strTotalTaskCompletepercentage % )',
-                                      Colors.white,
-                                      14.0,
-                                    ),
-                                    //
-                                  ],
+                                // const SizedBox(
+                                //   width: 10.0,
+                                // ),
+                                // Container(
+                                //   height: 20,
+                                //   color: Colors.transparent,
+                                //   width: MediaQuery.of(context).size.width,
+                                //   child: AbsorbPointer(
+                                //     child: Slider(
+                                //       value: _currentSliderValue,
+                                //       max: sliderMaxValue,
+                                //       // divisions: 5,
+                                //       label: _currentSliderValue.round().toString(),
+                                //       onChanged: (value) => print(value),
+                                //     ),
+                                //   ),
+                                // ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Stack(
+                                    children: <Widget>[
+                                      Container(
+                                        width: 240,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          // color: const Color(0xffABEBC6),
+                                          color: Colors.grey[400],
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                        ),
+                                      ),
+                                      // Container(
+                                      //   decoration: BoxDecoration(
+                                      //     // color: const Color(0xffABEBC6),
+                                      //     color: Colors.green,
+                                      //     borderRadius: BorderRadius.circular(
+                                      //       12.0,
+                                      //     ),
+                                      //   ),
+                                      //   width: MediaQuery.of(context)
+                                      //           .size
+                                      //           .width *
+                                      //       double.parse(
+                                      //           strTotalTaskCompletepercentage),
+                                      //   height: 20,
+                                      // ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          // color: const Color(0xffABEBC6),
+                                          color: Colors.green,
+
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                        ),
+                                        width: 240 * str_percentage_bar,
+                                        height: 20,
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          // color: const Color(0xffABEBC6),
+                                          color: Colors.transparent,
+
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
+                                          ),
+                                        ),
+                                        // width: MediaQuery.of(context)
+                                        //     .size
+                                        //     .width,
+                                        height: 20,
+                                        child: Center(
+                                          child: text_bold_style_custom(
+                                            //
+                                            '$sliderValue / $sliderTotalvalue',
+                                            Colors.black,
+                                            14.0,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                //
-                                const SizedBox(
-                                  width: 20.0,
-                                ),
-                                //
                               ],
                             ),
-                          ),
-                          // const SizedBox(
-                          //   width: 10.0,
-                          // ),
-                          Container(
-                            height: 20,
-                            color: Colors.transparent,
-                            width: MediaQuery.of(context).size.width,
-                            child: AbsorbPointer(
-                              child: Slider(
-                                value: _currentSliderValue,
-                                max: sliderMaxValue,
-                                // divisions: 5,
-                                label: _currentSliderValue.round().toString(),
-                                onChanged: (value) => print(value),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       const SizedBox(
                         height: 10.0,
                       ),
@@ -6834,6 +6910,28 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             str_task_count = totalTaskCount.toString();
             str_task_count_completed = strTotalThisGoalTaskComplete.toString();
           }
+          //
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          //  '$sliderValue / $sliderTotalvalue',
+          str_percentage_bar = (_currentSliderValue / sliderMaxValue);
+          if (kDebugMode) {
+            print('========== PERCENTAGE 1 ============');
+            print(_currentSliderValue);
+            print(sliderMaxValue);
+            print(str_percentage_bar);
+            print('====================================');
+          }
+          String inString = str_percentage_bar.toStringAsFixed(1); // '2.35'
+          double inDouble = double.parse(inString);
+          if (kDebugMode) {
+            print('dishant rajput');
+            print(inDouble);
+          }
+          // strTotalTaskCompletepercentage = inDouble;
+          str_percentage_bar = inDouble;
+          setState(() {});
+          //
         });
       } else {
         print(
@@ -6933,6 +7031,28 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             str_task_count = totalTaskCount.toString();
             str_task_count_completed = strTotalThisGoalTaskComplete.toString();
           }
+          //
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          //  '$sliderValue / $sliderTotalvalue',
+          str_percentage_bar = (_currentSliderValue / sliderMaxValue);
+          if (kDebugMode) {
+            print('========== PERCENTAGE 1 ============');
+            print(_currentSliderValue);
+            print(sliderMaxValue);
+            print(str_percentage_bar);
+            print('====================================');
+          }
+          String inString = str_percentage_bar.toStringAsFixed(1); // '2.35'
+          double inDouble = double.parse(inString);
+          if (kDebugMode) {
+            print('dishant rajput');
+            print(inDouble);
+          }
+          // strTotalTaskCompletepercentage = inDouble;
+          str_percentage_bar = inDouble;
+          setState(() {});
+          //
         });
       } else {
         print(
@@ -7094,6 +7214,29 @@ class _RealMainDetailsScreenState extends State<RealMainDetailsScreen>
             str_task_count_completed =
                 get_data['data']['totalTaskCompleted'].toString();
           }
+          //
+          //
+          _currentSliderValue = double.parse(sliderValue.toString());
+          sliderMaxValue = double.parse(sliderTotalvalue.toString());
+          //  '$sliderValue / $sliderTotalvalue',
+          str_percentage_bar = (_currentSliderValue / sliderMaxValue);
+          if (kDebugMode) {
+            print('========== PERCENTAGE 1 ============');
+            print(_currentSliderValue);
+            print(sliderMaxValue);
+            print(str_percentage_bar);
+            print('====================================');
+          }
+          String inString = str_percentage_bar.toStringAsFixed(1); // '2.35'
+          double inDouble = double.parse(inString);
+          if (kDebugMode) {
+            print('dishant rajput');
+            print(inDouble);
+          }
+          // strTotalTaskCompletepercentage = inDouble;
+          str_percentage_bar = inDouble;
+          setState(() {});
+          //
         });
       } else {
         print(

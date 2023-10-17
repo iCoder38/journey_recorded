@@ -71,7 +71,7 @@ class _QuestScreenState extends State<QuestScreen> {
 // /********** LANGUAGE SELECTED **********************************************/
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
@@ -270,7 +270,9 @@ class _QuestScreenState extends State<QuestScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return InkWell(
                     onTap: () {
-                      print('=====> PUSH TO QUEST');
+                      if (kDebugMode) {
+                        print('=====> PUSH TO QUEST');
+                      }
 
                       push_to_quest_details(
                         context,

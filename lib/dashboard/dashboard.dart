@@ -39,6 +39,8 @@ import 'package:journey_recorded/training/training_list_dashboard/training_list_
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:carousel_slider/carousel_slider.dart';
+
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -46,18 +48,38 @@ class DashboardScreen extends StatefulWidget {
   State<DashboardScreen> createState() => _DashboardScreenState();
 }
 
+class MyItem {
+  String itemName;
+  String path;
+  MyItem(this.itemName, this.path);
+}
+
 class _DashboardScreenState extends State<DashboardScreen> {
   //
   var strUserSelectLanguage = 'en';
   final ConvertLanguage languageTextConverter = ConvertLanguage();
   //
-
+//
+  int activeIndex = 0;
+  List<MyItem> items = [
+    MyItem("1/5",
+        'I would rather walk with a friend in the dark, than alone in the light.'),
+    MyItem("2/5",
+        'True friends are never apart, maybe in distance but never in heart.'),
+    MyItem("3/5",
+        'Life is partly what we make it, and partly what it is made by the friends we choose.'),
+    MyItem("4/5",
+        'Real friendship, like real poetry, is extremely rare — and precious as a pearl.'),
+    MyItem("5/5", 'True love is finding your soul mate in your best friend.'),
+  ];
+  //
   var strLoginUserName = '';
   var strCurrentLabel = '';
   var strLoginUserImage = '';
   var strTotalCoins = '';
   var sliderValue = '';
   var sliderTotalvalue = '';
+  var show_percentage = 0.0;
   double sliderMaxValue = 0;
   //
   var login_user_name;
@@ -126,7 +148,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 // /********** LANGUAGE SELECTED **********************************************/
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
@@ -194,30 +216,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
             strUserSelectLanguage = 'sp';
           }
           //
-          if (kDebugMode) {
-            print('===========> JOURNEY LANGUAGE <============');
-            print(strUserSelectLanguage);
-            print('===========================================');
-            // print(sliderValue);
-            // print(sliderTotalvalue);
-          }
 
           if (double.parse(sliderTotalvalue.toString()) == 0 ||
               double.parse(sliderTotalvalue.toString()) == 0.0) {
-            print('===========> yes <============');
+            if (kDebugMode) {
+              print('===========> yes <============');
+            }
             _currentSliderValue = double.parse(sliderValue.toString());
             sliderMaxValue = double.parse('0'.toString());
           } else {
-            print('===========> no <============');
+            if (kDebugMode) {
+              print('===========> no <============');
+            }
             _currentSliderValue = double.parse(sliderValue.toString());
             sliderMaxValue = double.parse(sliderTotalvalue.toString());
-          }
-
-          if (kDebugMode) {
-            print(_currentSliderValue);
-            print(sliderMaxValue);
+            //  '$sliderValue / $sliderTotalvalue',
+            show_percentage = (_currentSliderValue / sliderMaxValue);
+            if (kDebugMode) {
+              print('========== PERCENTAGE 1 ============');
+              print(_currentSliderValue);
+              print(sliderMaxValue);
+              print(show_percentage);
+              print('====================================');
+            }
+            //
+            String inString = show_percentage.toStringAsFixed(1); // '2.35'
+            double inDouble = double.parse(inString);
+            if (kDebugMode) {
+              print(inDouble);
+            }
+            show_percentage = inDouble;
+            //
           }
         });
+        if (kDebugMode) {
+          print('===========> JOURNEY LANGUAGE <============');
+          print(strUserSelectLanguage);
+          print('===========================================');
+          // print(sliderValue);
+          // print(sliderTotalvalue);
+        }
         setState(() {});
         get_category_list_WB();
         //
@@ -741,47 +779,127 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         height: 10,
                                       ),
                                       Stack(
-                                        children: <Widget>[
+                                        children: [
                                           Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
+                                            width: 200,
                                             height: 20,
                                             decoration: BoxDecoration(
                                               // color: const Color(0xffABEBC6),
-                                              color: Colors.greenAccent,
+                                              color: Colors.grey[400],
                                               borderRadius:
                                                   BorderRadius.circular(
                                                 12.0,
                                               ),
                                             ),
+                                            /*child: Center(
+                                                child: text_bold_style_custom(
+                                                  //
+                                                  '$sliderValue / $sliderTotalvalue',
+                                                  Colors.black,
+                                                  14.0,
+                                                ),
+                                              ),*/
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.green,
+
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            width: 200 * show_percentage,
+                                            height: 20,
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.transparent,
+
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            // width: MediaQuery.of(context)
+                                            //     .size
+                                            //     .width,
+                                            height: 20,
                                             child: Center(
                                               child: text_bold_style_custom(
                                                 //
-
                                                 '$sliderValue / $sliderTotalvalue',
                                                 Colors.black,
                                                 14.0,
                                               ),
                                             ),
                                           ),
+                                        ],
+                                      ),
+                                      /*Stack(
+                                        children: <Widget>[
                                           Container(
+                                            width: 100,
+                                            height: 20,
                                             decoration: BoxDecoration(
                                               // color: const Color(0xffABEBC6),
-                                              color: Colors.green,
+                                              color: Colors.grey[400],
                                               borderRadius:
                                                   BorderRadius.circular(
                                                 12.0,
                                               ),
                                             ),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.2,
+                                            /*child: Center(
+                                              child: text_bold_style_custom(
+                                                //
+                                                '$sliderValue / $sliderTotalvalue',
+                                                Colors.black,
+                                                14.0,
+                                              ),
+                                            ),*/
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.green,
+
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            width: 600,
                                             height: 20,
                                           ),
+                                          //
+                                          /*Container(
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.transparent,
+
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            // width: MediaQuery.of(context)
+                                            //     .size
+                                            //     .width,
+                                            height: 20,
+                                            child: Center(
+                                              child: text_bold_style_custom(
+                                                //
+                                                '$sliderValue / $sliderTotalvalue',
+                                                Colors.black,
+                                                14.0,
+                                              ),
+                                            ),
+                                          ),*/
+                                          //
                                         ],
-                                      ),
+                                      ),*/
                                       /*Expanded(
                                         child: Container(
                                           width:
@@ -915,14 +1033,58 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
-                              child: Text(
+                              child: Center(
+                                child: CarouselSlider.builder(
+                                  itemCount: items.length,
+                                  options: CarouselOptions(
+                                    height: 140,
+                                    viewportFraction: 1,
+                                    autoPlay: false,
+                                    enlargeCenterPage: true,
+                                    enlargeStrategy:
+                                        CenterPageEnlargeStrategy.height,
+                                    autoPlayInterval:
+                                        const Duration(seconds: 1),
+                                    onPageChanged: (index, reason) {
+                                      setState(() {
+                                        activeIndex = index;
+                                      });
+                                    },
+                                  ),
+                                  itemBuilder: (context, index, realIndex) {
+                                    final imgList = items[index];
+                                    return Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      // mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(0.0),
+                                          child: Center(
+                                            child: buildImage(
+                                              imgList.path,
+                                              index,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 34,
+                                        ),
+
+                                        // buildText(imgList.itemName, index),
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              /*Text(
                                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
                                 style: TextStyle(
                                   fontFamily: font_style_name,
                                   color: Colors.white,
                                   fontSize: 16.0,
                                 ),
-                              ),
+                              ),*/
                             ),
                           ),
                           Container(
@@ -1506,4 +1668,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
       get_category_list_WB();
     }
   }
+
+  //
+  Widget buildImage(String imgList, int index) => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 12),
+        color: Colors.transparent,
+        child: Align(
+          alignment: Alignment.center,
+          child: text_bold_style_custom(
+            imgList.toString(),
+            Colors.white,
+            18.0,
+          ),
+          /*Image.asset(
+            imgList,
+            fit: BoxFit.cover,
+          ),*/
+        ),
+      );
+  //
 }

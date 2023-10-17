@@ -50,7 +50,7 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
 
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
@@ -174,10 +174,15 @@ class _TrainingListFromDashboardState extends State<TrainingListFromDashboard> {
                   str_custom_loader: lc_training_not_added_yet,
                   str_status: '4',
                 )
-              : CustomeLoaderPopUp(
-                  str_custom_loader: alert_please_wait_sp,
-                  str_status: '0',
-                )
+              : (strUserSelectLanguage == 'en')
+                  ? CustomeLoaderPopUp(
+                      str_custom_loader: alert_please_wait_en,
+                      str_status: '0',
+                    )
+                  : CustomeLoaderPopUp(
+                      str_custom_loader: alert_please_wait_sp,
+                      str_status: '0',
+                    )
           : Column(
               children: [
                 for (int i = 0; i < arr_training_list.length; i++) ...[

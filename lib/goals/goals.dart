@@ -90,7 +90,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
 // /********** LANGUAGE SELECTED **********************************************/
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
@@ -671,6 +671,123 @@ class _GoalsScreenState extends State<GoalsScreen> {
 
   Container categories_filter_UI(BuildContext context) {
     return Container(
+      height: 80,
+      width: MediaQuery.of(context).size.width,
+      color: const Color.fromRGBO(9, 44, 132, 1),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(
+                8.0,
+              ),
+              child: InkWell(
+                onTap: () {
+                  // open_category_list(context);
+
+                  if (str_category_search == '1') {
+                    setState(() {
+                      str_category_search = '0';
+                    });
+                  } else {
+                    setState(() {
+                      str_category_search = '1';
+                    });
+                  }
+
+                  // func_manage_filter_section_here();
+                },
+                child: Container(
+                  height: 50,
+                  // width: MediaQuery.of(context).size.width,
+
+                  decoration: BoxDecoration(
+                    // color: Colors.orange,
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(250, 220, 10, 1),
+                        Color.fromRGBO(252, 215, 10, 1),
+                        Color.fromRGBO(251, 195, 11, 1),
+                        Color.fromRGBO(250, 180, 10, 1),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Center(
+                    child: text_bold_style_custom(
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_categories',
+                        strUserSelectLanguage,
+                      ),
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(
+                8.0,
+              ),
+              child: InkWell(
+                onTap: () {
+                  // open_filters_list(context);
+
+                  if (str_filter_search == '1') {
+                    setState(() {
+                      str_filter_search = '0';
+                    });
+                  } else {
+                    setState(() {
+                      str_filter_search = '1';
+                    });
+                  }
+
+                  // func_manage_filter_section_here();
+                },
+                child: Container(
+                  height: 50,
+                  // width: MediaQuery.of(context).size.width,
+
+                  decoration: BoxDecoration(
+                    // color: Colors.orange,
+                    borderRadius: BorderRadius.circular(12.0),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(250, 220, 10, 1),
+                        Color.fromRGBO(252, 215, 10, 1),
+                        Color.fromRGBO(251, 195, 11, 1),
+                        Color.fromRGBO(250, 180, 10, 1),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: Center(
+                    child: text_bold_style_custom(
+                      //
+                      languageTextConverter.funcConvertLanguage(
+                        'common_filters',
+                        strUserSelectLanguage,
+                      ),
+                      Colors.black,
+                      14.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+    /*Container(
       height: 70,
       width: MediaQuery.of(context).size.width,
       color: const Color.fromRGBO(9, 44, 132, 1),
@@ -820,7 +937,7 @@ class _GoalsScreenState extends State<GoalsScreen> {
           ),
         ],
       ),
-    );
+    );*/
   }
 
   AppBar app_bar_goals_UI() {

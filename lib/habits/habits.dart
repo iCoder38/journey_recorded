@@ -41,7 +41,7 @@ class _HabitsScreenState extends State<HabitsScreen> {
 // /********** LANGUAGE SELECTED **********************************************/
   funcSelectLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    strUserSelectLanguage = prefs.getString('selected_language').toString();
+    strUserSelectLanguage = prefs.getString('language').toString();
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }

@@ -245,7 +245,7 @@ class _SetLanguageScreenState extends State<SetLanguageScreen> {
         //
         Map<String, dynamic> user = getData['data'];
         await prefs.setInt('userId', user['userId']);
-        await prefs.setString('selected_language', user['language']);
+        await prefs.setString('language', user['language']);
         //
         setState(() {
           if (strUserSelectLanguage == 'en') {
