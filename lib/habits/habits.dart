@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, unused_local_variable
 
 import 'dart:convert';
 
@@ -426,11 +426,63 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                       var oldPercentage = int.parse(
                                           arr_habits_list[i]['startPercentage']
                                               .toString());
-                                      var sumBoth =
-                                          oldPercentage + sumOnePercentage;
-                                      if (kDebugMode) {
-                                        print(sumBoth);
+                                      // var sumBoth =
+                                      // oldPercentage + sumOnePercentage;
+                                      // if (kDebugMode) {
+                                      // print(sumBoth);
+                                      // }
+                                      // filter
+                                      // sumBoth = 29;
+                                      //
+
+                                      //
+                                      oldPercentage = 89;
+                                      //
+                                      // if (kDebugMode) {
+                                      //   print('======================');
+                                      //   print(oldPercentage);
+                                      // }
+                                      //
+                                      var addValue = 0;
+                                      //
+                                      var send_filtered_value = '32';
+                                      if (oldPercentage > 1 &&
+                                          oldPercentage < 30) {
+                                        //
+                                        // if (kDebugMode) {
+                                        //   print('add only 1');
+                                        //   print('======================');
+                                        // }
+                                        //
+                                        oldPercentage += 1;
+                                        //
+                                      } else if (oldPercentage > 30 &&
+                                          oldPercentage < 90) {
+                                        //
+                                        // if (kDebugMode) {
+                                        //   print('add only 2');
+                                        //   print('======================');
+                                        // }
+                                        //
+                                        oldPercentage += 2;
+                                        //
+                                      } else {
+                                        //
+                                        // if (kDebugMode) {
+                                        //   print('add only 1');
+                                        //   print('======================');
+                                        // }
+                                        //
+                                        oldPercentage += 1;
+                                        //
                                       }
+                                      // if (kDebugMode) {
+                                      //   print('======================');
+                                      //   print('======================');
+                                      //   print(oldPercentage);
+                                      //   print('======================');
+                                      //   print('======================');
+                                      // }
                                       //
                                       DateTime now = DateTime.now();
                                       String formattedDate =
@@ -458,10 +510,13 @@ class _HabitsScreenState extends State<HabitsScreen> {
                                         //
                                       } else {
                                         //
+                                        if (kDebugMode) {
+                                          print('you clicked plus button');
+                                        }
                                         updateOnePercentage(
                                           arr_habits_list[i]['habitId']
                                               .toString(),
-                                          sumBoth.toString(),
+                                          oldPercentage.toString(),
                                         );
                                         //
                                       }

@@ -130,7 +130,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (kDebugMode) {
       print('user already selected ====> $strUserSelectLanguage');
     }
-    setState(() {});
   }
 // /********** LANGUAGE SELECTED **********************************************/
 
@@ -219,7 +218,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             print(sliderMaxValue);
           }
         });
-
+        setState(() {});
         get_category_list_WB();
         //
       } else {
@@ -554,8 +553,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           child: Container(
                                             margin: const EdgeInsets.only(
                                               top: 20.0,
-                                              left: 20.0,
-                                              right: 10.0,
+                                              left: 0.0,
+                                              right: 6,
                                             ),
                                             height: 60,
                                             width: 200,
@@ -712,7 +711,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         ],
                                       ),
                                       //
-                                      Row(
+                                      /*Row(
                                         children: [
                                           const SizedBox(
                                             width: 20,
@@ -736,9 +735,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             18.0,
                                           ),
                                         ],
-                                      ),
+                                      ),*/
                                       //
-                                      Expanded(
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Stack(
+                                        children: <Widget>[
+                                          Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 20,
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.greenAccent,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            child: Center(
+                                              child: text_bold_style_custom(
+                                                //
+
+                                                '$sliderValue / $sliderTotalvalue',
+                                                Colors.black,
+                                                14.0,
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              // color: const Color(0xffABEBC6),
+                                              color: Colors.green,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                12.0,
+                                              ),
+                                            ),
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.2,
+                                            height: 20,
+                                          ),
+                                        ],
+                                      ),
+                                      /*Expanded(
                                         child: Container(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -759,7 +803,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             },
                                           ),
                                         ),
-                                      ),
+                                      ),*/
                                       const SizedBox(
                                         width: 0,
                                       ),

@@ -9,6 +9,7 @@ import 'package:journey_recorded/edit_profile/edit_profile.dart';
 import 'package:journey_recorded/edit_profile/edit_see_profile/edit_see_profile.dart';
 import 'package:journey_recorded/help/help.dart';
 import 'package:journey_recorded/login/login.dart';
+import 'package:journey_recorded/q_a/q_a.dart';
 import 'package:journey_recorded/set_language/set_language.dart';
 import 'package:journey_recorded/settings/settings.dart';
 import 'package:journey_recorded/shop_order_history/shop_order_history.dart';
@@ -176,10 +177,14 @@ class _navigationDrawerState extends State<navigationDrawer> {
                     16.0,
                   ),
                   onTap: () {
-                    // Update the state of the app
-                    // ...
-                    // Then close the drawer
-                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const QuestionAndAnswerScreen(
+                            // get_login_sender_chat_id: 'Dashboard',
+                            ),
+                      ),
+                    );
                   },
                 ),
                 ListTile(
