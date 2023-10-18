@@ -98,7 +98,7 @@ class _CreateSkillsState extends State<CreateSkills>
       cont_skill_name = TextEditingController();
       cont_skill_category = TextEditingController();
       cont_skill_select_class = TextEditingController();
-      cont_skill_select_rank = TextEditingController(text: 'NOVOICE');
+      cont_skill_select_rank = TextEditingController(text: 'NOVICE');
       cont_skill_stats_skill = TextEditingController();
       cont_skill_how_to_learn = TextEditingController();
       cont_skill_description = TextEditingController();
@@ -199,7 +199,7 @@ class _CreateSkillsState extends State<CreateSkills>
                     child: TextFormField(
                       controller: cont_skill_name,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        // border: OutlineInputBorder(),
                         labelText: 'Name',
                       ),
                     ),
@@ -212,7 +212,7 @@ class _CreateSkillsState extends State<CreateSkills>
                       readOnly: true,
                       controller: cont_skill_category,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        // border: OutlineInputBorder(),
                         labelText: 'Category',
                         suffixIcon: Icon(
                           Icons.arrow_drop_down,
@@ -234,7 +234,7 @@ class _CreateSkillsState extends State<CreateSkills>
                       readOnly: true,
                       controller: cont_skill_select_class,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        // border: OutlineInputBorder(),
                         labelText: 'Select Class',
                         suffixIcon: Icon(
                           Icons.arrow_drop_down,
@@ -253,14 +253,11 @@ class _CreateSkillsState extends State<CreateSkills>
                       readOnly: true,
                       controller: cont_skill_select_rank,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        //  border: OutlineInputBorder(),
                         labelText: 'Select Rank',
-                        suffixIcon: Icon(
-                          Icons.arrow_drop_down,
-                        ),
                       ),
                       onTap: () {
-                        select_rank_action_sheet(context);
+                        // select_rank_action_sheet(context);
                       },
                     ),
                   ),
@@ -271,7 +268,7 @@ class _CreateSkillsState extends State<CreateSkills>
                     child: TextFormField(
                       controller: cont_skill_stats_skill,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        // border: OutlineInputBorder(),
                         labelText: 'Stats Skill',
                       ),
                     ),
@@ -324,7 +321,7 @@ class _CreateSkillsState extends State<CreateSkills>
                     child: TextFormField(
                       controller: cont_skill_description,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        // border: OutlineInputBorder(),
                         labelText: 'Description',
                       ),
                       maxLines: 5,
@@ -332,7 +329,9 @@ class _CreateSkillsState extends State<CreateSkills>
                   ),
                   InkWell(
                     onTap: () {
-                      print('open camera gallery action sheet');
+                      if (kDebugMode) {
+                        print('open camera gallery action sheet');
+                      }
                       camera_gallery_for_profile(context);
                     },
                     child: Container(
@@ -660,7 +659,7 @@ class _CreateSkillsState extends State<CreateSkills>
             onPressed: () async {
               Navigator.pop(context);
 
-              cont_skill_select_rank.text = 'NOVOICE';
+              cont_skill_select_rank.text = 'NOVICE';
               //
             },
             child: Text(

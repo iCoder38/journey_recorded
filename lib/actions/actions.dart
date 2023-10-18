@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names, avoid_print, prefer_typing_uninitialized_variables, unused_local_variable
 
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:journey_recorded/single_classes/custom_loader/custom_loader.dart';
@@ -105,7 +106,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
     }*/
     //
     arrStoreProfessionalIds.clear();
-    // print(arr_actions_list);
+    print(arr_actions_list);
     for (int i = 0; i < arr_actions_list.length; i++) {
       /*var fetch = {
         'id': arr_actions_list[i]['profesionalId'].toString(),
@@ -122,12 +123,13 @@ class _ActionsScreenState extends State<ActionsScreen> {
     // print(idsAfterRemoveDuplicate);
     print('==================================================================');
     print('======= CREATE CUSTOM AFTER REMOVE IDs ===========');
+    print(idsAfterRemoveDuplicate);
 
     //
     for (int i = 0; i < idsAfterRemoveDuplicate.length; i++) {
       var list1 = {
         'id': idsAfterRemoveDuplicate[i].toString(),
-        'name': 'one',
+        'name': arr_actions_list[i]['taskName'].toString(),
         'data': [],
       };
       arrRemoveIds.add(list1);
@@ -142,6 +144,7 @@ class _ActionsScreenState extends State<ActionsScreen> {
       var list1 = {
         'id': arr_actions_list[i]['profesionalId'].toString(),
         'name': arr_actions_list[i]['To_userName'].toString(),
+        'skills': arr_actions_list[i]['To_skill'].toString(),
       };
       arrMainArrayToCustom.add(list1);
     }
@@ -159,7 +162,8 @@ class _ActionsScreenState extends State<ActionsScreen> {
         }
       }
     }
-    // print(arrRemoveIds);
+    print('===================== CHECK ==================================');
+    print(arrRemoveIds);
     // print(arrRemoveIds.length);
     // print(save_data_for_names);
     // final loop
@@ -299,9 +303,44 @@ class _ActionsScreenState extends State<ActionsScreen> {
                         for (var j = 0;
                             j < arrRemoveIds[i]['data'].length;
                             j++) ...[
-                          Text(
-                            arrRemoveIds[i]['data'][j]['name'].toString(),
-                          )
+                          // Text(
+                          //   arrRemoveIds[i]['data'][j]['name'].toString(),
+                          // )
+                          ListTile(
+                            leading: Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                // color: Colors.blueAccent[200],
+                                color: Colors.primaries[
+                                    Random().nextInt(Colors.primaries.length)],
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              child: Center(
+                                child: text_bold_style_custom(
+                                  func_get_initials(
+                                    //
+                                    arrRemoveIds[i]['data'][j]['name']
+                                        .toString(),
+                                  ),
+                                  Colors.white,
+                                  16.0,
+                                ),
+                              ),
+                            ),
+                            title: text_bold_style_custom(
+                              //
+                              arrRemoveIds[i]['data'][j]['name'].toString(),
+                              Colors.black,
+                              18.0,
+                            ),
+                            subtitle: text_regular_style_custom(
+                              //
+                              'Skills : ${arrRemoveIds[i]['data'][j]['skills']}',
+                              Colors.orange,
+                              14.0,
+                            ),
+                          ),
                         ]
                       ],
                     ),
@@ -311,5 +350,21 @@ class _ActionsScreenState extends State<ActionsScreen> {
               ),
             ),
     );
+  }
+
+  func_get_initials(String str_name) {
+    var initials_are = str_name.split(' ');
+
+    var final_initial_name = '';
+    // print(initials_are.length);
+    if (initials_are.length == 1) {
+      final_initial_name = initials_are[0][0].toString().toUpperCase();
+    } else if (initials_are.length == 2) {
+      final_initial_name =
+          (initials_are[0][0] + initials_are[1][0]).toString().toUpperCase();
+    } else {
+      final_initial_name = initials_are[0][0].toString().toUpperCase();
+    }
+    return final_initial_name;
   }
 }

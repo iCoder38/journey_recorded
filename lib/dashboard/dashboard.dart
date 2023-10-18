@@ -1678,7 +1678,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           child: text_bold_style_custom(
             imgList.toString(),
             Colors.white,
-            18.0,
+            14.0,
           ),
           /*Image.asset(
             imgList,
