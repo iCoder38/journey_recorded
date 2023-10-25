@@ -135,6 +135,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                       // sasa
                       // new Work(
                       // ),
+                      // check pull status
+                      // new status
+                      // new push
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -144,6 +147,7 @@ class _FriendsScreenState extends State<FriendsScreen> {
                           ),
                         ),
                       );
+                      //
                     },
                     child: show_FROM_data(
                       context,
