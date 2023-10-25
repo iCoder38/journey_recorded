@@ -44,46 +44,38 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyARIPRh1f3G31PaXd4F5vqQuQH1yjyLwG0',
-    appId: '1:667327318779:web:ae60fac0508475ee907e5e',
-    messagingSenderId: '667327318779',
-    projectId: 'official-console',
-    authDomain: 'official-console.firebaseapp.com',
-    databaseURL: 'https://official-console-default-rtdb.firebaseio.com',
-    storageBucket: 'official-console.appspot.com',
-    measurementId: 'G-NZWJ7DSYZ3',
+    apiKey: 'AIzaSyCIJpo4VetzY2L7K2kheu-H-I5JUA928Vk',
+    appId: '1:255352916458:web:36713f833148393be2ca93',
+    messagingSenderId: '255352916458',
+    projectId: 'journeyrecorded-fff2b',
+    authDomain: 'journeyrecorded-fff2b.firebaseapp.com',
+    storageBucket: 'journeyrecorded-fff2b.appspot.com',
+    measurementId: 'G-4N71STX9ZT',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBmrm-dy2Q67VGToBzDb9_CRu6jeDGtcoM',
-    appId: '1:667327318779:android:f36d07ece9c14d84907e5e',
-    messagingSenderId: '667327318779',
-    projectId: 'official-console',
-    databaseURL: 'https://official-console-default-rtdb.firebaseio.com',
-    storageBucket: 'official-console.appspot.com',
+    apiKey: 'AIzaSyDrlNAAERcIjqbF8DZnZFv3IEaCc-TsGfk',
+    appId: '1:255352916458:android:79e1466e2728440ae2ca93',
+    messagingSenderId: '255352916458',
+    projectId: 'journeyrecorded-fff2b',
+    storageBucket: 'journeyrecorded-fff2b.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCgGmP9X5dWA_YfyIzM089h8rrMt_0yS30',
-    appId: '1:667327318779:ios:e36dfc3f08f6b2e2907e5e',
-    messagingSenderId: '667327318779',
-    projectId: 'official-console',
-    databaseURL: 'https://official-console-default-rtdb.firebaseio.com',
-    storageBucket: 'official-console.appspot.com',
-    androidClientId: '667327318779-1df0tca6a31k7h367uvhn2sfmka84vas.apps.googleusercontent.com',
-    iosClientId: '667327318779-on6rgnne6p8b0nout4gijnbqt7k7msac.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCV6SBI_4vB6QzWpr9QOVsoBc6ACsTGbj0',
+    appId: '1:255352916458:ios:07eb1573450f16e7e2ca93',
+    messagingSenderId: '255352916458',
+    projectId: 'journeyrecorded-fff2b',
+    storageBucket: 'journeyrecorded-fff2b.appspot.com',
     iosBundleId: 'com.evs.jr',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCgGmP9X5dWA_YfyIzM089h8rrMt_0yS30',
-    appId: '1:667327318779:ios:22e80f4924d1cd4d907e5e',
-    messagingSenderId: '667327318779',
-    projectId: 'official-console',
-    databaseURL: 'https://official-console-default-rtdb.firebaseio.com',
-    storageBucket: 'official-console.appspot.com',
-    androidClientId: '667327318779-1df0tca6a31k7h367uvhn2sfmka84vas.apps.googleusercontent.com',
-    iosClientId: '667327318779-mahu9lcd19o9nb58f2k1i2a5fkoiecvi.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCV6SBI_4vB6QzWpr9QOVsoBc6ACsTGbj0',
+    appId: '1:255352916458:ios:c91ff64a31b63d66e2ca93',
+    messagingSenderId: '255352916458',
+    projectId: 'journeyrecorded-fff2b',
+    storageBucket: 'journeyrecorded-fff2b.appspot.com',
     iosBundleId: 'com.example.journeyRecorded',
   );
 }

@@ -24,6 +24,7 @@ void main() async {
   Stripe.publishableKey = '';
 
   await Firebase.initializeApp(
+    name: "Journey Recorded",
     options: DefaultFirebaseOptions.currentPlatform,
   );
 

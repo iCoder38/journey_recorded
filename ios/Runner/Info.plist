@@ -26,6 +26,8 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>FLTEnableImpeller</key>
+  	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
