@@ -132,6 +132,9 @@ class _FriendsScreenState extends State<FriendsScreen> {
                   GestureDetector(
                     onTap: () {
                       //
+                      // sasa
+                      // new Work(
+                      // ),
                       Navigator.push(
                         context,
                         MaterialPageRoute(
